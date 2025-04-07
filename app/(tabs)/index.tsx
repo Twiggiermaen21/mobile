@@ -1,74 +1,172 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { Component } from 'react';
+import { View, StyleSheet, Alert, TouchableOpacity, Text } from 'react-native';
+import MapView, { Region, Marker, Polyline, LatLng } from 'react-native-maps';
+import * as Location from 'expo-location';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+interface State {
+  region: Region;
+  path: LatLng[];
+  isTracking: boolean;
+}
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+export default class Home extends Component<{}, State> {
+  watchSubscription: Location.LocationSubscription | null = null;
+
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      region: {
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      },
+      path: [],
+      isTracking: false,
+    };
+  }
+
+  async componentDidMount() {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Denied', 'Cannot access location');
+      return;
+    }
+
+    this.centerMapOnUserLocation();
+  }
+
+  centerMapOnUserLocation = async () => {
+    try {
+      const location = await Location.getCurrentPositionAsync({});
+      this.setState({
+        region: {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        },
+      });
+    } catch (error) {
+      Alert.alert('Error', 'Could not fetch location');
+    }
+  };
+
+  startTracking = async () => {
+    if (this.state.isTracking) {
+      // stop tracking
+      this.watchSubscription?.remove();
+      this.watchSubscription = null;
+      this.setState({ isTracking: false });
+      return;
+    }
+
+    // start tracking
+    this.setState({ path: [], isTracking: true });
+
+    this.watchSubscription = await Location.watchPositionAsync(
+      {
+        accuracy: Location.Accuracy.High,
+        timeInterval: 1000,
+        distanceInterval: 5,
+      },
+      (location) => {
+        const newCoord = {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        };
+
+        this.setState((prevState) => ({
+          region: {
+            ...prevState.region,
+            latitude: newCoord.latitude,
+            longitude: newCoord.longitude,
+          },
+          path: [...prevState.path, newCoord],
+        }));
+      }
+    );
+  };
+
+  onRegionChange = (region: Region) => {
+    this.setState({ region });
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <MapView
+          style={styles.map}
+          region={this.state.region}
+          showsUserLocation={true}
+          onRegionChange={this.onRegionChange}
+        >
+          {this.state.path.length > 1 && (
+            <Polyline
+              coordinates={this.state.path}
+              strokeColor="#1E90FF"
+              strokeWidth={4}
+            />
+          )}
+        </MapView>
+
+        <TouchableOpacity style={styles.button} onPress={this.startTracking}>
+          <Text style={styles.buttonText}>
+            {this.state.isTracking ? '⏹ Stop' : '▶️ Track'}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.buttonCenter} onPress={this.centerMapOnUserLocation}>
+          <Text style={styles.buttonText}>📍</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  componentWillUnmount() {
+    this.watchSubscription?.remove();
+  }
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  map: {
+    ...StyleSheet.absoluteFillObject,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
+  button: {
     position: 'absolute',
+    top: 40,
+    right: 20,
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+  },
+  buttonCenter: {
+    position: 'absolute',
+    top: 80,
+    right: 20,
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
