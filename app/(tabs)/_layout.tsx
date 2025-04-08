@@ -8,7 +8,7 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 
@@ -80,7 +80,7 @@ export default function TabLayout() {
         options={{
           title: 'Historia',
           tabBarIcon: ({ color }: { color: string }) => (
-            <IconSymbol size={28} name="history.fill" color={color} />
+            <MaterialIcons size={28} name="history" color={color} />
           ), tabBarLabelStyle: {
             fontSize: 12,
             fontWeight: 'bold',
@@ -92,13 +92,18 @@ export default function TabLayout() {
         options={{
           title: 'Ustawienia',
           tabBarIcon: ({ color }: { color: string }) => (
-            <IconSymbol size={28} name="settings.fill" color={color} />
+            <MaterialIcons size={28} name="settings" color={color} />
           ), tabBarLabelStyle: {
             fontSize: 12,
             fontWeight: 'bold',
           },
         }}
       />
+
+
+
+
+
     </Tabs>
 
   );

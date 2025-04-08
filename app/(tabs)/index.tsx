@@ -1,28 +1,37 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Alert, TouchableOpacity, Text } from 'react-native';
-import MapView, { Region, Marker, Polyline, LatLng } from 'react-native-maps';
+import MapView, { Region, Polyline, LatLng } from 'react-native-maps';
 import * as Location from 'expo-location';
 
 interface State {
   region: Region;
   path: LatLng[];
   isTracking: boolean;
+  startTime: number | null; // Time when tracking starts
+  speed: number;            // Current speed
+  elevationGain: number;    // Elevation gain
+  timeElapsed: number;      // Time elapsed since tracking started
 }
 
 export default class map extends Component<{}, State> {
   watchSubscription: Location.LocationSubscription | null = null;
+  timeInterval: NodeJS.Timeout | null = null; // To store the interval reference
 
   constructor(props: {}) {
     super(props);
     this.state = {
       region: {
-        latitude: 0, // Domyślnie ustawiamy na wartości 0,0
+        latitude: 0, // Default values until location is found
         longitude: 0,
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
       },
       path: [],
       isTracking: false,
+      startTime: null,
+      speed: 0,
+      elevationGain: 0,
+      timeElapsed: 0, // Initially, no time elapsed
     };
   }
 
@@ -32,8 +41,7 @@ export default class map extends Component<{}, State> {
       Alert.alert('Permission Denied', 'Cannot access location');
       return;
     }
-
-    // Po uzyskaniu uprawnień próbujemy pobrać lokalizację
+    // Get the current location when the component is mounted
     this.getLocation();
   }
 
@@ -58,12 +66,37 @@ export default class map extends Component<{}, State> {
       // stop tracking
       this.watchSubscription?.remove();
       this.watchSubscription = null;
+      if (this.timeInterval) clearInterval(this.timeInterval); // Stop the interval
       this.setState({ isTracking: false });
       return;
     }
 
     // start tracking
-    this.setState({ path: [], isTracking: true });
+    this.setState({
+      path: [],
+      isTracking: true,
+      startTime: Date.now(),
+      speed: 0,
+      elevationGain: 0,
+      timeElapsed: 0,
+    });
+
+    // Start the interval to update elapsed time
+    this.timeInterval = setInterval(() => {
+      // Check if startTime is not null before calculating elapsed time
+      if (this.state.startTime) {
+        this.setState(prevState => {
+          if (prevState.startTime != null) {
+            // Calculate elapsed time if startTime is not null
+            return { timeElapsed: Math.floor((Date.now() - prevState.startTime) / 1000) };
+          } else {
+            // If startTime is null, handle accordingly (e.g., set timeElapsed to 0 or any other fallback behavior)
+            return { timeElapsed: 0 }; // or any fallback value you want
+          }
+        });
+
+      }
+    }, 1000);
 
     this.watchSubscription = await Location.watchPositionAsync(
       {
@@ -77,20 +110,38 @@ export default class map extends Component<{}, State> {
           longitude: location.coords.longitude,
         };
 
-        this.setState((prevState) => ({
+        const newPath = [...this.state.path, newCoord];
+
+        let elevationGain = this.state.elevationGain;
+        if (this.state.path.length > 0) {
+          const prevCoord = this.state.path[this.state.path.length - 1];
+          const elevationDiff = location.coords.altitude ? location.coords.altitude - (prevCoord.latitude || 0) : 0;
+          if (elevationDiff > 0) {
+            elevationGain += elevationDiff;  // Adding only the positive elevation difference
+          }
+        }
+
+        const speed = location.coords.speed ? location.coords.speed * 3.6 : 0; // Speed in km/h
+
+        this.setState({
           region: {
-            ...prevState.region,
+            ...this.state.region,
             latitude: newCoord.latitude,
             longitude: newCoord.longitude,
           },
-          path: [...prevState.path, newCoord],
-        }));
+          path: newPath,
+          speed,
+          elevationGain,
+        });
       }
     );
   };
 
-  onRegionChange = (region: Region) => {
-    this.setState({ region });
+  getTimeElapsed = () => {
+    const seconds = this.state.timeElapsed % 60;
+    const minutes = Math.floor(this.state.timeElapsed / 60) % 60;
+    const hours = Math.floor(this.state.timeElapsed / 3600);
+    return `${hours}:${minutes}:${seconds}`;
   };
 
   render() {
@@ -101,10 +152,6 @@ export default class map extends Component<{}, State> {
           region={this.state.region}
           showsUserLocation={true}
           followsUserLocation={true}
-          showsMyLocationButton={false}
-          onRegionChange={this.onRegionChange}
-          zoomControlEnabled={false}
-          zoomEnabled={false}
         >
           {this.state.path.length > 1 && (
             <Polyline
@@ -114,21 +161,35 @@ export default class map extends Component<{}, State> {
             />
           )}
         </MapView>
-        <View style={styles.menu} >
+
+        <View style={styles.menu}>
           <TouchableOpacity style={styles.button} onPress={this.startTracking}>
             <Text style={styles.buttonText}>
-              {this.state.isTracking ? '⏹ Stop' : '▶️ Track'}
+              {this.state.isTracking ? '⏹ Stop' : '▶️ Start Tracking'}
             </Text>
           </TouchableOpacity>
+
+          <Text style={styles.statusText}>
+            <Text style={styles.boldText}>Time: </Text>{this.getTimeElapsed()}
+          </Text>
+          <Text style={styles.statusText}>
+            <Text style={styles.boldText}>Speed: </Text>{this.state.speed.toFixed(2)} km/h
+          </Text>
+          <Text style={styles.statusText}>
+            <Text style={styles.boldText}>Distance: </Text>{(this.state.path.length * 5).toFixed(2)} meters
+          </Text>
+          <Text style={styles.statusText}>
+            <Text style={styles.boldText}>Elevation Gain: </Text>{this.state.elevationGain.toFixed(2)} m
+          </Text>
         </View>
-
-
       </View>
     );
   }
 
   componentWillUnmount() {
+    // Clean up the subscription and interval when the component unmounts
     this.watchSubscription?.remove();
+    if (this.timeInterval) clearInterval(this.timeInterval);
   }
 }
 
@@ -142,24 +203,20 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   menu: {
-    position: 'relative',
-    bottom: 50,  // Ustawia menu na dole ekranu
-    left: 0,    // Ustawia lewy brzeg menu na 0 (pełna szerokość)
-    right: 0,   // Ustawia prawy brzeg menu na 0 (pełna szerokość)
-    paddingBottom: 20,  // Dodaje przestrzeń od dołu ekranu
-    justifyContent: 'center', // Centruje elementy w pionie
-    alignItems: 'center',     // Centruje elementy w poziomie
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Opcjonalne tło
-    zIndex: 1,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    padding: 15,
+    alignItems: 'center',
   },
   button: {
-    position: 'absolute',
-    top: 40,
-    right: 20,
+    width: '100%',
     backgroundColor: '#fff',
-    borderRadius: 25,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingVertical: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -167,7 +224,17 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  statusText: {
     fontSize: 16,
+    color: '#333',
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  boldText: {
     fontWeight: 'bold',
   },
 });
