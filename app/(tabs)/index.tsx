@@ -9,15 +9,15 @@ interface State {
   isTracking: boolean;
 }
 
-export default class Home extends Component<{}, State> {
+export default class map extends Component<{}, State> {
   watchSubscription: Location.LocationSubscription | null = null;
 
   constructor(props: {}) {
     super(props);
     this.state = {
       region: {
-        latitude: 37.78825,
-        longitude: -122.4324,
+        latitude: 0, // Domyślnie ustawiamy na wartości 0,0
+        longitude: 0,
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
       },
@@ -33,10 +33,11 @@ export default class Home extends Component<{}, State> {
       return;
     }
 
-    this.centerMapOnUserLocation();
+    // Po uzyskaniu uprawnień próbujemy pobrać lokalizację
+    this.getLocation();
   }
 
-  centerMapOnUserLocation = async () => {
+  getLocation = async () => {
     try {
       const location = await Location.getCurrentPositionAsync({});
       this.setState({
@@ -99,7 +100,11 @@ export default class Home extends Component<{}, State> {
           style={styles.map}
           region={this.state.region}
           showsUserLocation={true}
+          followsUserLocation={true}
+          showsMyLocationButton={false}
           onRegionChange={this.onRegionChange}
+          zoomControlEnabled={false}
+          zoomEnabled={false}
         >
           {this.state.path.length > 1 && (
             <Polyline
@@ -109,16 +114,15 @@ export default class Home extends Component<{}, State> {
             />
           )}
         </MapView>
+        <View style={styles.menu} >
+          <TouchableOpacity style={styles.button} onPress={this.startTracking}>
+            <Text style={styles.buttonText}>
+              {this.state.isTracking ? '⏹ Stop' : '▶️ Track'}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-        <TouchableOpacity style={styles.button} onPress={this.startTracking}>
-          <Text style={styles.buttonText}>
-            {this.state.isTracking ? '⏹ Stop' : '▶️ Track'}
-          </Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buttonCenter} onPress={this.centerMapOnUserLocation}>
-          <Text style={styles.buttonText}>📍</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -137,23 +141,20 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
+  menu: {
+    position: 'relative',
+    bottom: 50,  // Ustawia menu na dole ekranu
+    left: 0,    // Ustawia lewy brzeg menu na 0 (pełna szerokość)
+    right: 0,   // Ustawia prawy brzeg menu na 0 (pełna szerokość)
+    paddingBottom: 20,  // Dodaje przestrzeń od dołu ekranu
+    justifyContent: 'center', // Centruje elementy w pionie
+    alignItems: 'center',     // Centruje elementy w poziomie
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Opcjonalne tło
+    zIndex: 1,
+  },
   button: {
     position: 'absolute',
     top: 40,
-    right: 20,
-    backgroundColor: '#fff',
-    borderRadius: 25,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-  },
-  buttonCenter: {
-    position: 'absolute',
-    top: 80,
     right: 20,
     backgroundColor: '#fff',
     borderRadius: 25,

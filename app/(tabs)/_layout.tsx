@@ -8,38 +8,101 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors.natural.primary, // Kolor aktywnej ikony/tabu
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+            position: 'absolute', // Dla przezroczystości/blur na iOS
+          },
+          android: {
+            position: 'relative',
+            backgroundColor: Colors.natural.background, // Kolor tła z naszej palety
+            height: 60, // Wysokość tab bar na Androidzie
+
           },
           default: {},
         }),
-      }}>
+      }}
+    >
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profil',
+          tabBarIcon: ({ color }: { color: string }) => (
+            <MaterialCommunityIcons name="account" size={28} color={color} />
+          ), tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: 'bold',
+          },
+        }}
+      />
+      <Tabs.Screen
+        name="league"
+        options={{
+          title: 'League',
+          tabBarIcon: ({ color }: { color: string }) => (
+            <MaterialCommunityIcons name="arrow-up-bold-hexagon-outline" size={28} color={color} />
+          ), tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: 'bold',
+          },
+        }}
+      />
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Start',
+          tabBarIcon: ({ color }: { color: string }) => (
+            <MaterialCommunityIcons name="dog-service" size={32} color={color} />
+
+          ), tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: 'bold',
+
+          },
+
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="history"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Historia',
+          tabBarIcon: ({ color }: { color: string }) => (
+            <IconSymbol size={28} name="history.fill" color={color} />
+          ), tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: 'bold',
+          },
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Ustawienia',
+          tabBarIcon: ({ color }: { color: string }) => (
+            <IconSymbol size={28} name="settings.fill" color={color} />
+          ), tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: 'bold',
+          },
         }}
       />
     </Tabs>
+
   );
 }
+const styles = {
+  ...Colors,
+};
