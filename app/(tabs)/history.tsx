@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
+import { Colors } from '@/constants/Colors';
 
 const mockHistory = [
     { date: '2025-04-07', duration: '35 min', distance: '2.1 km' },
-    { date: '2025-04-06', duration: '28 min', distance: '1.8 km' },
+
 ];
+
 
 export default function HistoryScreen() {
     return (
@@ -34,11 +36,18 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: '600',
         marginBottom: 16,
+        marginTop: 30,
+        textAlign: 'center'
     },
     item: {
         paddingVertical: 12,
         borderBottomWidth: 1,
-        borderColor: '#eee',
+        borderColor: Colors.natural.accent,
+        backgroundColor: Colors.natural.background,
+        borderRadius: 10,
+        padding: 10,
+
+
     },
     date: {
         fontWeight: '500',

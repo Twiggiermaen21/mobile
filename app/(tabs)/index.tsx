@@ -160,6 +160,27 @@ export default class map extends Component<{}, State> {
               strokeWidth={4}
             />
           )}
+
+          <Polyline
+            coordinates={[
+              { latitude: 49.991408, longitude: 18.876801 },
+              { latitude: 49.989145, longitude: 18.877015 },
+
+            ]}
+            strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+            strokeColors={[
+              '#7F0000',
+              '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
+              '#B24112',
+              '#E5845C',
+              '#238C23',
+              '#7F0000',
+            ]}
+            strokeWidth={6}
+          />
+
+
+
         </MapView>
 
         <View style={styles.menu}>
