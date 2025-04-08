@@ -46,11 +46,16 @@ export default function HistoryScreen() {
                     <View style={styles.item}>
                         <MapView
                             style={styles.map}
+                            scrollEnabled={false}
+                            zoomEnabled={false}
+                            rotateEnabled={false}
+                            pitchEnabled={false}
+                            toolbarEnabled={false}
                             initialRegion={{
                                 latitude: item.path[0].latitude,
                                 longitude: item.path[0].longitude,
-                                latitudeDelta: 0.01,
-                                longitudeDelta: 0.01,
+                                latitudeDelta: 0.005,
+                                longitudeDelta: 0.005,
 
                             }}
                         >

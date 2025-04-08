@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 export default function ProfileScreen() {
     return (
         <View style={styles.container}>
-            <Image source={{ uri: 'https://placekitten.com/200/200' }} style={styles.avatar} />
+            <Image style={styles.avatar} />
             <Text style={styles.name}>Jan Piesowski</Text>
             <Text style={styles.info}>Opiekun: Azor (Golden Retriever)</Text>
 
