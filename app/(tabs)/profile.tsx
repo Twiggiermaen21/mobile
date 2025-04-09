@@ -58,16 +58,17 @@ export default function ProfileScreen() {
                                 <Text style={styles.dogBreed}>{item.Rasa}</Text>
 
                             </View>
-                            <TouchableOpacity style={styles.button}>
+                            <TouchableOpacity style={styles.buttonEdit}>
                                 <Text style={styles.buttonText}>Edytuj</Text>
                             </TouchableOpacity>
                         </View>
                     )}
                 />
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>Dodaj psa</Text>
-                </TouchableOpacity>
+
             </View>
+            <TouchableOpacity style={styles.addButton}>
+                <Text style={styles.addButtonText}>+ Dodaj psa</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -105,6 +106,34 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 20,
+    }, buttonEdit: {
+        marginTop: 12,
+        backgroundColor: '#4CAF50',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 20,
+        left: 60
+
+    }, addButton: {
+        position: 'absolute',
+        bottom: 20,
+        left: 20,
+        right: 20,
+        backgroundColor: '#2196F3',
+        paddingVertical: 14,
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+    },
+    addButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
     },
     buttonText: {
         color: '#fff',
