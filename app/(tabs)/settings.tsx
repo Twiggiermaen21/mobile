@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity } from 'react-native';
+import { Link } from 'expo-router';
 
 export default function SettingsScreen() {
     const [notifications, setNotifications] = React.useState(true);
@@ -26,13 +27,13 @@ export default function SettingsScreen() {
                 />
             </View>
 
-            <TouchableOpacity style={styles.button}
+            <Link href="/(auth)" style={styles.button}
             // onPress={this.startTracking}
             >
                 <Text style={styles.buttonText} >
                     Wyloguj
                 </Text>
-            </TouchableOpacity>
+            </Link>
 
 
         </View>

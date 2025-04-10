@@ -16,8 +16,6 @@ export default function Login() {
     return (
         <KeyboardAvoidingView style={{ flex: 1 }}
             behavior="height">
-
-
             <View style={styles.container}>
                 <View style={styles.topIllustration}>
                     <Image source={require("../../assets/images/DogWalking-rafiki.png")}
@@ -72,7 +70,9 @@ export default function Login() {
                         <View style={styles.footer}>
                             <Text style={styles.footerText}> Don't have an account?</Text>
                             <Link href="/singup" asChild>
-                                <Text style={styles.link}> Sing Up</Text>
+                                <TouchableOpacity>
+                                    <Text style={styles.link}> Sing Up</Text>
+                                </TouchableOpacity>
                             </Link>
                         </View>
 
