@@ -44,7 +44,7 @@ export default function singup() {
                                     style={styles.inputIcon} />
                                 <TextInput
                                     style={styles.input}
-                                    placeholder='John Doe'
+                                    placeholder='johndoe'
                                     placeholderTextColor={COLORS.placeholderText}
                                     value={username}
                                     onChangeText={setUsername}
