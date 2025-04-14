@@ -12,7 +12,6 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import COLORS from '@/constants/colorsApp';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
@@ -21,6 +20,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: COLORS.primary, // Kolor aktywnej ikony/tabu
+        tabBarInactiveTintColor: COLORS.inactiveIcon, // Kolor nieaktywnej ikony/tabu
         headerShown: false,
         headerTitleStyle: {
           fontWeight: 'bold',
@@ -36,6 +36,9 @@ export default function TabLayout() {
           paddingTop: 5,
           height: 60 + insets.bottom,
           paddingBottom: insets.bottom
+        },
+        tabBarIconStyle: {
+          color: COLORS.textPrimary // Ustaw kolor ikon
         }
       }}
     >
@@ -43,7 +46,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Profil',
-          tabBarIcon: ({ color }: { color: string }) => (
+          tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="account" size={28} color={color} />
           )
         }}
@@ -52,7 +55,7 @@ export default function TabLayout() {
         name="league"
         options={{
           title: 'League',
-          tabBarIcon: ({ color }: { color: string }) => (
+          tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="arrow-up-bold-hexagon-outline" size={28} color={color} />
           )
         }}
@@ -61,18 +64,16 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Start',
-          tabBarIcon: ({ color }: { color: string }) => (
+          tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="dog-service" size={32} color={color} />
-
           )
-
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
           title: 'Historia',
-          tabBarIcon: ({ color }: { color: string }) => (
+          tabBarIcon: ({ color }) => (
             <MaterialIcons size={28} name="history" color={color} />
           )
         }}
@@ -81,17 +82,11 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: 'Ustawienia',
-          tabBarIcon: ({ color }: { color: string }) => (
+          tabBarIcon: ({ color }) => (
             <MaterialIcons size={28} name="settings" color={color} />
           )
         }}
       />
-
-
-
-
-
     </Tabs>
-
   );
 }

@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand'
-
+import { API_URL } from "../constants/api"
 export const useAuthStore = create((set) => ({
     user: null,
     token: null,
@@ -11,7 +11,7 @@ export const useAuthStore = create((set) => ({
         set({ isLoading: true });
         try {
             //zmienic tutaj adres jak bede używał telefonu
-            const response = await fetch("http://10.0.2.2:3000/api/auth/register", {
+            const response = await fetch(`${API_URL}/auth/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
