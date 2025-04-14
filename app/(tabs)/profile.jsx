@@ -1,35 +1,45 @@
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-
-
-
-const dog = [{
-    ImiePsa: 'Azor',
-    Rasa: 'Golden Retriever',
-    DogIMG: 'dogimg.jpeg'
-}, {
-    ImiePsa: 'Marcin',
-    Rasa: 'Chihuahua',
-    DogIMG: 'dogimg.jpeg'
-}
-]
+import { API_URL } from '@/constants/api';
+import { useAuthStore } from '@/store/authStore';
+import ProfileHeader from '@/components/ProfileHeader'
+import styles from "@/assets/styles/profile.styles"
 
 
 
 export default function ProfileScreen() {
-    const [book, setBooks] = useState();
+
     const [isLoading, setIsLoading] = useState(true);
     const [redreshing, setRefreshing] = useState(true);
 
     const router = useRouter();
 
-    // const response = await fetch(`${AAPI_URL}/books/user`, {
-    //     headers: { Autorization: `Bearer:${token}` },
-    // })
+
+    const fetchData = async () => {
+        try {
+            setIsLoading(true);
+
+            const response = await fetch(`${API_URL}/walks/user`, {
+                headers: { Autorization: `Bearer:${token}` },
+            })
+
+        } catch (error) {
+
+        }
+
+
+
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     return (
-        <View >
+        <View style={styles.container}>
+
+            <ProfileHeader />
 
         </View>
     );
