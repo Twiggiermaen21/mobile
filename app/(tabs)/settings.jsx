@@ -2,11 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
 import { useAuthStore } from '@/store/authStore';
+import LogoutButton from '@/components/LogoutButton';
 
 export default function SettingsScreen() {
     const [notifications, setNotifications] = React.useState(true);
     const [darkMode, setDarkMode] = React.useState(false);
-    const { logout } = useAuthStore();
+
 
     return (
 
@@ -30,9 +31,7 @@ export default function SettingsScreen() {
             </View>
 
 
-            <TouchableOpacity style={styles.button} onPress={logout}>
-                <Text style={styles.buttonText}> Logout</Text>
-            </TouchableOpacity>
+            <LogoutButton />
 
         </View>
     );
