@@ -9,7 +9,7 @@ import { Image } from 'expo-image';
 
 export default function ProfileHeader() {
     const { user } = useAuthStore();
-    console.log(user.createdAt)
+    if (!user) return null;
     return (
         <View style={styles.profileHeader}>
             <Image source={{ uri: user.profileImage }} style={styles.profileImage} />

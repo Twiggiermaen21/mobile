@@ -6,7 +6,7 @@ import COLORS from '@/constants/colorsApp';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../store/authStore'
 
-export default function singup() {
+export default function signup() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

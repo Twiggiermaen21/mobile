@@ -75,10 +75,11 @@ export default function Login() {
 
                         <View style={styles.footer}>
                             <Text style={styles.footerText}> Don't have an account?</Text>
-                            <Link href="/singup" asChild>
+                            <Link href="/signup" asChild>
                                 <TouchableOpacity>
                                     <Text style={styles.link}> Sing Up</Text>
                                 </TouchableOpacity>
+
                             </Link>
                         </View>
 
