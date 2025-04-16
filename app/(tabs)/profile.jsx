@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import { View, FlatList, Text, StyleSheet, Image, TouchableOpacity, Alert, ActivityIndicator, RefreshControl } from 'react-native';
 import { API_URL } from '@/constants/api';
 import { useAuthStore } from '@/store/authStore';
 import ProfileHeader from '@/components/ProfileHeader'
@@ -15,7 +15,8 @@ export default function ProfileScreen() {
     const { token } = useAuthStore();
     const [dogs, setDogs] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [redreshing, setRefreshing] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
+    const [deletedDogId, setDeletedDogId] = useState(null);
 
     const router = useRouter();
 
@@ -53,6 +54,7 @@ export default function ProfileScreen() {
 
     const handleDeleteDog = async (dogId) => {
         try {
+            setDeletedDogId(dogId);
             const response = await fetch(`${API_URL}/dogs/${dogId}`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}` }
@@ -61,10 +63,12 @@ export default function ProfileScreen() {
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || "Failed to delete dog");
 
-            setDogs(dog.filter((dog) => dog._id !== dogId));
+            setDogs(dogs.filter((dog) => dog._id !== dogId));
             Alert.alert("Success", "Dog deleted succesfully");
         } catch (error) {
-
+            Alert.alert("Error", error.message || "Failed to delete dog");
+        } finally {
+            setDeletedDogId(null);
         }
     }
 
@@ -93,13 +97,21 @@ export default function ProfileScreen() {
 
             <TouchableOpacity
                 style={styles.deleteButton}
-                onPress={() => confirmDelete(item._id)}
-            >
-                <Ionicons name="trash-outline" size={20} color={COLORS.primary} />
+                onPress={() => confirmDelete(item._id)} >
+                {deletedDogId == item._id ? (
+                    <ActivityIndicator size="small" color={COLORS.primary} />
+                ) : (
+                    <Ionicons name="trash-outline" size={20} color={COLORS.primary} />
+                )}
             </TouchableOpacity>
         </View>
     );
 
+    const handleRefresh = async () => {
+        setRefreshing(true);
+        await fetchData();
+        setRefreshing(false);
+    }
 
     return (
         <View style={styles.container}>
@@ -107,16 +119,30 @@ export default function ProfileScreen() {
             <ProfileHeader />
 
             <View style={styles.booksHeader}><Text style={styles.bookTitle}>Twoje zwierzeta</Text></View>
+            {!isLoading && dogs.length === 0 && (
+                <Text style={styles.noDogsText}>Nie masz jeszcze żadnych zwierząt. Dodaj pierwszego psa!</Text>
+            )}
 
-            <FlatList
-                data={dogs}
-                renderItem={renderDogItem}
-                keyExtractor={(item) => item._id}
-                contentContainerStyle={styles.booksList}
-            />
+            {isLoading ? (
+                <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 20 }} />
+            ) : (
+                <FlatList
+                    data={dogs}
+                    renderItem={renderDogItem}
+                    keyExtractor={(item) => item._id}
+                    contentContainerStyle={styles.booksList}
+                    showsVerticalScrollIndicator={false}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={handleRefresh}
+                            colors={[COLORS.primary]}
+                        />
+                    }
+                />)}
 
             <TouchableOpacity style={styles.logoutButton} onPress={() => router.push('/addDog')}>
-                <Ionicons name='log-out-outline' size={20} color={COLORS.white} />
+                <Ionicons name='add-circle-outline' size={20} color={COLORS.white} />
                 <Text style={styles.logoutText}>Add Dog </Text>
             </TouchableOpacity >
 

@@ -114,6 +114,11 @@ const styles = StyleSheet.create({
   bookInfo: {
     flex: 1,
     justifyContent: "space-between",
+  }, noDogsText: {
+    textAlign: 'center',
+    marginVertical: 20,
+    color: COLORS.gray,
+    fontSize: 16,
   },
   bookTitle: {
     fontSize: 16,
