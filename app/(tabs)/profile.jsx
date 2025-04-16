@@ -7,7 +7,7 @@ import ProfileHeader from '@/components/ProfileHeader'
 import styles from "@/assets/styles/profile.styles"
 import { Ionicons } from '@expo/vector-icons';
 import COLORS from '@/constants/colorsApp';
-
+import noDog from "../../assets/ImagesPetWalk/noDog.jpeg";
 
 
 
@@ -81,7 +81,11 @@ export default function ProfileScreen() {
 
     const renderDogItem = ({ item }) => (
         <View style={styles.bookItem}>
-            <Image source={{ uri: item.dogImage }} style={styles.bookImage} />
+            <Image
+
+                source={item.dogImage ? { uri: item.dogImage } : noDog}
+
+                style={styles.bookImage} />
             <View style={styles.bookInfo}>
                 <Text style={styles.bookTitle}>{item.name}</Text>
 

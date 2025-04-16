@@ -68,13 +68,14 @@ export default function addDog() {
         try {
             setLoading(true);
 
-            const uriParts = image.split(".");
-            const fileType = uriParts[uriParts.length - 1];
+            let imageDataUrl = null;
 
-            const imageType = fileType ? `image/${fileType.toLowerCase()}` : "image/jpeg";
-
-            const imageDataUrl = `data:${imageType};base64,${imageBase64}`;
-
+            if (image && imageBase64) {
+                const uriParts = image.split(".");
+                const fileType = uriParts[uriParts.length - 1];
+                const imageType = fileType ? `image/${fileType.toLowerCase()}` : "image/jpeg";
+                imageDataUrl = `data:${imageType};base64,${imageBase64}`;
+            }
 
             const response = await fetch(`${API_URL}/dogs/add-dog`, {
                 method: "POST",
@@ -93,13 +94,11 @@ export default function addDog() {
                     image: imageDataUrl
                 })
 
-            })
+            });
             const data = await response.json();
-            // console.log("User from store:", user);
-            // const text = await response.text();
-            // console.log("Server response:", text);
             if (!response.ok) throw new Error(data.message || "Something went wrong");
             Alert.alert("Succes", "Your dog has been added");
+
             setName("");
             setAge(0);
             setBreed("");
