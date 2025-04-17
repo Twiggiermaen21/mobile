@@ -1,38 +1,25 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, StyleSheet, Alert, TouchableOpacity, Text, KeyboardAvoidingView, Image } from 'react-native';
-import MapView, { Region, Polyline, LatLng } from 'react-native-maps';
+import { View, StyleSheet, Alert, TouchableOpacity, Text, KeyboardAvoidingView, Image, Platform } from 'react-native';
+import MapView, { Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
-import styles from '@/assets/styles/map.styles'
-import { API_URL } from "../../constants/api"
+import styles from '@/assets/styles/map.styles';
+import { API_URL } from "../../constants/api";
 import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'expo-router';
-export default function index() {
-    const [dog, setDog] = useState();
-    const [region, setRegion] = useState();
+
+export default function Index() {
+    const [dog, setDog] = useState(null); // możesz zmienić logikę wczytywania psa
     const [isTracking, setIsTracking] = useState(false);
-    const [path, setPath] = useState([]);
     const [location, setLocation] = useState(null);
-    const watchId = useRef(null);
+    const [path, setPath] = useState([]);
+    const watchSubscription = useRef(null);
     const mapRef = useRef(null);
-    const [isPaused, setIsPaused] = useState(false);
-    const [startTime, setStartTime] = useState(null);
-    const [pausedTime, setPausedTime] = useState(null);
-    const [speed, setSpeed] = useState(0);
-    const [averageSpeed, setAverageSpeed] = useState(0);
-    const [elevationGain, setElevationGain] = useState(0);
-    const [timeElapsed, setTimeElapsed] = useState(0);
-    const [distance, setDistance] = useState(0);
-    const [speeds, setSpeeds] = useState([]);
-
-    const watchSubscription = Location.LocationSubscription;
-
 
     const requestPermissions = async () => {
-        if (Platform.OS === 'android') {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-            );
-            return granted === PermissionsAndroid.RESULTS.GRANTED;
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Permission denied', 'You need to allow location access.');
+            return false;
         }
         return true;
     };
@@ -41,33 +28,38 @@ export default function index() {
         const hasPermission = await requestPermissions();
         if (!hasPermission) return;
 
-        watchId.current = Geolocation.watchPosition(
-            position => {
-                const { latitude, longitude } = position.coords;
-                const newLocation = { latitude, longitude };
-                setLocation(newLocation);
+        setIsTracking(true);
+        const subscription = await Location.watchPositionAsync(
+            {
+                accuracy: Location.Accuracy.Highest,
+                timeInterval: 3000,
+                distanceInterval: 5,
+            },
+            (loc) => {
+                const { latitude, longitude } = loc.coords;
+                const newLoc = { latitude, longitude };
+                setLocation(newLoc);
+                setPath(prev => [...prev, newLoc]);
+
                 if (mapRef.current) {
                     mapRef.current.animateToRegion({
-                        ...newLocation,
+                        ...newLoc,
                         latitudeDelta: 0.01,
                         longitudeDelta: 0.01,
                     });
                 }
-            },
-            error => console.log(error),
-            {
-                enableHighAccuracy: true,
-                distanceFilter: 10,
-                interval: 5000,
-                fastestInterval: 2000,
             }
         );
+
+        watchSubscription.current = subscription;
     };
 
     const stopTracking = () => {
-        if (watchId.current !== null) {
-            Geolocation.clearWatch(watchId.current);
+        if (watchSubscription.current) {
+            watchSubscription.current.remove();
+            watchSubscription.current = null;
         }
+        setIsTracking(false);
     };
 
     useEffect(() => {
@@ -76,18 +68,13 @@ export default function index() {
         };
     }, []);
 
-
-
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
             <View style={styles.container}>
-
-                {/* Środkowa karta z mapą */}
                 <View style={[styles.mapCard, { flex: 1, padding: 0, overflow: 'hidden' }]}>
                     <MapView
                         style={styles.map}
                         ref={mapRef}
-                        // region={region}
                         initialRegion={{
                             latitude: location?.latitude || 37.78825,
                             longitude: location?.longitude || -122.4324,
@@ -97,56 +84,48 @@ export default function index() {
                         showsUserLocation={true}
                         followsUserLocation={true}
                     >
-                        {/* {this.state.path.length > 1 && (
+                        {path.length > 1 && (
                             <Polyline
-                                coordinates={this.state.path}
+                                coordinates={path}
                                 strokeColor="#1E90FF"
                                 strokeWidth={4}
                             />
-                        )} */}
+                        )}
                     </MapView>
                 </View>
 
-                {/* Górna karta z informacjami */}
                 <View style={styles.card}>
                     <View style={styles.header}>
                         <View style={styles.formGroup}>
                             <Text style={styles.label}>Time</Text>
-                            <Text style={styles.info}>
-                                {/* {this.getTimeElapsed()} */}
-                            </Text>
+                            <Text style={styles.info}>--:--</Text>
                         </View>
                         <View style={styles.formGroup}>
                             <Text style={styles.label}>Speed</Text>
-                            <Text style={styles.info}>
-                                {/* {this.state.speed.toFixed(2)} km/h */}
-                            </Text>
+                            <Text style={styles.info}>-- km/h</Text>
                         </View>
-
                         <View style={styles.formGroup}>
                             <Text style={styles.label}>Distance</Text>
-                            <Text style={styles.info}>
-                                {/* {this.state.distance.toFixed(2)} km */}
-                            </Text>
+                            <Text style={styles.info}>-- km</Text>
                         </View>
                     </View>
 
                     <View style={styles.footer}>
-
-                        {!dog ? (<View>
-                            <Image style={styles.img} source={require("../../assets/ImagesPetWalk/dogimg.jpg")} />
-
-
-                            <TouchableOpacity style={styles.button} onPress={startTracking}>
-                                <Text style={styles.buttonText}>▶️ Start Tracking</Text>
-                            </TouchableOpacity>
-                        </View>
-                        ) : (<View>
-                            <Text> elo</Text>
-                        </View>)}
-
-
-
+                        {!dog ? (
+                            <View>
+                                <Image style={styles.img} source={require("../../assets/ImagesPetWalk/dogimg.jpg")} />
+                                <TouchableOpacity
+                                    style={styles.button}
+                                    onPress={isTracking ? stopTracking : startTracking}
+                                >
+                                    <Text style={styles.buttonText}>
+                                        {isTracking ? '⏹ Stop Tracking' : '▶️ Start Tracking'}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        ) : (
+                            <Text>elo</Text>
+                        )}
                     </View>
                 </View>
             </View>
