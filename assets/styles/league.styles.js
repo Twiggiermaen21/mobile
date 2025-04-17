@@ -1,8 +1,13 @@
+
+import { StyleSheet } from "react-native";
+import COLORS from "../../constants/colorsApp";
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 24,
-        backgroundColor: "#fff",
+        backgroundColor: COLORS.background,
+        padding: 16,
+        paddingBottom: 0,
     },
     title: {
         fontSize: 26,
@@ -19,9 +24,35 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 16,
         borderRadius: 20,
-        elevation: 2,
+
         marginRight: 8,
+        alignItems: "center",
+        textAlign: "center",
     },
+    selectedIconWrapper: {
+        backgroundColor: 'white',
+        borderRadius: 30, // połowa nowego rozmiaru
+        height: 60,
+        width: 60,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    profileHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: COLORS.cardBackground,
+        borderRadius: 16,
+        padding: 16,
+        marginBottom: 16,
+        shadowColor: COLORS.black,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 3,
+        borderWidth: 1,
+        borderColor: COLORS.border,
+    },
+
     tierText: {
         fontWeight: "600",
         color: "#333",
@@ -37,12 +68,17 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        paddingVertical: 12,
-        paddingHorizontal: 16,
-        backgroundColor: "#f9f9f9",
+        backgroundColor: COLORS.cardBackground,
         borderRadius: 12,
+        padding: 12,
         marginBottom: 12,
-        elevation: 1,
+        shadowColor: COLORS.black,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+        borderWidth: 1,
+        borderColor: COLORS.border,
     },
     profileImage: {
         width: 50,
