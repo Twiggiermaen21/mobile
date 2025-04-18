@@ -139,7 +139,44 @@ export default function Index() {
         setTimeElapsed(0);
         setCurrentSpeed(0);
         setAverageSpeed(0);
+
+        savePath();
     };
+
+    const savePath = async () => {
+        try {
+            //zmienic tutaj adres jak bede używał telefonu
+            const response = await fetch(`${API_URL}/walks`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    time: timeElapsed,
+                    speed: averageSpeed,
+                    distance,
+                    when: new Date(),
+                    path, // lista lokalizacji
+                    dogs: selectedDogIds, // opcjonalnie, jeśli backend je przyjmuje
+                })
+            })
+            console.log("Saving walk with dog IDs:", selectedDogIds);
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || "Something went wrong");
+
+            await AsyncStorage.setItem("user", JSON.stringify(data.user));
+            await AsyncStorage.setItem("token", data.token);
+
+
+            Alert.alert("Sukces", "Spacer został zapisany!");
+
+        } catch (error) {
+            console.error("Błąd zapisu spaceru:", error);
+            Alert.alert("Błąd", error.message);
+        }
+    };
+
 
     useEffect(() => {
         return () => stopTracking();
@@ -231,25 +268,16 @@ export default function Index() {
                     </View>
 
                     <View style={styles.footer}>
-                        {dog.length > 0 ? (
+                        {selectedDogIds.length > 0 ? (
                             <View style={{ alignItems: 'center' }}>
-
                                 <Text style={{ marginBottom: 10 }}>Wybrane psy:</Text>
                                 <FlatList
-                                    data={dog}
-                                    keyExtractor={(item, index) => item.id?.toString() ?? index.toString()}
+                                    data={dogs.filter(dog => selectedDogIds.includes(dog._id))}
+                                    keyExtractor={(item) => item._id?.toString()}
                                     renderItem={({ item }) => (
                                         <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
                                     )}
                                 />
-                                <TouchableOpacity
-                                    style={styles.button}
-                                    onPress={isTracking ? stopTracking : startTracking}
-                                >
-                                    <Text style={styles.buttonText}>
-                                        {isTracking ? '⏹ Zakończ spacer' : `▶️ Zacznij spacer`}
-                                    </Text>
-                                </TouchableOpacity>
                             </View>
                         ) : (
                             <View >
@@ -275,9 +303,9 @@ export default function Index() {
                             <Text style={styles.title}>Wybierz psa</Text>
                             <FlatList
                                 data={dogs}
-                                keyExtractor={(item, index) => item.id?.toString() ?? index.toString()}
+                                keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
                                 renderItem={({ item }) => {
-                                    const isSelected = selectedDogIds.includes(item.id);
+                                    const isSelected = selectedDogIds.includes(item._id); // Sprawdzamy, czy _id jest w selectedDogIds
 
                                     return (
                                         <Pressable
@@ -286,34 +314,46 @@ export default function Index() {
                                                 flexDirection: 'row',
                                                 justifyContent: 'space-between',
                                                 alignItems: 'center',
+                                                paddingHorizontal: 16,
+                                                backgroundColor: isSelected ? '#d0f0d0' : '#f0f0f0',
+                                                borderRadius: 8,
+                                                marginVertical: 4,
                                             }}
                                             onPress={() => {
-                                                setSelectedDogIds(prev => {
-                                                    if (prev.includes(item.id)) {
-                                                        return prev.filter(id => id !== item.id);
-                                                    } else {
-                                                        return [...prev, item.id];
-                                                    }
+                                                setSelectedDogIds(prevSelected => {
+                                                    const isSelected = prevSelected.includes(item._id);
+                                                    const updatedSelection = isSelected
+                                                        ? prevSelected.filter(id => id !== item._id) // Usuń
+                                                        : [...prevSelected, item._id]; // Dodaj
+
+                                                    return updatedSelection;
                                                 });
                                             }}
                                         >
-                                            <Text style={[styles.info, { backgroundColor: '#f0f0f0', paddingHorizontal: 10 }]}>
-                                                {item.name}
+                                            <Text style={[styles.info, { fontSize: 16 }]}>{item.name}</Text>
+                                            <Text style={{ fontSize: 18, color: isSelected ? 'green' : '#ccc' }}>
+                                                {isSelected ? '✓' : '○'}  {/* Zmieniamy kolor na zielony, jeśli wybrano */}
                                             </Text>
-                                            {isSelected && (
-                                                <Text style={{ fontSize: 16, color: 'green' }}>✓</Text>
-                                            )}
                                         </Pressable>
                                     );
                                 }}
                             />
+
                             <View style={{
                                 marginTop: 20,
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                             }}>
-                                <TouchableOpacity onPress={() => setIsDogModalVisible(false)} style={styles.button} >
+                                <TouchableOpacity
+                                    onPress={async () => {
+                                        const selectedDogs = dogs.filter(d => selectedDogIds.includes(d.id));
+                                        setDog(selectedDogs);
+                                        setIsDogModalVisible(false);
+                                        await startTracking();
+                                    }}
+                                    style={styles.button}
+                                >
                                     <Text style={styles.buttonText}>Gotowe</Text>
                                 </TouchableOpacity>
                             </View>
