@@ -15,7 +15,7 @@ export default function ProfileHeader() {
             <Image source={{ uri: user.profileImage }} style={styles.profileImage} />
             <View style={styles.profileInfo}>
                 <Text style={styles.username} >{user.username}</Text>
-                <Text style={styles.username} >{user.profileImage}</Text>
+
                 <Text style={styles.email} >{user.email}</Text>
                 <Text style={styles.memberSince} >Joined {user.createdAt}</Text>
 

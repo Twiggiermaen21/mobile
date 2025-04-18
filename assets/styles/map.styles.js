@@ -155,12 +155,13 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: COLORS.primary,
     borderRadius: 25, // bardziej zaokrąglony, przy połowie wysokości
-    height: 100,
+    // height: 100,
     // paddingHorizontal: 24, // żeby był dłuższy niezależnie od tekstu
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     // marginTop: 16,
+    padding: 4,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -187,6 +188,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 2, // tylko w nowszych wersjach React Native; alternatywa: użyj marginRight
+    justifyContent: 'center',
   },
   buttonGroup: {
     flexDirection: 'row',
@@ -202,6 +204,36 @@ const styles = StyleSheet.create({
   buttonIcon: {
     marginRight: 8,
   },
+  ModalAroundBox: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  ModalBox: {
+
+
+    borderRadius: 10,
+    width: '80%',
+
+    backgroundColor: COLORS.cardBackground,
+
+    padding: 20,
+    marginVertical: 8,
+
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+
+
+  },
+
+
+
 
   // Styl do mapy
   map: {
