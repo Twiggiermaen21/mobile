@@ -140,7 +140,7 @@ export default function Index() {
         setCurrentSpeed(0);
         setAverageSpeed(0);
 
-        savePath();
+
     };
 
     const savePath = async () => {
@@ -272,10 +272,21 @@ export default function Index() {
                             <View style={{ alignItems: 'center' }}>
                                 <Text style={{ marginBottom: 10 }}>Wybrane psy:</Text>
                                 <FlatList
+                                    horizontal={true}
                                     data={dogs.filter(dog => selectedDogIds.includes(dog._id))}
                                     keyExtractor={(item) => item._id?.toString()}
                                     renderItem={({ item }) => (
-                                        <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                                            <Image
+                                                source={{ uri: item.dogImage }}
+                                                style={{
+                                                    width: 50,
+                                                    height: 50,
+                                                    borderRadius: 25,
+                                                    marginRight: 10,
+                                                }}
+                                            />
+                                        </View>
                                     )}
                                 />
                             </View>
