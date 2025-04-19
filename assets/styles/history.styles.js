@@ -15,21 +15,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: COLORS.background,
     },
-    profileHeader: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: COLORS.cardBackground,
-        borderRadius: 16,
-        padding: 16,
-        marginBottom: 16,
-        shadowColor: COLORS.black,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 3,
-        borderWidth: 1,
-        borderColor: COLORS.border,
-    },
+
     item: {
         flexDirection: 'row',
         marginBottom: 16,
@@ -38,9 +24,34 @@ const styles = StyleSheet.create({
         backgroundColor: '#f9f9f9',
         elevation: 2,
     },
+    dogContainer: {
+        alignItems: 'center',
+        marginRight: 10,
+    },
     map: {
         width: 150,
         height: 150,
+        borderRadius: 20,
+        overflow: 'hidden',
+    },
+    infoContainer: {
+        flex: 1,
+        padding: 12,
+        justifyContent: 'space-between',
+    },
+    dogsContainer: {
+        flexDirection: 'row',
+        marginBottom: 8,
+    },
+    dogImage: {
+        width: 50,
+        height: 50,
+        borderRadius: 16,
+        marginRight: 8,
+    },
+    infoText: {
+        fontSize: 14,
+        marginBottom: 4,
     },
     profileImage: {
         width: 80,
@@ -66,25 +77,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: COLORS.textSecondary,
     },
-    logoutButton: {
-        backgroundColor: COLORS.primary,
-        borderRadius: 12,
-        padding: 12,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: 24,
-        shadowColor: COLORS.black,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
-    },
-    logoutText: {
-        color: COLORS.white,
-        fontWeight: "600",
-        marginLeft: 8,
-    },
+
     booksHeader: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -185,6 +178,11 @@ const styles = StyleSheet.create({
         color: COLORS.white,
         fontWeight: "600",
         fontSize: 14,
+    }, title: {
+        fontSize: 24,
+        fontWeight: "700",
+        color: COLORS.textPrimary,
+        marginBottom: 8,
     },
 });
 
