@@ -7,6 +7,7 @@ import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'expo-router';
 import COLORS from '@/constants/colorsApp';
 import styles from '@/assets/styles/history.styles';
+import noDog from "../../assets/ImagesPetWalk/noDog.jpeg";
 
 
 export default function HistoryScreen() {
@@ -141,7 +142,7 @@ export default function HistoryScreen() {
                                     renderItem={({ item: dog, index }) => (
                                         <View key={index} style={styles.dogContainer}>
                                             <Image
-                                                source={{ uri: dog.dogImage }}
+                                                source={dog.dogImage ? { uri: dog.dogImage } : noDog}
                                                 style={styles.dogImage}
                                             />
                                             {/* <Text style={styles.dogName}>{dog.name}</Text> */}

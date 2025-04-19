@@ -18,6 +18,7 @@ import * as Location from 'expo-location';
 import styles from '@/assets/styles/map.styles';
 import { API_URL } from '@/constants/api';
 import COLORS from "../../constants/colorsApp";
+import noDog from "../../assets/ImagesPetWalk/noDog.jpeg";
 export default function Index() {
     const [refreshing, setRefreshing] = useState(false);
     const [dogs, setDogs] = useState([]);
@@ -300,7 +301,7 @@ export default function Index() {
                                     renderItem={({ item }) => (
                                         <View style={{ alignItems: 'center', marginRight: 10 }}>
                                             <Image
-                                                source={{ uri: item.dogImage }}
+                                                source={item.dogImage ? { uri: item.dogImage } : noDog}
                                                 style={{
                                                     width: 50,
                                                     height: 50,
