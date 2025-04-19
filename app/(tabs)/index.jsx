@@ -165,13 +165,9 @@ export default function Index() {
                     dogs: selectedDogIds, // opcjonalnie, jeśli backend je przyjmuje
                 })
             })
-            console.log("Saving walk with dog IDs:", selectedDogIds);
+
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || "Something went wrong");
-
-            // await AsyncStorage.setItem("user", JSON.stringify(data.user));
-            // await AsyncStorage.setItem("token", data.token);
-
 
             Alert.alert("Sukces", "Spacer został zapisany!");
 
