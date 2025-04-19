@@ -33,6 +33,7 @@ export default function Index() {
     const [dog, setDog] = useState([]);
     const { token } = useAuthStore();
     const [selectedDogIds, setSelectedDogIds] = useState([]);
+    const [isPaused, setIsPaused] = useState(false);
     const fetchData = async () => {
         try {
             setIsLoading(true);
@@ -80,9 +81,6 @@ export default function Index() {
         setCurrentSpeed(0);
         setAverageSpeed(0);
 
-        timerRef.current = setInterval(() => {
-            setTimeElapsed(prev => prev + 1);
-        }, 1000);
 
         const subscription = await Location.watchPositionAsync(
             {
@@ -123,6 +121,9 @@ export default function Index() {
     };
 
     const stopTracking = () => {
+
+        savePath();
+
         if (watchSubscription.current) {
             watchSubscription.current.remove();
             watchSubscription.current = null;
@@ -139,8 +140,12 @@ export default function Index() {
         setTimeElapsed(0);
         setCurrentSpeed(0);
         setAverageSpeed(0);
+        setSelectedDogIds([]);
+        setIsPaused(false);
 
-
+    };
+    const togglePause = () => {
+        setIsPaused(prev => !prev);
     };
 
     const savePath = async () => {
@@ -156,7 +161,6 @@ export default function Index() {
                     time: timeElapsed,
                     speed: averageSpeed,
                     distance,
-                    when: new Date(),
                     path, // lista lokalizacji
                     dogs: selectedDogIds, // opcjonalnie, jeśli backend je przyjmuje
                 })
@@ -165,8 +169,8 @@ export default function Index() {
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || "Something went wrong");
 
-            await AsyncStorage.setItem("user", JSON.stringify(data.user));
-            await AsyncStorage.setItem("token", data.token);
+            // await AsyncStorage.setItem("user", JSON.stringify(data.user));
+            // await AsyncStorage.setItem("token", data.token);
 
 
             Alert.alert("Sukces", "Spacer został zapisany!");
@@ -177,17 +181,34 @@ export default function Index() {
         }
     };
 
-
-    useEffect(() => {
-        return () => stopTracking();
-    }, []);
+    // Nie wiem co z tym zrobic???
+    // useEffect(() => {
+    //     return () => stopTracking();
+    // }, []);
 
     useEffect(() => {
         if (distance > 0 && timeElapsed > 0) {
             const avg = distance / (timeElapsed / 3600); // km/h
             setAverageSpeed(avg.toFixed(2));
+        };
+        if (isTracking && !isPaused) {
+            timerRef.current = setInterval(() => {
+                setTimeElapsed(prev => prev + 1);
+            }, 1000);
+        } else {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+            }
         }
-    }, [distance, timeElapsed]);
+
+        return () => {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+            }
+        };
+    }, [distance, timeElapsed, isTracking, isPaused]);
 
     const formatTime = (seconds) => {
         const h = Math.floor(seconds / 3600);
@@ -240,6 +261,10 @@ export default function Index() {
                         }}
                         showsUserLocation={true}
                         followsUserLocation={true}
+                        scrollEnabled={false}
+                        zoomEnabled={false}
+                        rotateEnabled={false}
+                        pitchEnabled={false}
                     >
                         {path.length > 1 && (
                             <Polyline
@@ -269,26 +294,47 @@ export default function Index() {
 
                     <View style={styles.footer}>
                         {selectedDogIds.length > 0 ? (
-                            <View style={{ alignItems: 'center' }}>
-                                <Text style={{ marginBottom: 10 }}>Wybrane psy:</Text>
+                            <View style={{ alignItems: 'center', paddingVertical: 10 }}>
                                 <FlatList
-                                    horizontal={true}
+                                    horizontal
                                     data={dogs.filter(dog => selectedDogIds.includes(dog._id))}
                                     keyExtractor={(item) => item._id?.toString()}
+                                    showsHorizontalScrollIndicator={false}
+                                    contentContainerStyle={{ paddingHorizontal: 10 }}
                                     renderItem={({ item }) => (
-                                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                                        <View style={{ alignItems: 'center', marginRight: 10 }}>
                                             <Image
                                                 source={{ uri: item.dogImage }}
                                                 style={{
                                                     width: 50,
                                                     height: 50,
                                                     borderRadius: 25,
-                                                    marginRight: 10,
+                                                    marginBottom: 5,
                                                 }}
                                             />
+                                            <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{item.name}</Text>
                                         </View>
                                     )}
                                 />
+
+                                {/* Przyciski pod listą */}
+                                <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                                    <TouchableOpacity
+                                        style={[styles.button, { marginHorizontal: 10, backgroundColor: isPaused ? '#90ee90' : '#FFD700' }]}
+                                        onPress={togglePause}
+                                    >
+                                        <Text style={styles.buttonText}>
+                                            {isPaused ? '▶️ Wznów' : '⏸ Pauza'}
+                                        </Text>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity
+                                        style={[styles.button, { backgroundColor: '#FF6347' }]}
+                                        onPress={stopTracking}
+                                    >
+                                        <Text style={styles.buttonText}>⏹ Koniec spaceru</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         ) : (
                             <View >
