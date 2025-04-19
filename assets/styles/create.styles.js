@@ -128,6 +128,21 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  backButton: {
+    backgroundColor: COLORS.primary,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8, // Dodajemy padding, aby dopasować wielkość przycisku do zawartości
+    flexDirection: "row", // Jeśli chcesz mieć ikonę i tekst obok siebie
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    width: 100
+  },
+
   buttonText: {
     color: COLORS.white,
     fontSize: 16,

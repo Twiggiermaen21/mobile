@@ -76,7 +76,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
 
-
+  buttonDisabled: {
+    backgroundColor: 'gray',  // Możesz wybrać kolor, który będzie wyglądał na nieaktywny
+    opacity: 0.5,             // Możesz dodać lekki efekt przezroczystości
+  },
   label: {
     fontSize: 14,
     color: COLORS.textPrimary,

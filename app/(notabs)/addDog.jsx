@@ -10,6 +10,7 @@ import * as   ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system"
 import { useAuthStore } from '@/store/authStore';
 import { API_URL, URL_API } from "@/constants/api"
+import { useNavigation } from '@react-navigation/native'; // Importowanie hooka do nawigacji
 
 export default function addDog() {
     const [name, setName] = useState("");
@@ -20,7 +21,7 @@ export default function addDog() {
     const [image, setImage] = useState(null);
     const [imageBase64, setImageBase64] = useState(null);
     const [loading, setLoading] = useState(false);
-
+    const navigation = useNavigation(); // Hook do nawigacji
     const router = useRouter();
     const { token, user } = useAuthStore();
     const pickImage = async () => {
@@ -118,47 +119,57 @@ export default function addDog() {
 
 
     return (
-        <KeyboardAvoidingView style={{ flex: 1 }}
-            behavior="height">
-            <ScrollView contentContainerStyle={styles.container} style={styles.scrollViewStyle}>
-
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+            <ScrollView
+                contentContainerStyle={styles.container}
+                style={styles.scrollViewStyle}
+                keyboardShouldPersistTaps="handled" // Aby kliknąć w inne pola, gdy klawiatura jest otwarta
+            >
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                    <Ionicons name="arrow-back" size={24} color={COLORS.white} />
+                    <Text style={styles.buttonText} >Back</Text>
+                </TouchableOpacity>
                 <View style={styles.card}>
-
+                    {/* Przyciski nawigacji */}
                     <View style={styles.header}>
-                        <Text style={styles.title}>
-                            Tell Us About Your Doggo
-                        </Text>
-                        <Text style={styles.subtitle}> Because every good boy deserves a profile 🐶</Text>
+                        <Text style={styles.title}>Tell Us About Your Doggo</Text>
+                        <Text style={styles.subtitle}>Because every good boy deserves a profile 🐶</Text>
                     </View>
+
                     <View style={styles.form}>
+                        {/* Dog Name */}
                         <View style={styles.formGroup}>
-                            <Text style={styles.label}> Dog Name </Text>
+                            <Text style={styles.label}>Dog Name</Text>
                             <View style={styles.inputContainer}>
-                                <Ionicons name='chevron-forward' style={styles.inputIcon} size={20} color={COLORS.textSecondary} />
+                                <Ionicons name="chevron-forward" style={styles.inputIcon} size={20} color={COLORS.textSecondary} />
                                 <TextInput
                                     style={styles.input}
-                                    placeholder='Enter the name'
+                                    placeholder="Enter the name"
                                     placeholderTextColor={COLORS.placeholderText}
                                     value={name}
                                     onChangeText={setName}
                                 />
                             </View>
                         </View>
+
+                        {/* Breed */}
                         <View style={styles.formGroup}>
-                            <Text style={styles.label}> Breed </Text>
+                            <Text style={styles.label}>Breed</Text>
                             <View style={styles.inputContainer}>
-                                <Ionicons name='chevron-forward' style={styles.inputIcon} size={20} color={COLORS.textSecondary} />
+                                <Ionicons name="chevron-forward" style={styles.inputIcon} size={20} color={COLORS.textSecondary} />
                                 <TextInput
                                     style={styles.input}
-                                    placeholder='Enter the breed'
+                                    placeholder="Enter the breed"
                                     placeholderTextColor={COLORS.placeholderText}
                                     value={breed}
                                     onChangeText={setBreed}
                                 />
                             </View>
                         </View>
+
+                        {/* Weight Slider */}
                         <View style={styles.formGroup}>
-                            <Text style={styles.label}> Weight: {weight} kg </Text>
+                            <Text style={styles.label}>Weight: {weight} kg</Text>
                             <Slider
                                 style={{ width: '100%', height: 40 }}
                                 minimumValue={0}
@@ -171,8 +182,10 @@ export default function addDog() {
                                 thumbTintColor={COLORS.primary}
                             />
                         </View>
+
+                        {/* Age Slider */}
                         <View style={styles.formGroup}>
-                            <Text style={styles.label}> Age: {age} years </Text>
+                            <Text style={styles.label}>Age: {age} years</Text>
                             <Slider
                                 style={{ width: '100%', height: 40 }}
                                 minimumValue={0}
@@ -185,8 +198,10 @@ export default function addDog() {
                                 thumbTintColor={COLORS.primary}
                             />
                         </View>
+
+                        {/* Height Slider */}
                         <View style={styles.formGroup}>
-                            <Text style={styles.label}> Height: {height} cm </Text>
+                            <Text style={styles.label}>Height: {height} cm</Text>
                             <Slider
                                 style={{ width: '100%', height: 40 }}
                                 minimumValue={0}
@@ -199,34 +214,34 @@ export default function addDog() {
                                 thumbTintColor={COLORS.primary}
                             />
                         </View>
+
+                        {/* Dog Image Picker */}
                         <View style={styles.formGroup}>
-                            <Text style={styles.label}> Dog Image</Text>
+                            <Text style={styles.label}>Dog Image</Text>
                             <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
                                 {image ? (
                                     <Image source={{ uri: image }} style={styles.previewImage} />
                                 ) : (
                                     <View style={styles.placeholderContainer}>
-                                        <Ionicons name='image-outline' style={styles.inputIcon} size={40} color={COLORS.textSecondary} />
+                                        <Ionicons name="image-outline" style={styles.inputIcon} size={40} color={COLORS.textSecondary} />
                                         <Text style={styles.placeholderText}>Tap to select image</Text>
                                     </View>
                                 )}
                             </TouchableOpacity>
                         </View>
 
+                        {/* Submit Button */}
                         <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading}>
                             {loading ? (
                                 <ActivityIndicator color={COLORS.white} />
                             ) : (
                                 <>
-                                    <Ionicons name='add-circle-outline' size={20} color={COLORS.white} style={styles.buttonIcon} />
+                                    <Ionicons name="add-circle-outline" size={20} color={COLORS.white} style={styles.buttonIcon} />
                                     <Text style={styles.buttonText}>Upload</Text>
                                 </>
-                            )
-
-                            }
+                            )}
                         </TouchableOpacity>
                     </View>
-
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>

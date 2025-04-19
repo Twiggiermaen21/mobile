@@ -357,6 +357,13 @@ export default function Index() {
                             <FlatList
                                 data={dogs}
                                 keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
+                                refreshControl={
+                                    <RefreshControl
+                                        refreshing={refreshing} // Przekazanie stanu odświeżania
+                                        onRefresh={handleRefresh} // Funkcja do wywołania po zainicjowaniu odświeżania
+                                        colors={[COLORS.primary]}// Możesz dostosować kolor ładowania
+                                    />
+                                }
                                 renderItem={({ item }) => {
                                     const isSelected = selectedDogIds.includes(item._id); // Sprawdzamy, czy _id jest w selectedDogIds
 
@@ -400,12 +407,18 @@ export default function Index() {
                             }}>
                                 <TouchableOpacity
                                     onPress={async () => {
+                                        // Jeśli nie ma żadnego wybranego psa, nie wykonuj akcji
+                                        if (selectedDogIds.length === 0) {
+                                            return;  // Wstrzymaj akcję, jeśli nie ma wybranego psa
+                                        }
+
                                         const selectedDogs = dogs.filter(d => selectedDogIds.includes(d.id));
                                         setDog(selectedDogs);
                                         setIsDogModalVisible(false);
                                         await startTracking();
                                     }}
-                                    style={styles.button}
+                                    style={[styles.button, selectedDogIds.length === 0 && styles.buttonDisabled]} // Dodanie stylu, gdy brak wybranych psów
+                                    disabled={selectedDogIds.length === 0}  // Zablokowanie kliknięcia, jeśli nie ma wybranych psów
                                 >
                                     <Text style={styles.buttonText}>Gotowe</Text>
                                 </TouchableOpacity>

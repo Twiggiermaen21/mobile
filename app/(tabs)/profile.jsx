@@ -145,7 +145,7 @@ export default function ProfileScreen() {
                     }
                 />)}
 
-            <TouchableOpacity style={styles.logoutButton} onPress={() => router.push('/addDog')}>
+            <TouchableOpacity style={styles.logoutButton} onPress={() => router.push('/(notabs)/addDog')}>
                 <Ionicons name='add-circle-outline' size={20} color={COLORS.white} />
                 <Text style={styles.logoutText}>Add Dog </Text>
             </TouchableOpacity >

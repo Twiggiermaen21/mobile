@@ -60,7 +60,19 @@ export default function HistoryScreen() {
             fetchData(page + 1);
         }
     };
+    const formatTime = (seconds) => {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
 
+        if (h > 0) {
+            return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        } else if (m > 0) {
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        } else {
+            return `${s}s`;
+        }
+    };
     return (
         <View style={styles.container}>
 
@@ -82,44 +94,61 @@ export default function HistoryScreen() {
                 renderItem={({ item }) => (
                     <View style={styles.bookItem}>
                         {/* Mapka po lewej */}
-                        <MapView
-                            style={styles.map}
-                            scrollEnabled={false}
-                            zoomEnabled={false}
-                            rotateEnabled={false}
-                            pitchEnabled={false}
-                            toolbarEnabled={false}
-                            initialRegion={{
-                                latitude: item.path[0].latitude,
-                                longitude: item.path[0].longitude,
-                                latitudeDelta: 0.005,
-                                longitudeDelta: 0.005,
-                            }}
-                        >
-                            <Polyline
-                                coordinates={item.path}
-                                strokeColor="#000"
-                                strokeWidth={3}
-                            />
-                        </MapView>
-
+                        <View style={[styles.mapCard, { flex: 1, padding: 0, overflow: 'hidden' }]}>
+                            <MapView
+                                style={styles.map}
+                                scrollEnabled={false}
+                                zoomEnabled={false}
+                                rotateEnabled={false}
+                                pitchEnabled={false}
+                                toolbarEnabled={false}
+                                initialRegion={{
+                                    latitude: item.path[0].latitude,
+                                    longitude: item.path[0].longitude,
+                                    latitudeDelta: 0.01,
+                                    longitudeDelta: 0.01,
+                                }}
+                            >
+                                <Polyline
+                                    coordinates={item.path}
+                                    strokeColor="#000"
+                                    strokeWidth={3}
+                                />
+                            </MapView>
+                        </View>
                         {/* Informacje po prawej */}
                         <View style={styles.infoContainer}>
-                            <Text style={styles.memberSince}>📅 {new Date(item.createdAt).toLocaleString()}</Text>
+                            <Text style={styles.email}>
+                                📅 Data: {new Date(item.createdAt).toLocaleDateString()} {/* Data bez godziny */}
+                            </Text>
 
-                            <Text style={styles.email}>🕒 {item.time}</Text>
-                            <Text style={styles.email}>📏 {item.distance}</Text>
-                            <Text style={styles.email}>🏃 {item.speed}</Text>
+                            <Text style={styles.email}>
+                                🕒 Czas: {formatTime(item.time)} {/* Formatowany czas */}
+                            </Text>
+
+                            <Text style={styles.email}>
+                                📏 Dystans: {(item.distance).toFixed(2)} km {/* Dystans w kilometrach */}
+                            </Text>
+
+                            <Text style={styles.email}>
+                                🏃 Szybkość: {item.speed.toFixed(2)} km/h {/* Szybkość w km/h */}
+                            </Text>
                             <View style={styles.dogsContainer}>
-                                {item.dogs.map((dog, idx) => (
-                                    <View key={idx} style={styles.dogContainer}>
-                                        <Image
-                                            source={{ uri: dog.dogImage }}
-                                            style={styles.dogImage}
-                                        />
-                                        {/* <Text style={styles.dogName}>{dog.name}</Text> */}
-                                    </View>
-                                ))}
+                                <FlatList
+                                    horizontal={true} // Sprawia, że lista jest pozioma
+                                    data={item.dogs} // Twoje dane psów
+                                    keyExtractor={(dog, index) => dog._id || index.toString()} // Unikalny klucz dla każdego psa
+                                    renderItem={({ item: dog, index }) => (
+                                        <View key={index} style={styles.dogContainer}>
+                                            <Image
+                                                source={{ uri: dog.dogImage }}
+                                                style={styles.dogImage}
+                                            />
+                                            {/* <Text style={styles.dogName}>{dog.name}</Text> */}
+                                        </View>
+                                    )}
+                                    showsHorizontalScrollIndicator={false} // Ukrywa pasek przewijania
+                                />
                             </View>
 
                         </View>

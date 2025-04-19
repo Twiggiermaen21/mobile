@@ -29,10 +29,23 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     map: {
-        width: 150,
-        height: 150,
-        borderRadius: 20,
-        overflow: 'hidden',
+        ...StyleSheet.absoluteFillObject,
+        position: "absolute",
+    },
+    mapCard: {
+        flex: 1,
+        backgroundColor: COLORS.cardBackground,
+        borderRadius: 16,
+        // marginHorizontal: 2,
+        marginBottom: 4,
+        overflow: "hidden",
+        shadowColor: COLORS.black,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 3,
+        borderWidth: 1,
+        borderColor: COLORS.border,
     },
     infoContainer: {
         flex: 1,
@@ -41,7 +54,7 @@ const styles = StyleSheet.create({
     },
     dogsContainer: {
         flexDirection: 'row',
-        marginBottom: 8,
+
     },
     dogImage: {
         width: 50,
