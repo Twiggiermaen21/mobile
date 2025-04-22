@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, StyleSheet, Image, TouchableOpacity, Alert, ActivityIndicator, RefreshControl } from 'react-native';
+import { View, FlatList, Text, Image, TouchableOpacity, Alert, ActivityIndicator, RefreshControl } from 'react-native';
 import { API_URL } from '@/constants/api';
 import { useAuthStore } from '@/store/authStore';
 import ProfileHeader from '@/components/ProfileHeader'
@@ -8,41 +8,42 @@ import styles from "@/assets/styles/profile.styles"
 import { Ionicons } from '@expo/vector-icons';
 import COLORS from '@/constants/colorsApp';
 import noDog from "../../assets/ImagesPetWalk/noDog.jpeg";
-
-
-
+import { useDogStore } from "@/store/dogStore"
 export default function ProfileScreen() {
     const { token } = useAuthStore();
     const [dogs, setDogs] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    // const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [deletedDogId, setDeletedDogId] = useState(null);
 
     const router = useRouter();
-
+    const { dogsFromDB, getDogs, isLoading } = useDogStore()
 
     const fetchData = async () => {
-        try {
-            setIsLoading(true);
+        const result = await getDogs(token);
+        if (!result.success) Alert.alert("Error", result.error);
+        else {
 
-            // const response = await fetch(`${API_URL}/walks/user`, {
-            //     headers: { Authorization: `Bearer ${token}` },
-            // })
+            setDogs(dogsFromDB);
 
-            const response = await fetch(`${API_URL}/dogs/get-dog`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || "Failed to fetch dogs");
-
-            setDogs(data.dogs);
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
-            Alert.alert("Error", "Failed to load profile data. Pulldown to refresh.");
-        } finally {
-            setIsLoading(false);
         }
+
+        // try {
+        //     setIsLoading(true);
+        //     const response = await fetch(`${API_URL}/dogs/get-dog`, {
+        //         headers: { Authorization: `Bearer ${token}` },
+        //     });
+        //     const data = await response.json();
+        //     if (!response.ok) throw new Error(data.message || "Failed to fetch dogs");
+
+        //     setDogs(data.dogs);
+
+        // } catch (error) {
+        //     console.error("Error fetching data:", error);
+        //     Alert.alert("Error", "Failed to load profile data. Pulldown to refresh.");
+        // } finally {
+        //     setIsLoading(false);
+        // }
 
 
 
@@ -123,7 +124,7 @@ export default function ProfileScreen() {
             <ProfileHeader />
 
             <View style={styles.booksHeader}><Text style={styles.bookTitle}>Twoje zwierzeta</Text></View>
-            {!isLoading && dogs.length === 0 && (
+            {!isLoading && dogs.length === null && (
                 <Text style={styles.noDogsText}>Nie masz jeszcze żadnych zwierząt. Dodaj pierwszego psa!</Text>
             )}
 

@@ -10,7 +10,7 @@ import * as   ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system"
 import { useAuthStore } from '@/store/authStore';
 import { API_URL, URL_API } from "@/constants/api"
-import { useNavigation } from '@react-navigation/native'; // Importowanie hooka do nawigacji
+import { useNavigation } from '@react-navigation/native';
 
 export default function addDog() {
     const [name, setName] = useState("");
@@ -21,9 +21,9 @@ export default function addDog() {
     const [image, setImage] = useState(null);
     const [imageBase64, setImageBase64] = useState(null);
     const [loading, setLoading] = useState(false);
-    const navigation = useNavigation(); // Hook do nawigacji
+    const navigation = useNavigation();
     const router = useRouter();
-    const { token, user } = useAuthStore();
+    const { token } = useAuthStore();
     const pickImage = async () => {
         try {
             if (Platform.OS !== "web") {
