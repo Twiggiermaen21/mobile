@@ -6,12 +6,10 @@ import {
     Text,
     KeyboardAvoidingView,
     Image,
-    Platform,
     Modal,
     FlatList,
     Pressable, RefreshControl
 } from 'react-native';
-import { CheckBox } from 'react-native';
 import { useAuthStore } from '@/store/authStore';
 import MapView, { Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -19,6 +17,9 @@ import styles from '@/assets/styles/map.styles';
 import { API_URL } from '@/constants/api';
 import COLORS from "../../constants/colorsApp";
 import noDog from "../../assets/ImagesPetWalk/noDog.jpeg";
+import { useDogStore } from "@/store/dogStore"
+import IndexText from "@/constants/IndexText";
+import { useSettingsStore } from '@/store/settingStore';
 export default function Index() {
     const [refreshing, setRefreshing] = useState(false);
     const [dogs, setDogs] = useState([]);
@@ -30,28 +31,16 @@ export default function Index() {
     const [averageSpeed, setAverageSpeed] = useState(0);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [isDogModalVisible, setIsDogModalVisible] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    // const [isLoading, setIsLoading] = useState(true);
     const [dog, setDog] = useState([]);
     const { token } = useAuthStore();
     const [selectedDogIds, setSelectedDogIds] = useState([]);
     const [isPaused, setIsPaused] = useState(false);
+    const { dogsFromDB, getDogs, isLoading } = useDogStore()
+
     const fetchData = async () => {
-        try {
-            setIsLoading(true);
-
-            const response = await fetch(`${API_URL}/dogs/get-dog`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || "Failed to fetch dogs");
-
-            setDogs(data.dogs);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-            Alert.alert("Error", "Failed to load profile data. Pulldown to refresh.");
-        } finally {
-            setIsLoading(false);
-        }
+        const result = await getDogs(token);
+        if (!result.success) Alert.alert("Error", result.error);
     };
 
     useEffect(() => {
@@ -81,7 +70,6 @@ export default function Index() {
         setPath([]);
         setCurrentSpeed(0);
         setAverageSpeed(0);
-
 
         const subscription = await Location.watchPositionAsync(
             {
@@ -177,11 +165,6 @@ export default function Index() {
             Alert.alert("Błąd", error.message);
         }
     };
-
-    // Nie wiem co z tym zrobic???
-    // useEffect(() => {
-    //     return () => stopTracking();
-    // }, []);
 
     useEffect(() => {
         if (distance > 0 && timeElapsed > 0) {
@@ -294,7 +277,7 @@ export default function Index() {
                             <View style={{ alignItems: 'center', paddingVertical: 10 }}>
                                 <FlatList
                                     horizontal
-                                    data={dogs.filter(dog => selectedDogIds.includes(dog._id))}
+                                    data={dogsFromDB.filter(dogsFromDB => selectedDogIds.includes(dogsFromDB._id))}
                                     keyExtractor={(item) => item._id?.toString()}
                                     showsHorizontalScrollIndicator={false}
                                     contentContainerStyle={{ paddingHorizontal: 10 }}
@@ -356,7 +339,7 @@ export default function Index() {
                         <View style={styles.ModalBox}>
                             <Text style={styles.title}>Wybierz psa</Text>
                             <FlatList
-                                data={dogs}
+                                data={dogsFromDB}
                                 keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
                                 refreshControl={
                                     <RefreshControl

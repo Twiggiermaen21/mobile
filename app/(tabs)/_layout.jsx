@@ -1,26 +1,20 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
-
 import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import COLORS from '@/constants/colorsApp';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: COLORS.primary, // Kolor aktywnej ikony/tabu
-        tabBarInactiveTintColor: COLORS.inactiveIcon, // Kolor nieaktywnej ikony/tabu
+        tabBarActiveTintColor: COLORS.primary,
+        tabBarInactiveTintColor: COLORS.inactiveIcon,
         headerShown: false,
         headerTitleStyle: {
           fontWeight: 'bold',
@@ -38,7 +32,7 @@ export default function TabLayout() {
           paddingBottom: insets.bottom
         },
         tabBarIconStyle: {
-          color: COLORS.textPrimary // Ustaw kolor ikon
+          color: COLORS.textPrimary
         }
       }}
     >
