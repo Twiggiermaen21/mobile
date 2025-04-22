@@ -22,9 +22,6 @@ export default function Login() {
         if (!result.success) Alert.alert("Error", result.error);
     }
 
-
-
-
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
             <View style={styles.container}>

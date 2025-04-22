@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, RefreshControl, Alert } from "react-native";
 import styles from "../../assets/styles/league.styles";
@@ -7,14 +7,8 @@ import COLORS from "@/constants/colorsApp";
 import { useAuthStore } from '@/store/authStore';
 import { API_URL } from '@/constants/api';
 import { Image } from 'expo-image';
-
-const tiers = [
-    { name: "Emerald", color: "#50c878" },
-    { name: "Diament", color: "#33ccff" },
-    { name: "Gold", color: "#ffd700" },
-    { name: "Silver", color: "#c0c0c0" },
-    { name: "Bronze", color: "#cd7f32" },
-];
+import LeagueText from "@/constants/LeagueText"
+import { useSettingsStore } from '@/store/settingStore';
 
 export default function LeagueScreen() {
     const [selectedTier, setSelectedTier] = useState("Emerald");
@@ -25,11 +19,12 @@ export default function LeagueScreen() {
         Silver: [],
         Bronze: [],
     });
-
+    const { lang } = useSettingsStore();
+    const t = LeagueText[lang];
     const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const { token } = useAuthStore();
-    const router = useRouter();
+
 
     const splitTop50ToTiers = (users) => ({
         Emerald: users.slice(0, 10),
@@ -42,17 +37,12 @@ export default function LeagueScreen() {
     const fetchData = async () => {
         try {
             setIsLoading(true);
-
             const response = await fetch(`${API_URL}/league`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || "Failed to fetch user/walks");
-
-
             const grouped = splitTop50ToTiers(data.users);
-
             setTieredUsers(grouped);
 
         } catch (error) {
@@ -78,18 +68,16 @@ export default function LeagueScreen() {
             <Text style={styles.rank}>{index + 1}.</Text>
             <Image source={{ uri: item.profileImage }} style={styles.profileImage} />
             <Text style={styles.name}>{item.username}</Text>
-            <Text style={styles.walks}>{item.rank} punktów</Text>
+            <Text style={styles.walks}>{item.rank} {t.point}</Text>
         </View>
     );
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>🏆 Liga spacerowiczów</Text>
-
-            {/* Tiers */}
+            <Text style={styles.title}>🏆 {t.leagueName}</Text>
             <View style={styles.profileHeader}>
                 <FlatList
-                    data={tiers}
+                    data={t.levels}
                     keyExtractor={(item) => item.name}
                     renderItem={({ item }) => (
                         <TouchableOpacity

@@ -55,4 +55,23 @@ export const useDogStore = create((set) => ({
         }
     },
 
+
+    DeletedDogId: async (token, dogId) => {
+        set({ isLoading: true });
+        try {
+            const response = await fetch(`${API_URL}/dogs/${dogId}`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` }
+            })
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || "Something went wrong");
+            set({ isLoading: false });
+            return { success: true };
+        } catch (error) {
+            set({ isLoading: false });
+            return { success: false, error: error.message };
+        }
+    },
+
 }));
