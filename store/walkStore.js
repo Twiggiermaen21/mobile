@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand'
 import { API_URL } from "../constants/api"
 
@@ -69,6 +68,23 @@ export const useWalkStore = create((set) => ({
             return { success: false, error: error.message };
         }
 
+    },
+    deleteWalk: async (id, token) => {
+        set({ isLoading: true, });
+        try {
+            const response = await fetch(`${API_URL}/walks/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            set({ isLoading: false });
+            const data = await response.json();
+            return { success: response.ok, error: data.message };
+        } catch (err) {
+            set({ isLoading: false });
+            return { success: false, error: err.message };
+        }
     }
 
 

@@ -13,9 +13,8 @@ export default function LeagueScreen() {
     const [selectedTier, setSelectedTier] = useState("Emerald");
     const { lang } = useSettingsStore();
     const t = LeagueText[lang];
-    const [refreshing, setRefreshing] = useState(false);
     const { token } = useAuthStore();
-    const { getLeague, users, isLoading } = useLeagueStore()
+    const { getLeague, users, isLoading, refreshing } = useLeagueStore()
 
     const fetchData = async () => {
         const result = await getLeague(token);
@@ -29,9 +28,7 @@ export default function LeagueScreen() {
     }, [token]);
 
     const handleRefresh = async () => {
-        setRefreshing(true);
         await fetchData();
-        setRefreshing(false);
     };
 
     const renderUsers = ({ item, index }) => (

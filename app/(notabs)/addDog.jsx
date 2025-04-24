@@ -10,11 +10,11 @@ import * as   ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system"
 import { useAuthStore } from '@/store/authStore';
 
-import { useNavigation } from '@react-navigation/native';
+
 import { useDogStore } from "@/store/dogStore"
 import AddDogText from "@/constants/AddDogText"
 import { useSettingsStore } from '@/store/settingStore';
-export default function addDog() {
+export default function AddDog() {
     const [name, setName] = useState("");
     const [breed, setBreed] = useState("");
     const [weight, setWeight] = useState(0);
@@ -22,7 +22,7 @@ export default function addDog() {
     const [height, setHeight] = useState(0);
     const [image, setImage] = useState(null);
     const [imageBase64, setImageBase64] = useState(null);
-    const navigation = useNavigation();
+
     const router = useRouter();
     const { token } = useAuthStore();
     const { addDog, isLoading } = useDogStore()
@@ -101,7 +101,7 @@ export default function addDog() {
                 style={styles.scrollViewStyle}
                 keyboardShouldPersistTaps="handled"
             >
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name="arrow-back" size={24} color={COLORS.white} />
                     <Text style={styles.buttonText} >{t.backButton}</Text>
                 </TouchableOpacity>

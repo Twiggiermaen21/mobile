@@ -14,7 +14,8 @@ const ProfileText = {
         cancel: "Cancel",
         confirmDelete: "Delete",
         Success: "Success",
-        Yourpets: "Your pets"
+        Yourpets: "Your pets",
+        Joined: "Joined "
     },
     pl: {
         yourPets: "Twoje zwierzęta",
@@ -31,7 +32,8 @@ const ProfileText = {
         cancel: "Anuluj",
         confirmDelete: "Usuń",
         Success: "Udało się",
-        Yourpets: "Twoje zwierzeta"
+        Yourpets: "Twoje zwierzeta",
+        Joined: "Dołączył"
     },
 };
 

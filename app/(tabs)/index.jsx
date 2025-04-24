@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Alert, TouchableOpacity, Text, KeyboardAvoidingView, Image, Modal, FlatList, Pressable, RefreshControl } from 'react-native';
+import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useAuthStore } from '@/store/authStore';
 import MapView, { Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -10,8 +11,8 @@ import { useDogStore } from "@/store/dogStore"
 import IndexText from "@/constants/IndexText";
 import { useSettingsStore } from '@/store/settingStore';
 import { useWalkStore } from "@/store/walkStore"
-
-
+import formatTime from "@/components/PetWalkComponents/timeUtils"
+import haversineDistance from "@/components/PetWalkComponents/haversineDistance"
 
 export default function Index() {
     const [refreshing, setRefreshing] = useState(false);
@@ -27,7 +28,7 @@ export default function Index() {
     const { token } = useAuthStore();
     const [selectedDogIds, setSelectedDogIds] = useState([]);
     const [isPaused, setIsPaused] = useState(false);
-    const { dogsFromDB, getDogs, isLoading } = useDogStore()
+    const { dogsFromDB, getDogs } = useDogStore()
 
     const { saveWalk } = useWalkStore()
     const { lang } = useSettingsStore();
@@ -92,7 +93,7 @@ export default function Index() {
                 });
 
                 if (speed != null) {
-                    setCurrentSpeed((speed * 3.6).toFixed(2)); // m/s -> km/h
+                    setCurrentSpeed((speed * 3.6).toFixed(2));
                 }
 
                 if (mapRef.current) {
@@ -167,36 +168,7 @@ export default function Index() {
         };
     }, [distance, timeElapsed, isTracking, isPaused]);
 
-    const formatTime = (seconds) => {
-        const h = Math.floor(seconds / 3600);
-        const m = Math.floor((seconds % 3600) / 60);
-        const s = seconds % 60;
 
-        if (h > 0) {
-            return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        } else if (m > 0) {
-            return `${m}:${s.toString().padStart(2, '0')}`;
-        } else {
-            return `${s}s`;
-        }
-    };
-
-    const haversineDistance = (coord1, coord2) => {
-        const toRad = (value) => (value * Math.PI) / 180;
-        const R = 6371;
-        const dLat = toRad(coord2.latitude - coord1.latitude);
-        const dLon = toRad(coord2.longitude - coord1.longitude);
-        const lat1 = toRad(coord1.latitude);
-        const lat2 = toRad(coord2.latitude);
-
-        const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1) * Math.cos(lat2) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    };
     const handleRefresh = async () => {
         setRefreshing(true);
         await fetchData();
@@ -270,8 +242,6 @@ export default function Index() {
                                         </View>
                                     )}
                                 />
-
-                                {/* Przyciski pod listą */}
                                 <View style={{ flexDirection: 'row', marginTop: 15 }}>
                                     <TouchableOpacity
                                         style={[styles.button, { marginHorizontal: 10, backgroundColor: isPaused ? '#90ee90' : '#FFD700' }]}
@@ -309,67 +279,78 @@ export default function Index() {
                     animationType="slide"
                     transparent={true}
                 >
-                    <View style={styles.ModalAroundBox}>
-                        <View style={styles.ModalBox}>
-                            <Text style={styles.title}>{t.selectDog}</Text>
-                            <FlatList
-                                data={dogsFromDB}
-                                keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
-                                refreshControl={
-                                    <RefreshControl
-                                        refreshing={refreshing}
-                                        onRefresh={handleRefresh}
-                                        colors={[COLORS.primary]}
-                                    />
-                                }
-                                renderItem={({ item }) => {
-                                    const isSelected = selectedDogIds.includes(item._id);
-
-                                    return (
-                                        <Pressable
-                                            style={[
-                                                styles.pressableDogs,
-                                                { backgroundColor: isSelected ? '#d0f0d0' : '#f0f0f0' }
-                                            ]}
-                                            onPress={() => {
-                                                setSelectedDogIds(prevSelected => {
-                                                    const isSelected = prevSelected.includes(item._id);
-                                                    const updatedSelection = isSelected
-                                                        ? prevSelected.filter(id => id !== item._id)
-                                                        : [...prevSelected, item._id];
-
-                                                    return updatedSelection;
-                                                });
-                                            }}
-                                        >
-                                            <Text style={[styles.info, { fontSize: 16 }]}>{item.name}</Text>
-                                            <Text style={{ fontSize: 18, color: isSelected ? 'green' : '#ccc' }}>
-                                                {isSelected ? '✓' : '○'}
-                                            </Text>
-                                        </Pressable>
-                                    );
-                                }}
-                            />
-
-                            <View style={styles.buttonDone}>
-                                <TouchableOpacity
-                                    onPress={async () => {
-                                        if (selectedDogIds.length === 0) {
-                                            return;
+                    <TouchableWithoutFeedback
+                        onPress={() => {
+                            if (selectedDogIds.length === 0) {
+                                setIsDogModalVisible(false);
+                            }
+                        }}
+                    >
+                        <View style={styles.ModalAroundBox}>
+                            <TouchableWithoutFeedback onPress={() => { }}>
+                                <View style={styles.ModalBox}>
+                                    <Text style={styles.title}>{t.selectDog}</Text>
+                                    <FlatList
+                                        data={dogsFromDB}
+                                        keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
+                                        refreshControl={
+                                            <RefreshControl
+                                                refreshing={refreshing}
+                                                onRefresh={handleRefresh}
+                                                colors={[COLORS.primary]}
+                                            />
                                         }
-                                        const selectedDogs = dog.filter(d => selectedDogIds.includes(d.id));
-                                        setDog(selectedDogs);
-                                        setIsDogModalVisible(false);
-                                        await startTracking();
-                                    }}
-                                    style={[styles.button, selectedDogIds.length === 0 && styles.buttonDisabled]}
-                                    disabled={selectedDogIds.length === 0}
-                                >
-                                    <Text style={styles.buttonText}>{t.done}</Text>
-                                </TouchableOpacity>
-                            </View>
+                                        renderItem={({ item }) => {
+                                            const isSelected = selectedDogIds.includes(item._id);
+
+                                            return (
+                                                <Pressable
+                                                    style={[
+                                                        styles.pressableDogs,
+                                                        { backgroundColor: isSelected ? '#d0f0d0' : '#f0f0f0' }
+                                                    ]}
+                                                    onPress={() => {
+                                                        setSelectedDogIds(prevSelected => {
+                                                            const isSelected = prevSelected.includes(item._id);
+                                                            const updatedSelection = isSelected
+                                                                ? prevSelected.filter(id => id !== item._id)
+                                                                : [...prevSelected, item._id];
+
+                                                            return updatedSelection;
+                                                        });
+                                                    }}
+                                                >
+                                                    <Text style={[styles.info, { fontSize: 16 }]}>{item.name}</Text>
+                                                    <Text style={{ fontSize: 18, color: isSelected ? 'green' : '#ccc' }}>
+                                                        {isSelected ? '✓' : '○'}
+                                                    </Text>
+                                                </Pressable>
+                                            );
+                                        }}
+                                    />
+
+                                    <View style={styles.buttonDone}>
+                                        <TouchableOpacity
+                                            onPress={async () => {
+                                                if (selectedDogIds.length === 0) {
+                                                    return;
+                                                }
+                                                const selectedDogs = dog.filter(d => selectedDogIds.includes(d.id));
+                                                setDog(selectedDogs);
+                                                setIsDogModalVisible(false);
+                                                await startTracking();
+                                            }}
+                                            style={[styles.button, selectedDogIds.length === 0 && styles.buttonDisabled]}
+                                            disabled={selectedDogIds.length === 0}
+                                        >
+                                            <Text style={styles.buttonText}>{t.done}</Text>
+                                        </TouchableOpacity>
+                                    </View>
+
+                                </View>
+                            </TouchableWithoutFeedback>
                         </View>
-                    </View>
+                    </TouchableWithoutFeedback>
                 </Modal>
             </View >
         </KeyboardAvoidingView >

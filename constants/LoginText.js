@@ -5,12 +5,12 @@ const LoginText = {
         loginButton: 'Zaloguj się',
         footerText: 'Nie masz konta?',
         signUpLink: 'Zarejestruj się',
-        LabalPassword: "Hasło"
+        labelPassword: "Hasło"
     },
     en: {
         email: 'Enter your email',
         password: 'Enter your password',
-        LabalPassword: "Password",
+        labelPassword: "Password",
         loginButton: 'Login',
         footerText: 'Don\'t have an account?',
         signUpLink: 'Sign Up',

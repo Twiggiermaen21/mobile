@@ -1,13 +1,14 @@
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Alert } from 'react-native'
-import React, { useState } from 'react'
-import styles from '../../assets/styles/login.styles'
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import COLORS from '@/constants/colorsApp';
 import { useRouter } from 'expo-router';
-import { useAuthStore } from '../../store/authStore'
-import SigninText from "@/constants/SigninText"
+
+import styles from '../../assets/styles/login.styles';
+import COLORS from '@/constants/colorsApp';
+import SigninText from '@/constants/SigninText';
+import { useAuthStore } from '../../store/authStore';
 import { useSettingsStore } from '@/store/settingStore';
-export default function signup() {
+export default function Signup() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -19,7 +20,7 @@ export default function signup() {
 
     const router = useRouter();
 
-    const handleSingup = async () => {
+    const handleSignup = async () => {
         const result = await register(username, email, password);
         if (!result.success) Alert.alert("Error", result.error);
     };
@@ -100,8 +101,8 @@ export default function signup() {
 
 
 
-                        <TouchableOpacity onPress={handleSingup} style={styles.button} disabled={isLoading}>
-                            {isLoading ? (<ActivityIndicator color="#fff" />) : (<Text style={styles.buttonText}>{t.button}</Text>)}
+                        <TouchableOpacity onPress={handleSignup} style={styles.button} disabled={isLoading}>
+                            {isLoading ? (<ActivityIndicator color={COLORS.white} />) : (<Text style={styles.buttonText}>{t.button}</Text>)}
                         </TouchableOpacity>
 
                         <View style={styles.footer}>

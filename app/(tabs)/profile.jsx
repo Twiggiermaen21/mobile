@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, Image, TouchableOpacity, Alert, ActivityIndicator, RefreshControl } from 'react-native';
 import { useAuthStore } from '@/store/authStore';
-import ProfileHeader from '@/components/ProfileHeader'
+import ProfileHeader from '@/components/PetWalkComponents/ProfileHeader'
 import styles from "@/assets/styles/profile.styles"
 import { Ionicons } from '@expo/vector-icons';
 import COLORS from '@/constants/colorsApp';

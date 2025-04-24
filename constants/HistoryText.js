@@ -5,7 +5,12 @@ const HistoryText = {
         date: "Date:",
         time: "🕒 Time:",
         distance: "📏 Distance:",
-        speed: "🏃 Speed:"
+        speed: "🏃 Speed:",
+        noPath: "No walk path recorded",
+        deleteTitle: "Delete Walk",
+        deleteMessage: "Are you sure you want to delete this walk?",
+        deleteCancel: "Cancel",
+        deleteConfirm: "Delete"
     },
 
     pl: {
@@ -14,7 +19,12 @@ const HistoryText = {
         date: "Data:",
         time: "🕒 Czas:",
         distance: "📏 Dystans:",
-        speed: "🏃 Szybkość:"
+        speed: "🏃 Szybkość:",
+        noPath: "Brak zapisanego śladu spaceru",
+        deleteTitle: "Usuń spacer",
+        deleteMessage: "Czy na pewno chcesz usunąć ten spacer?",
+        deleteCancel: "Anuluj",
+        deleteConfirm: "Usuń"
     }
 };
 

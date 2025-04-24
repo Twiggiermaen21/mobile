@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, Switch, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
-import LogoutButton from '@/components/LogoutButton';
-import COLORS from '@/constants/colorsApp';
+import { View, Text, Switch, TouchableOpacity, ScrollView } from 'react-native';
+
+import LogoutButton from '@/components/PetWalkComponents/LogoutButton';
+
 import styles from '@/assets/styles/settings.styles';
+import { useRouter } from 'expo-router';
 
 
 export default function SettingsScreen() {
     const [notifications, setNotifications] = useState(true);
     const [darkMode, setDarkMode] = useState(false);
+    const router = useRouter();
+
 
     return (
         <View style={styles.container}>
@@ -18,7 +21,7 @@ export default function SettingsScreen() {
 
                 {/* 1. Konto użytkownika */}
                 <Text style={styles.sectionTitle}>Konto użytkownika</Text>
-                <SettingButton label="Zmień username" />
+                <SettingButton label="Zmień username" destination="/profile" />
                 <SettingButton label="Zmień adres e-mail" />
                 <SettingButton label="Zmień hasło" />
                 <SettingButton label="Edytuj zdjęcie profilowe" />
@@ -56,18 +59,18 @@ export default function SettingsScreen() {
                 <SettingButton label="Resetuj ustawienia" />
                 <SettingButton label="O aplikacji" />
 
-                {/* <View style={{ height: 20 }} />  */}
+
                 <LogoutButton />
             </ScrollView>
 
-            {/* Przycisk wylogowania przyklejony na dole */}
+
 
         </View>
     );
 };
 
-const SettingButton = ({ label, onPress }) => (
-    <TouchableOpacity style={styles.settingButton} onPress={onPress}>
+const SettingButton = ({ label, destination }) => (
+    <TouchableOpacity style={styles.settingButton} onPress={() => handleNavigate(destination)}>
         <Text style={styles.settingText}>{label}</Text>
     </TouchableOpacity>
 );
@@ -79,44 +82,7 @@ const SettingSwitch = ({ label, value, onValueChange }) => (
     </View>
 );
 
-
-const styles2 = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        paddingTop: 60,
-    },
-    scrollContainer: {
-        paddingHorizontal: 20,
-        paddingBottom: 80,
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        textAlign: 'center',
-    },
-    sectionTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginTop: 24,
-        marginBottom: 8,
-        color: COLORS.primary,
-    },
-    settingButton: {
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-    settingText: {
-        fontSize: 16,
-    },
-    settingSwitch: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-});
+const handleNavigate = (destination) => {
+    const router = useRouter();
+    router.push(destination);
+};

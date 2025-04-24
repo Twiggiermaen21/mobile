@@ -1,5 +1,5 @@
-import { Alert, Text, TouchableOpacity, View } from 'react-native'
-import React, { Component } from 'react'
+import { Alert, Text, TouchableOpacity, } from 'react-native'
+import React from 'react'
 
 import { useAuthStore } from '@/store/authStore'
 import styles from '@/assets/styles/settings.styles'

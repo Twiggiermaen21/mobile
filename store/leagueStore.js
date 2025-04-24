@@ -5,9 +5,9 @@ import { API_URL } from "../constants/api"
 export const useLeagueStore = create((set) => ({
     isLoading: false,
     users: { Emerald: [], Diament: [], Gold: [], Silver: [], Bronze: [] },
-
+    refreshing: false,
     getLeague: async (token) => {
-        set({ isLoading: true });
+        set({ isLoading: true, refreshing: true });
 
         try {
             const response = await fetch(`${API_URL}/league`, {
@@ -26,11 +26,11 @@ export const useLeagueStore = create((set) => ({
 
             const grouped = splitTop50ToTiers(data.users);
 
-            set({ isLoading: false, users: grouped });
+            set({ isLoading: false, users: grouped, refreshing: false });
             return { success: true };
 
         } catch (error) {
-            set({ isLoading: false });
+            set({ isLoading: false, refreshing: false });
             return { success: false, error: error.message };
         }
     },
