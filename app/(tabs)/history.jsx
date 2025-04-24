@@ -30,8 +30,13 @@ export default function HistoryScreen() {
 
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (token) {
+            fetchData();
+        }
+    }, [token]);
+
+
+
     const handleLoadMore = () => {
         if (!isLoadingMore && page < totalPages) {
             fetchData(page + 1);

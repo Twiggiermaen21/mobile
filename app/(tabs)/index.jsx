@@ -42,10 +42,12 @@ export default function Index() {
         if (!result.success) Alert.alert("Error", result.error);
     };
 
-    useEffect(() => {
-        fetchData();
-    }, []);
 
+    useEffect(() => {
+        if (token) {
+            fetchData();
+        }
+    }, [token]);
 
 
     const requestPermissions = async () => {

@@ -25,9 +25,13 @@ export default function ProfileScreen() {
         if (!result.success) Alert.alert("Error", result.error);
     }
 
+
+
     useEffect(() => {
-        GetDogsFromDataBase();
-    }, []);
+        if (token) {
+            GetDogsFromDataBase();
+        }
+    }, [token]);
 
     const handleDeleteDog = async (dogId) => {
         const result = await DeletedDogId(token, dogId);
@@ -58,7 +62,7 @@ export default function ProfileScreen() {
 
                 <Text style={styles.bookCaption} numberOfLines={4}>
                     {`${t.breed}: ${item.breed || '---'}\n`}
-                    {`${t.age}: ${item.age} \n`}
+                    {`${t.age}: ${item.age} ${t.age2} \n`}
                     {`${t.weight}: ${item.weight} kg\n`}
                     {`${t.height}: ${item.height} cm`}
                 </Text>

@@ -6,28 +6,40 @@ export const useDogStore = create((set) => ({
     dogsFromDB: null,
     isLoading: false,
 
-    addDog: async (username, email, password) => {
+    addDog: async (token, name, age, breed, image, height, weight, imageBase64) => {
 
         set({ isLoading: true });
         try {
-            //zmienic tutaj adres jak bede używał telefonu
-            const response = await fetch(`${API_URL}/auth/register`, {
+            let imageDataUrl = null;
+            if (image && imageBase64) {
+                const uriParts = image.split(".");
+                const fileType = uriParts[uriParts.length - 1];
+                const imageType = fileType ? `image/${fileType.toLowerCase()}` : "image/jpeg";
+                imageDataUrl = `data:${imageType};base64,${imageBase64}`;
+            }
+
+            const response = await fetch(`${API_URL}/dogs/add-dog`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+
                 },
                 body: JSON.stringify({
-                    username, email, password
+                    name,
+                    breed,
+                    weight,
+                    age,
+                    height,
+                    image: imageDataUrl
                 })
-            })
+
+            });
 
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || "Something went wrong");
 
-            await AsyncStorage.setItem("user", JSON.stringify(data.user));
-            await AsyncStorage.setItem("token", data.token);
-
-            set({ token: data.token, user: data.user, isLoading: false });
+            set({ isLoading: false, });
 
             return { success: true };
 
