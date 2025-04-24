@@ -52,6 +52,25 @@ export default function signup() {
                                 />
                             </View>
                         </View>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Email</Text>
+                            <View style={styles.inputContainer}>
+                                <Ionicons
+                                    name='mail-outline'
+                                    size={20}
+                                    color={COLORS.primary}
+                                    style={styles.inputIcon} />
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder={t.placeholderEmail}
+                                    placeholderTextColor={COLORS.placeholderText}
+                                    value={email}
+                                    onChangeText={setEmail}
+                                    keyboardType="email-address"
+                                    autoCapitalize="none"
+                                />
+                            </View>
+                        </View>
 
                         <View style={styles.inputGroup}>
                             <Text style={styles.label}>{t.password}</Text>
@@ -79,25 +98,7 @@ export default function signup() {
                             </View>
                         </View>
 
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>{t.password}</Text>
-                            <View style={styles.inputContainer}>
-                                <Ionicons
-                                    name='mail-outline'
-                                    size={20}
-                                    color={COLORS.primary}
-                                    style={styles.inputIcon} />
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder={t.placeholderEmail}
-                                    placeholderTextColor={COLORS.placeholderText}
-                                    value={email}
-                                    onChangeText={setEmail}
-                                    keyboardType="email-address"
-                                    autoCapitalize="none"
-                                />
-                            </View>
-                        </View>
+
 
                         <TouchableOpacity onPress={handleSingup} style={styles.button} disabled={isLoading}>
                             {isLoading ? (<ActivityIndicator color="#fff" />) : (<Text style={styles.buttonText}>{t.button}</Text>)}

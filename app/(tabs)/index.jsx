@@ -14,12 +14,13 @@ import { useAuthStore } from '@/store/authStore';
 import MapView, { Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import styles from '@/assets/styles/map.styles';
-import { API_URL } from '@/constants/api';
+
 import COLORS from "../../constants/colorsApp";
 import noDog from "../../assets/ImagesPetWalk/noDog.jpeg";
 import { useDogStore } from "@/store/dogStore"
 import IndexText from "@/constants/IndexText";
 import { useSettingsStore } from '@/store/settingStore';
+import { useWalkStore } from "@/store/walkStore"
 export default function Index() {
     const [refreshing, setRefreshing] = useState(false);
     const [dogs, setDogs] = useState([]);
@@ -31,12 +32,14 @@ export default function Index() {
     const [averageSpeed, setAverageSpeed] = useState(0);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [isDogModalVisible, setIsDogModalVisible] = useState(false);
-    // const [isLoading, setIsLoading] = useState(true);
-    const [dog, setDog] = useState([]);
     const { token } = useAuthStore();
     const [selectedDogIds, setSelectedDogIds] = useState([]);
     const [isPaused, setIsPaused] = useState(false);
     const { dogsFromDB, getDogs, isLoading } = useDogStore()
+
+    const { saveWalk } = useWalkStore()
+
+
 
     const fetchData = async () => {
         const result = await getDogs(token);
@@ -138,32 +141,10 @@ export default function Index() {
     };
 
     const savePath = async () => {
-        try {
-            //zmienic tutaj adres jak bede używał telefonu
-            const response = await fetch(`${API_URL}/walks`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    time: timeElapsed,
-                    speed: averageSpeed,
-                    distance,
-                    path, // lista lokalizacji
-                    dogs: selectedDogIds, // opcjonalnie, jeśli backend je przyjmuje
-                })
-            })
+        const result = await saveWalk(token, timeElapsed, averageSpeed, distance, path, selectedDogIds,);
+        if (!result.success) Alert.alert("Error", result.error);
+        else Alert.alert("Sukces", "Spacer został zapisany!");
 
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || "Something went wrong");
-
-            Alert.alert("Sukces", "Spacer został zapisany!");
-
-        } catch (error) {
-            console.error("Błąd zapisu spaceru:", error);
-            Alert.alert("Błąd", error.message);
-        }
     };
 
     useEffect(() => {
@@ -343,13 +324,13 @@ export default function Index() {
                                 keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
                                 refreshControl={
                                     <RefreshControl
-                                        refreshing={refreshing} // Przekazanie stanu odświeżania
-                                        onRefresh={handleRefresh} // Funkcja do wywołania po zainicjowaniu odświeżania
-                                        colors={[COLORS.primary]}// Możesz dostosować kolor ładowania
+                                        refreshing={refreshing}
+                                        onRefresh={handleRefresh}
+                                        colors={[COLORS.primary]}
                                     />
                                 }
                                 renderItem={({ item }) => {
-                                    const isSelected = selectedDogIds.includes(item._id); // Sprawdzamy, czy _id jest w selectedDogIds
+                                    const isSelected = selectedDogIds.includes(item._id);
 
                                     return (
                                         <Pressable
@@ -367,8 +348,8 @@ export default function Index() {
                                                 setSelectedDogIds(prevSelected => {
                                                     const isSelected = prevSelected.includes(item._id);
                                                     const updatedSelection = isSelected
-                                                        ? prevSelected.filter(id => id !== item._id) // Usuń
-                                                        : [...prevSelected, item._id]; // Dodaj
+                                                        ? prevSelected.filter(id => id !== item._id)
+                                                        : [...prevSelected, item._id];
 
                                                     return updatedSelection;
                                                 });
@@ -376,7 +357,7 @@ export default function Index() {
                                         >
                                             <Text style={[styles.info, { fontSize: 16 }]}>{item.name}</Text>
                                             <Text style={{ fontSize: 18, color: isSelected ? 'green' : '#ccc' }}>
-                                                {isSelected ? '✓' : '○'}  {/* Zmieniamy kolor na zielony, jeśli wybrano */}
+                                                {isSelected ? '✓' : '○'}
                                             </Text>
                                         </Pressable>
                                     );
@@ -391,18 +372,16 @@ export default function Index() {
                             }}>
                                 <TouchableOpacity
                                     onPress={async () => {
-                                        // Jeśli nie ma żadnego wybranego psa, nie wykonuj akcji
                                         if (selectedDogIds.length === 0) {
-                                            return;  // Wstrzymaj akcję, jeśli nie ma wybranego psa
+                                            return;
                                         }
-
                                         const selectedDogs = dogs.filter(d => selectedDogIds.includes(d.id));
                                         setDog(selectedDogs);
                                         setIsDogModalVisible(false);
                                         await startTracking();
                                     }}
-                                    style={[styles.button, selectedDogIds.length === 0 && styles.buttonDisabled]} // Dodanie stylu, gdy brak wybranych psów
-                                    disabled={selectedDogIds.length === 0}  // Zablokowanie kliknięcia, jeśli nie ma wybranych psów
+                                    style={[styles.button, selectedDogIds.length === 0 && styles.buttonDisabled]}
+                                    disabled={selectedDogIds.length === 0}
                                 >
                                     <Text style={styles.buttonText}>Gotowe</Text>
                                 </TouchableOpacity>

@@ -1,57 +1,76 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, RefreshControl } from 'react-native';
-import MapView, { Region, Polyline, LatLng } from 'react-native-maps';
+import { View, Text, FlatList, RefreshControl } from 'react-native';
+import MapView, { Polyline } from 'react-native-maps';
 import { Image } from 'expo-image';
 import { API_URL } from '@/constants/api';
 import { useAuthStore } from '@/store/authStore';
-import { useRouter } from 'expo-router';
 import COLORS from '@/constants/colorsApp';
 import styles from '@/assets/styles/history.styles';
 import noDog from "../../assets/ImagesPetWalk/noDog.jpeg";
-
-
+import HistoryText from "@/constants/HistoryText"
+import { useSettingsStore } from '@/store/settingStore';
+import { useWalkStore } from "@/store/walkStore"
 export default function HistoryScreen() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [walks, setWalks] = useState([]);
-    const router = useRouter();
-    const { token, user } = useAuthStore();
-    const [refreshing, setRefreshing] = useState(false);
-    const [page, setPage] = useState(1);
-    const [isLoadingMore, setIsLoadingMore] = useState(false);
-    const [totalPages, setTotalPages] = useState(1); // z backendu
+    // const [isLoading, setIsLoading] = useState(true);
+    // const [walks, setWalks] = useState([]);
+    const { token } = useAuthStore();
+    // const [refreshing, setRefreshing] = useState(false);
+    // const [page, setPage] = useState(1);
+    // const [isLoadingMore, setIsLoadingMore] = useState(false);
+    // const [totalPages, setTotalPages] = useState(1); // z backendu
+
+    const {
+        walks,
+        page,
+        totalPages,
+        isLoading,
+        isLoadingMore,
+        refreshing,
+        pageNumber, getWalks } = useWalkStore()
+
+
+    const { lang } = useSettingsStore();
+    const t = HistoryText[lang];
+
     const handleRefresh = async () => {
         setRefreshing(true);
         await fetchData();
         setRefreshing(false);
     }
+
     const fetchData = async (pageNumber = 1, refreshing = false) => {
-        try {
-            if (refreshing) setRefreshing(true);
-            else if (pageNumber > 1) setIsLoadingMore(true);
-            else setIsLoading(true);
+        // try {
+        //     if (refreshing) setRefreshing(true);
+        //     else if (pageNumber > 1) setIsLoadingMore(true);
+        //     else setIsLoading(true);
 
-            const response = await fetch(`${API_URL}/walks?page=${pageNumber}&limit=5`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+        //     const response = await fetch(`${API_URL}/walks?page=${pageNumber}&limit=5`, {
+        //         headers: { Authorization: `Bearer ${token}` },
+        //     });
 
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || "Failed to fetch walks");
+        //     const data = await response.json();
+        //     if (!response.ok) throw new Error(data.message || "Failed to fetch walks");
 
-            // Jeśli odświeżamy — nadpisz spacery, jeśli nie — dołącz
-            setWalks(prev =>
-                pageNumber === 1 ? data.walks : [...prev, ...data.walks]
-            );
 
-            setPage(data.currentPage);
-            setTotalPages(data.totalPages);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        } finally {
-            setIsLoading(false);
-            setRefreshing(false);
-            setIsLoadingMore(false);
-        }
+        //     setWalks(prev =>
+        //         pageNumber === 1 ? data.walks : [...prev, ...data.walks]
+        //     );
+
+        //     setPage(data.currentPage);
+        //     setTotalPages(data.totalPages);
+        // } catch (error) {
+        //     console.error("Error fetching data:", error);
+        // } finally {
+        //     setIsLoading(false);
+        //     setRefreshing(false);
+        //     setIsLoadingMore(false);
+        // }
+
+        const result = await getWalks(pageNumber = 1, refreshing = false, token);
+        if (!result.success) Alert.alert("Error", result.error);
+
     };
+
 
     useEffect(() => {
         fetchData();
@@ -76,8 +95,7 @@ export default function HistoryScreen() {
     };
     return (
         <View style={styles.container}>
-
-            <Text style={styles.title}>Historia spacerów</Text>
+            <Text style={styles.title}>{t.historyTitle}</Text>
             <FlatList
                 data={walks}
                 extraData={walks}
@@ -86,15 +104,12 @@ export default function HistoryScreen() {
                     <RefreshControl
                         refreshing={refreshing}
                         onRefresh={handleRefresh}
-                        colors={[COLORS.primary]}
-                    />
-                }
+                        colors={[COLORS.primary]} />}
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={0.5}
-                ListFooterComponent={isLoadingMore ? <Text style={{ textAlign: 'center', padding: 8 }}>Ładowanie...</Text> : null}
+                ListFooterComponent={isLoadingMore ? <Text style={{ textAlign: 'center', padding: 8 }}>{t.loading}</Text> : null}
                 renderItem={({ item }) => (
                     <View style={styles.bookItem}>
-                        {/* Mapka po lewej */}
                         <View style={[styles.mapCard, { flex: 1, padding: 0, overflow: 'hidden' }]}>
                             <MapView
                                 style={styles.map}
@@ -108,8 +123,7 @@ export default function HistoryScreen() {
                                     longitude: item.path[0].longitude,
                                     latitudeDelta: 0.01,
                                     longitudeDelta: 0.01,
-                                }}
-                            >
+                                }} >
                                 <Polyline
                                     coordinates={item.path}
                                     strokeColor="#000"
@@ -117,46 +131,39 @@ export default function HistoryScreen() {
                                 />
                             </MapView>
                         </View>
-                        {/* Informacje po prawej */}
                         <View style={styles.infoContainer}>
                             <Text style={styles.email}>
-                                📅 Data: {new Date(item.createdAt).toLocaleDateString()} {/* Data bez godziny */}
+                                {t.date} {new Date(item.createdAt).toLocaleDateString()}
                             </Text>
 
                             <Text style={styles.email}>
-                                🕒 Czas: {formatTime(item.time)} {/* Formatowany czas */}
+                                {t.time}{formatTime(item.time)}
                             </Text>
 
                             <Text style={styles.email}>
-                                📏 Dystans: {(item.distance).toFixed(2)} km {/* Dystans w kilometrach */}
+                                {t.distance} {(item.distance).toFixed(2)} km
                             </Text>
 
                             <Text style={styles.email}>
-                                🏃 Szybkość: {item.speed.toFixed(2)} km/h {/* Szybkość w km/h */}
+                                {t.speed} {item.speed.toFixed(2)} km/h
                             </Text>
                             <View style={styles.dogsContainer}>
                                 <FlatList
-                                    horizontal={true} // Sprawia, że lista jest pozioma
-                                    data={item.dogs} // Twoje dane psów
-                                    keyExtractor={(dog, index) => dog._id || index.toString()} // Unikalny klucz dla każdego psa
+                                    horizontal={true}
+                                    data={item.dogs}
+                                    keyExtractor={(dog, index) => dog._id || index.toString()}
                                     renderItem={({ item: dog, index }) => (
                                         <View key={index} style={styles.dogContainer}>
                                             <Image
                                                 source={dog.dogImage ? { uri: dog.dogImage } : noDog}
-                                                style={styles.dogImage}
-                                            />
-                                            {/* <Text style={styles.dogName}>{dog.name}</Text> */}
+                                                style={styles.dogImage} />
                                         </View>
                                     )}
-                                    showsHorizontalScrollIndicator={false} // Ukrywa pasek przewijania
-                                />
+                                    showsHorizontalScrollIndicator={false} />
                             </View>
-
                         </View>
                     </View>
-                )}
-            />
-
+                )} />
         </View>
     );
 }
