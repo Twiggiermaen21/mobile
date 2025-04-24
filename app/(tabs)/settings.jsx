@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, Switch, TouchableOpacity, ScrollView } from 'react-native';
-
-import LogoutButton from '@/components/PetWalkComponents/LogoutButton';
-
-import styles from '@/assets/styles/settings.styles';
 import { useRouter } from 'expo-router';
 
+import LogoutButton from '@/components/PetWalkComponents/LogoutButton';
+import styles from '@/assets/styles/settings.styles';
 
+// Main Settings Screen
 export default function SettingsScreen() {
     const [notifications, setNotifications] = useState(true);
     const [darkMode, setDarkMode] = useState(false);
-    const router = useRouter();
-
 
     return (
         <View style={styles.container}>
@@ -21,10 +18,10 @@ export default function SettingsScreen() {
 
                 {/* 1. Konto użytkownika */}
                 <Text style={styles.sectionTitle}>Konto użytkownika</Text>
-                <SettingButton label="Zmień username" destination="/profile" />
-                <SettingButton label="Zmień adres e-mail" />
-                <SettingButton label="Zmień hasło" />
-                <SettingButton label="Edytuj zdjęcie profilowe" />
+                <SettingButton label="Zmień username" destination="../(notabs)/username" />
+                <SettingButton label="Zmień adres e-mail" destination="/notabs/email" />
+                <SettingButton label="Zmień hasło" destination="/notabs/password" />
+                <SettingButton label="Edytuj zdjęcie profilowe" destination="/notabs/profile-picture" />
 
                 {/* 2. Powiadomienia */}
                 <Text style={styles.sectionTitle}>Powiadomienia</Text>
@@ -59,30 +56,31 @@ export default function SettingsScreen() {
                 <SettingButton label="Resetuj ustawienia" />
                 <SettingButton label="O aplikacji" />
 
-
                 <LogoutButton />
             </ScrollView>
-
-
-
         </View>
     );
 };
 
-const SettingButton = ({ label, destination }) => (
-    <TouchableOpacity style={styles.settingButton} onPress={() => handleNavigate(destination)}>
-        <Text style={styles.settingText}>{label}</Text>
-    </TouchableOpacity>
-);
+// Setting Button Component
+const SettingButton = ({ label, destination }) => {
+    const router = useRouter();  // Call useRouter here to handle navigation
 
+    const handleNavigate = () => {
+        router.push(destination);  // Navigate to the provided destination
+    };
+
+    return (
+        <TouchableOpacity style={styles.settingButton} onPress={handleNavigate}>
+            <Text style={styles.settingText}>{label}</Text>
+        </TouchableOpacity>
+    );
+};
+
+// Setting Switch Component
 const SettingSwitch = ({ label, value, onValueChange }) => (
     <View style={styles.settingSwitch}>
         <Text style={styles.settingText}>{label}</Text>
         <Switch value={value} onValueChange={onValueChange} />
     </View>
 );
-
-const handleNavigate = (destination) => {
-    const router = useRouter();
-    router.push(destination);
-};
