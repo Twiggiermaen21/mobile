@@ -23,6 +23,31 @@ const styles = StyleSheet.create({
         width: width * 0.75,
         height: width * 0.75,
     },
+
+    logoutButton: {
+        backgroundColor: COLORS.primary,
+        borderRadius: 12,
+        padding: 12,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        marginHorizontal: 24,
+        shadowColor: COLORS.black,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+        position: "absolute",
+        bottom: 10,
+        left: 0,
+        right: 0,
+    },
+    logoutText: {
+        color: COLORS.white,
+        fontWeight: "600",
+        marginLeft: 8,
+    },
+
     card: {
         backgroundColor: COLORS.cardBackground,
         borderRadius: 16,

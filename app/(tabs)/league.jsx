@@ -5,57 +5,28 @@ import styles from "../../assets/styles/league.styles";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "@/constants/colorsApp";
 import { useAuthStore } from '@/store/authStore';
-import { API_URL } from '@/constants/api';
 import { Image } from 'expo-image';
 import LeagueText from "@/constants/LeagueText"
 import { useSettingsStore } from '@/store/settingStore';
-
+import { useLeagueStore } from "@/store/leagueStore"
 export default function LeagueScreen() {
     const [selectedTier, setSelectedTier] = useState("Emerald");
-    const [tieredUsers, setTieredUsers] = useState({
-        Emerald: [],
-        Diament: [],
-        Gold: [],
-        Silver: [],
-        Bronze: [],
-    });
     const { lang } = useSettingsStore();
     const t = LeagueText[lang];
-    const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const { token } = useAuthStore();
-
-
-    const splitTop50ToTiers = (users) => ({
-        Emerald: users.slice(0, 10),
-        Diament: users.slice(10, 20),
-        Gold: users.slice(20, 30),
-        Silver: users.slice(30, 40),
-        Bronze: users.slice(40, 50),
-    });
+    const { getLeague, users, isLoading } = useLeagueStore()
 
     const fetchData = async () => {
-        try {
-            setIsLoading(true);
-            const response = await fetch(`${API_URL}/league`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || "Failed to fetch user/walks");
-            const grouped = splitTop50ToTiers(data.users);
-            setTieredUsers(grouped);
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
-            Alert.alert("Error", "Failed to load ranking data. Pull to refresh.");
-        } finally {
-            setIsLoading(false);
-        }
+        const result = await getLeague(token);
+        if (!result.success) Alert.alert("Error", result.error);
     };
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (token) {
+            fetchData();
+        }
+    }, [token]);
 
     const handleRefresh = async () => {
         setRefreshing(true);
@@ -82,8 +53,7 @@ export default function LeagueScreen() {
                     renderItem={({ item }) => (
                         <TouchableOpacity
                             style={styles.tierBadge}
-                            onPress={() => setSelectedTier(item.name)}
-                        >
+                            onPress={() => setSelectedTier(item.name)} >
                             <View style={selectedTier === item.name ? styles.selectedIconWrapper : null}>
                                 <Ionicons name="trophy-sharp" size={50} color={item.color} />
                             </View>
@@ -100,7 +70,7 @@ export default function LeagueScreen() {
                 <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 20 }} />
             ) : (
                 <FlatList
-                    data={tieredUsers[selectedTier]}
+                    data={users[selectedTier]}
                     renderItem={renderUsers}
                     keyExtractor={(item, index) => `${item._id}-${index}`}
                     contentContainerStyle={styles.booksList}

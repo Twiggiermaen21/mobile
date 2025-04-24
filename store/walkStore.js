@@ -4,7 +4,7 @@ import { API_URL } from "../constants/api"
 
 export const useWalkStore = create((set) => ({
     isLoading: false,
-    walks: null,
+    walks: [],
     page: null,
     totalPages: null,
     isLoading: null,
@@ -12,11 +12,10 @@ export const useWalkStore = create((set) => ({
     pageNumber: 1,
     refreshing: false,
 
-    getWalks: async (pageNumber = 1, refreshing = false, token) => {
-
-        if (refreshing) set({ refreshing: true, });
-        else if (pageNumber > 1) set({ isLoadingMore: true, });
-        else set({ isLoading: true, });
+    getWalks: async (pageNumber, refreshing, token) => {
+        if (refreshing) set({ refreshing: true });
+        else if (pageNumber > 1) set({ isLoadingMore: true });
+        else set({ isLoading: true });
 
         try {
             const response = await fetch(`${API_URL}/walks?page=${pageNumber}&limit=5`, {
@@ -26,22 +25,19 @@ export const useWalkStore = create((set) => ({
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || "Failed to fetch walks");
 
-
-
-
-            set({
-                isLoading: false,
-                walks: pageNumber === 1 ? data.walks : [...prevWalks, ...data.walks],
+            set((state) => ({
+                walks: pageNumber === 1 ? data.walks : [...(state.walks || []), ...data.walks],
                 page: data.currentPage,
                 totalPages: data.totalPages,
                 isLoading: false,
                 refreshing: false,
                 isLoadingMore: false,
-            });
+            }));
+
             return { success: true };
 
         } catch (error) {
-            set({ isLoading: false });
+            set({ isLoading: false, isLoadingMore: false, refreshing: false });
             return { success: false, error: error.message };
         }
     },

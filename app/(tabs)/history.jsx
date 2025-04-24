@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, FlatList, RefreshControl } from 'react-native';
 import MapView, { Polyline } from 'react-native-maps';
 import { Image } from 'expo-image';
-import { API_URL } from '@/constants/api';
 import { useAuthStore } from '@/store/authStore';
 import COLORS from '@/constants/colorsApp';
 import styles from '@/assets/styles/history.styles';
@@ -11,23 +10,8 @@ import HistoryText from "@/constants/HistoryText"
 import { useSettingsStore } from '@/store/settingStore';
 import { useWalkStore } from "@/store/walkStore"
 export default function HistoryScreen() {
-    // const [isLoading, setIsLoading] = useState(true);
-    // const [walks, setWalks] = useState([]);
     const { token } = useAuthStore();
-    // const [refreshing, setRefreshing] = useState(false);
-    // const [page, setPage] = useState(1);
-    // const [isLoadingMore, setIsLoadingMore] = useState(false);
-    // const [totalPages, setTotalPages] = useState(1); // z backendu
-
-    const {
-        walks,
-        page,
-        totalPages,
-        isLoading,
-        isLoadingMore,
-        refreshing,
-        pageNumber, getWalks } = useWalkStore()
-
+    const { walks, page, totalPages, isLoadingMore, refreshing, getWalks } = useWalkStore()
 
     const { lang } = useSettingsStore();
     const t = HistoryText[lang];
@@ -39,34 +23,7 @@ export default function HistoryScreen() {
     }
 
     const fetchData = async (pageNumber = 1, refreshing = false) => {
-        // try {
-        //     if (refreshing) setRefreshing(true);
-        //     else if (pageNumber > 1) setIsLoadingMore(true);
-        //     else setIsLoading(true);
-
-        //     const response = await fetch(`${API_URL}/walks?page=${pageNumber}&limit=5`, {
-        //         headers: { Authorization: `Bearer ${token}` },
-        //     });
-
-        //     const data = await response.json();
-        //     if (!response.ok) throw new Error(data.message || "Failed to fetch walks");
-
-
-        //     setWalks(prev =>
-        //         pageNumber === 1 ? data.walks : [...prev, ...data.walks]
-        //     );
-
-        //     setPage(data.currentPage);
-        //     setTotalPages(data.totalPages);
-        // } catch (error) {
-        //     console.error("Error fetching data:", error);
-        // } finally {
-        //     setIsLoading(false);
-        //     setRefreshing(false);
-        //     setIsLoadingMore(false);
-        // }
-
-        const result = await getWalks(pageNumber = 1, refreshing = false, token);
+        const result = await getWalks(pageNumber, refreshing, token);
         if (!result.success) Alert.alert("Error", result.error);
 
     };
@@ -93,6 +50,7 @@ export default function HistoryScreen() {
             return `${s}s`;
         }
     };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{t.historyTitle}</Text>
@@ -107,10 +65,10 @@ export default function HistoryScreen() {
                         colors={[COLORS.primary]} />}
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={0.5}
-                ListFooterComponent={isLoadingMore ? <Text style={{ textAlign: 'center', padding: 8 }}>{t.loading}</Text> : null}
+                ListFooterComponent={isLoadingMore ? <Text style={styles.loading}>{t.loading}</Text> : null}
                 renderItem={({ item }) => (
                     <View style={styles.bookItem}>
-                        <View style={[styles.mapCard, { flex: 1, padding: 0, overflow: 'hidden' }]}>
+                        <View style={styles.mapCard}>
                             <MapView
                                 style={styles.map}
                                 scrollEnabled={false}

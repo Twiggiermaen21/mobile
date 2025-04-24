@@ -33,6 +33,7 @@ export default function ProfileScreen() {
         const result = await DeletedDogId(token, dogId);
         if (!result.success) Alert.alert("Error", result.error);
         else Alert.alert(t.Success, t.DeleteDog);
+        handleRefresh();
     }
 
     const confirmDelete = (dogId) => {
@@ -43,7 +44,7 @@ export default function ProfileScreen() {
     };
     const handleRefresh = async () => {
         setRefreshing(true);
-        await fetchData();
+        await GetDogsFromDataBase();
         setRefreshing(false);
     }
 
@@ -78,7 +79,7 @@ export default function ProfileScreen() {
         <View style={styles.container}>
             <ProfileHeader />
             <View style={styles.booksHeader}><Text style={styles.bookTitle}>{t.Yourpets}</Text></View>
-            {!isLoading && dogsFromDB === null && (
+            {!isLoading && (!dogsFromDB || dogsFromDB.length === 0) && (
                 <Text style={styles.noDogsText}>{t.noDogs}</Text>
             )}
             {isLoading ? (
@@ -99,9 +100,9 @@ export default function ProfileScreen() {
                     }
                 />)}
 
-            <TouchableOpacity style={styles.logoutButton} onPress={() => router.push('/(notabs)/addDog')}>
+            <TouchableOpacity style={styles.addButton} onPress={() => router.push('/(notabs)/addDog')}>
                 <Ionicons name='add-circle-outline' size={20} color={COLORS.white} />
-                <Text style={styles.logoutText}>{t.addDog}</Text>
+                <Text style={styles.addButtonText}>{t.addDog}</Text>
             </TouchableOpacity >
         </View>
     );

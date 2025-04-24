@@ -1,33 +1,25 @@
 import React, { useRef, useState, useEffect } from 'react';
-import {
-    View,
-    Alert,
-    TouchableOpacity,
-    Text,
-    KeyboardAvoidingView,
-    Image,
-    Modal,
-    FlatList,
-    Pressable, RefreshControl
-} from 'react-native';
+import { View, Alert, TouchableOpacity, Text, KeyboardAvoidingView, Image, Modal, FlatList, Pressable, RefreshControl } from 'react-native';
 import { useAuthStore } from '@/store/authStore';
 import MapView, { Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import styles from '@/assets/styles/map.styles';
-
 import COLORS from "../../constants/colorsApp";
 import noDog from "../../assets/ImagesPetWalk/noDog.jpeg";
 import { useDogStore } from "@/store/dogStore"
 import IndexText from "@/constants/IndexText";
 import { useSettingsStore } from '@/store/settingStore';
 import { useWalkStore } from "@/store/walkStore"
+
+
+
 export default function Index() {
     const [refreshing, setRefreshing] = useState(false);
-    const [dogs, setDogs] = useState([]);
     const [isTracking, setIsTracking] = useState(false);
     const [location, setLocation] = useState(null);
     const [path, setPath] = useState([]);
     const [distance, setDistance] = useState(0);
+    const [dog, setDog] = useState([]);
     const [currentSpeed, setCurrentSpeed] = useState(0);
     const [averageSpeed, setAverageSpeed] = useState(0);
     const [timeElapsed, setTimeElapsed] = useState(0);
@@ -38,8 +30,12 @@ export default function Index() {
     const { dogsFromDB, getDogs, isLoading } = useDogStore()
 
     const { saveWalk } = useWalkStore()
+    const { lang } = useSettingsStore();
+    const t = IndexText[lang];
 
-
+    const mapRef = useRef(null);
+    const watchSubscription = useRef(null);
+    const timerRef = useRef(null);
 
     const fetchData = async () => {
         const result = await getDogs(token);
@@ -50,9 +46,7 @@ export default function Index() {
         fetchData();
     }, []);
 
-    const mapRef = useRef(null);
-    const watchSubscription = useRef(null);
-    const timerRef = useRef(null);
+
 
     const requestPermissions = async () => {
         const { status } = await Location.requestForegroundPermissionsAsync();
@@ -149,7 +143,7 @@ export default function Index() {
 
     useEffect(() => {
         if (distance > 0 && timeElapsed > 0) {
-            const avg = distance / (timeElapsed / 3600); // km/h
+            const avg = distance / (timeElapsed / 3600);
             setAverageSpeed(avg.toFixed(2));
         };
         if (isTracking && !isPaused) {
@@ -187,8 +181,7 @@ export default function Index() {
 
     const haversineDistance = (coord1, coord2) => {
         const toRad = (value) => (value * Math.PI) / 180;
-        const R = 6371; // km
-
+        const R = 6371;
         const dLat = toRad(coord2.latitude - coord1.latitude);
         const dLon = toRad(coord2.longitude - coord1.longitude);
         const lat1 = toRad(coord1.latitude);
@@ -207,10 +200,13 @@ export default function Index() {
         await fetchData();
         setRefreshing(false);
     }
+
+
+
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
             <View style={styles.container}>
-                <View style={[styles.mapCard, { flex: 1, padding: 0, overflow: 'hidden' }]}>
+                <View style={styles.mapCard}>
                     <MapView
                         style={styles.map}
                         ref={mapRef}
@@ -240,40 +236,35 @@ export default function Index() {
                 <View style={styles.card}>
                     <View style={styles.header}>
                         <View style={styles.formGroup}>
-                            <Text style={styles.label}>Time</Text>
+                            <Text style={styles.label}>{t.time}</Text>
                             <Text style={styles.info}>{formatTime(timeElapsed)}</Text>
                         </View>
                         <View style={styles.formGroup}>
-                            <Text style={styles.label}>Speed</Text>
+                            <Text style={styles.label}>{t.speed}</Text>
                             <Text style={styles.info}>{currentSpeed} km/h</Text>
                         </View>
                         <View style={styles.formGroup}>
-                            <Text style={styles.label}>Distance</Text>
+                            <Text style={styles.label}>{t.distance}</Text>
                             <Text style={styles.info}>{distance.toFixed(2)} km</Text>
                         </View>
                     </View>
 
                     <View style={styles.footer}>
                         {selectedDogIds.length > 0 ? (
-                            <View style={{ alignItems: 'center', paddingVertical: 10 }}>
+                            <View style={styles.selectedDogsContainer}>
                                 <FlatList
                                     horizontal
                                     data={dogsFromDB.filter(dogsFromDB => selectedDogIds.includes(dogsFromDB._id))}
                                     keyExtractor={(item) => item._id?.toString()}
                                     showsHorizontalScrollIndicator={false}
-                                    contentContainerStyle={{ paddingHorizontal: 10 }}
+                                    contentContainerStyle={styles.dogsListContent}
                                     renderItem={({ item }) => (
-                                        <View style={{ alignItems: 'center', marginRight: 10 }}>
+                                        <View style={styles.dogItem}>
                                             <Image
                                                 source={item.dogImage ? { uri: item.dogImage } : noDog}
-                                                style={{
-                                                    width: 50,
-                                                    height: 50,
-                                                    borderRadius: 25,
-                                                    marginBottom: 5,
-                                                }}
+                                                style={styles.dogImage}
                                             />
-                                            <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{item.name}</Text>
+                                            <Text style={styles.dogName}>{item.name}</Text>
                                         </View>
                                     )}
                                 />
@@ -285,7 +276,7 @@ export default function Index() {
                                         onPress={togglePause}
                                     >
                                         <Text style={styles.buttonText}>
-                                            {isPaused ? '▶️ Wznów' : '⏸ Pauza'}
+                                            {isPaused ? (t.resume) : (t.pause)}
                                         </Text>
                                     </TouchableOpacity>
 
@@ -293,7 +284,7 @@ export default function Index() {
                                         style={[styles.button, { backgroundColor: '#FF6347' }]}
                                         onPress={stopTracking}
                                     >
-                                        <Text style={styles.buttonText}>⏹ Koniec spaceru</Text>
+                                        <Text style={styles.buttonText}>{t.endWalk}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -303,7 +294,7 @@ export default function Index() {
                                     style={styles.button}
                                     onPress={() => setIsDogModalVisible(true)}
                                 >
-                                    <Text style={styles.buttonText}>🐶 Wybierz psa, ruszamy na spacer!</Text>
+                                    <Text style={styles.buttonText}>{t.startWalkPrompt}</Text>
 
                                 </TouchableOpacity>
                             </View>
@@ -318,7 +309,7 @@ export default function Index() {
                 >
                     <View style={styles.ModalAroundBox}>
                         <View style={styles.ModalBox}>
-                            <Text style={styles.title}>Wybierz psa</Text>
+                            <Text style={styles.title}>{t.selectDog}</Text>
                             <FlatList
                                 data={dogsFromDB}
                                 keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
@@ -334,16 +325,10 @@ export default function Index() {
 
                                     return (
                                         <Pressable
-                                            style={{
-                                                paddingVertical: 10,
-                                                flexDirection: 'row',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'center',
-                                                paddingHorizontal: 16,
-                                                backgroundColor: isSelected ? '#d0f0d0' : '#f0f0f0',
-                                                borderRadius: 8,
-                                                marginVertical: 4,
-                                            }}
+                                            style={[
+                                                styles.pressableDogs,
+                                                { backgroundColor: isSelected ? '#d0f0d0' : '#f0f0f0' }
+                                            ]}
                                             onPress={() => {
                                                 setSelectedDogIds(prevSelected => {
                                                     const isSelected = prevSelected.includes(item._id);
@@ -364,18 +349,13 @@ export default function Index() {
                                 }}
                             />
 
-                            <View style={{
-                                marginTop: 20,
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}>
+                            <View style={styles.buttonDone}>
                                 <TouchableOpacity
                                     onPress={async () => {
                                         if (selectedDogIds.length === 0) {
                                             return;
                                         }
-                                        const selectedDogs = dogs.filter(d => selectedDogIds.includes(d.id));
+                                        const selectedDogs = dog.filter(d => selectedDogIds.includes(d.id));
                                         setDog(selectedDogs);
                                         setIsDogModalVisible(false);
                                         await startTracking();
@@ -383,7 +363,7 @@ export default function Index() {
                                     style={[styles.button, selectedDogIds.length === 0 && styles.buttonDisabled]}
                                     disabled={selectedDogIds.length === 0}
                                 >
-                                    <Text style={styles.buttonText}>Gotowe</Text>
+                                    <Text style={styles.buttonText}>{t.done}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>

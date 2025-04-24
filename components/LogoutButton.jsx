@@ -2,7 +2,7 @@ import { Alert, Text, TouchableOpacity, View } from 'react-native'
 import React, { Component } from 'react'
 
 import { useAuthStore } from '@/store/authStore'
-import styles from '@/assets/styles/profile.styles'
+import styles from '@/assets/styles/settings.styles'
 import COLORS from '@/constants/colorsApp'
 import { Ionicons } from '@expo/vector-icons'
 
