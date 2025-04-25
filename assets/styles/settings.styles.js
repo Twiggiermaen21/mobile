@@ -167,6 +167,61 @@ const styles = StyleSheet.create({
 
         paddingBottom: 80,
     },
+    ModalAroundBox: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    ModalBox: {
+        width: '80%',
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    // button: {
+    //     marginTop: 20,
+    //     padding: 10,
+    //     backgroundColor: '#007AFF',
+    //     borderRadius: 8,
+    // },
+    // buttonText: {
+    //     color: '#fff',
+    //     fontWeight: 'bold',
+    // },
+
+
+    form: {
+        marginBottom: 16,
+    },
+    formGroup: {
+        marginBottom: 20,
+    },
+    label: {
+        fontSize: 14,
+        marginBottom: 8,
+        color: COLORS.textPrimary,
+        fontWeight: "500",
+    },
+    inputContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: COLORS.inputBackground,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: COLORS.border,
+        paddingHorizontal: 12,
+    },
+    inputIcon: {
+        marginRight: 10,
+    },
+    input: {
+        flex: 1,
+        height: 48,
+        color: COLORS.textDark,
+    },
+
 });
 
 export default styles;

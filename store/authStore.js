@@ -82,6 +82,45 @@ export const useAuthStore = create((set) => ({
         await AsyncStorage.removeItem("user");
         set({ token: null, user: null });
 
+    },
+
+    updateUsername: async (token, newUsername) => {
+        set({ isLoading: true });
+        try {
+            // Jeśli używasz API, podstaw URL i metodę aktualizacji
+            const response = await fetch(`${API_URL}/auth/update-username`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}` // jeśli używasz autoryzacji
+                },
+                body: JSON.stringify({ username: newUsername })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to update username');
+
+            }
+
+
+
+            // Jeśli masz lokalny store (np. Zustand):
+            // set({ username: data.username });
+            set({ isLoading: false });
+            console.log('Username updated successfully:', data.username);
+            return { success: true };
+        } catch (error) {
+            set({ isLoading: false });
+            console.error('Error updating username:', error);
+            return { success: false, error: error.message };
+        }
     }
+    , updatePassword: async () => {
+
+    }, updateEmail: async () => {
+
+    },
+
+
 
 }));

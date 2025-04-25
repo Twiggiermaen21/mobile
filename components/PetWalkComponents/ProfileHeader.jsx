@@ -5,14 +5,14 @@ import styles from '@/assets/styles/profile.styles';
 import { Image } from 'expo-image';
 import ProfileText from "@/constants/ProfileText";
 import { useSettingsStore } from '@/store/settingStore';
-
+import noProfil from "@/assets/ImagesPetWalk/profil.jpg";
 
 
 export default function ProfileHeader() {
     const { user } = useAuthStore();
     if (!user) return null;
     const { lang } = useSettingsStore();
-    const t = ProfileText[lang];
+    const t = ProfileText[lang] || ProfileText.pl;
     const formatDate = (isoString) => {
         const date = new Date(isoString);
         const day = date.getDate().toString().padStart(2, '0');
@@ -23,7 +23,7 @@ export default function ProfileHeader() {
 
     return (
         <View style={styles.profileHeader}>
-            <Image source={{ uri: user.profileImage }} style={styles.profileImage} />
+            <Image source={{ uri: user.profileImage || noProfil }} style={styles.profileImage} />
             <View style={styles.profileInfo}>
                 <Text style={styles.username} >{user.username}</Text>
 

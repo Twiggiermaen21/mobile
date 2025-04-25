@@ -1,77 +1,135 @@
 import React, { useState } from 'react';
-import { View, Text, Switch, TouchableOpacity, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Modal, View, Text, Switch, TouchableOpacity, TextInput, TouchableWithoutFeedback, ScrollView, Alert } from 'react-native';
+
+
+import COLORS from '@/constants/colorsApp';
 
 import LogoutButton from '@/components/PetWalkComponents/LogoutButton';
 import styles from '@/assets/styles/settings.styles';
-
+import { useSettingsStore } from '@/store/settingStore';
+import SettingsText from "@/constants/SettingsText"
+import { Ionicons } from '@expo/vector-icons';
+import { useAuthStore } from '@/store/authStore';
 // Main Settings Screen
 export default function SettingsScreen() {
     const [notifications, setNotifications] = useState(true);
     const [darkMode, setDarkMode] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedLabel, setSelectedLabel] = useState('');
+    const { lang } = useSettingsStore();
+    const t = SettingsText[lang];
+    const [inputValue, setInputValue] = useState('');
+    const { isLoading, updateUsername, token } = useAuthStore();
+    const closeModal = () => {
+        updateUsernameButton();
+        setModalVisible(false);
+        setSelectedLabel('');
+        setInputValue('');
+
+    };
+
+    const openModal = (label) => {
+        setSelectedLabel(label);
+        setModalVisible(true);
+    };
+
+    const updateUsernameButton = async () => {
+        const result = await updateUsername(token, inputValue);
+        if (!result.success) Alert.alert("Error", result.error);
+    }
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Ustawienia</Text>
+            <Text style={styles.title}>{t.settingsTitle}</Text>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-                {/* 1. Konto użytkownika */}
-                <Text style={styles.sectionTitle}>Konto użytkownika</Text>
-                <SettingButton label="Zmień username" destination="../(notabs)/username" />
-                <SettingButton label="Zmień adres e-mail" destination="/notabs/email" />
-                <SettingButton label="Zmień hasło" destination="/notabs/password" />
-                <SettingButton label="Edytuj zdjęcie profilowe" destination="/notabs/profile-picture" />
+                <Text style={styles.sectionTitle}>{t.account}</Text>
+                <SettingButton label={t.changeUsername} onPress={() => openModal(t.changeUsername)} />
+                <SettingButton label={t.changeEmail} onPress={() => openModal(t.changeEmail)} />
+                <SettingButton label={t.changePassword} onPress={() => openModal(t.changePassword)} />
+                <SettingButton label={t.editProfilePicture} onPress={() => openModal(t.editProfilePicture)} />
 
-                {/* 2. Powiadomienia */}
-                <Text style={styles.sectionTitle}>Powiadomienia</Text>
-                <SettingButton label="Powiadomienia e-mail/SMS" />
+                <Text style={styles.sectionTitle}>{t.notifications}</Text>
+                <SettingButton label={t.emailSMSNotifications} onPress={() => openModal(t.emailSMSNotifications)} />
 
-                {/* 3. Motyw i wygląd */}
-                <Text style={styles.sectionTitle}>Motyw i wygląd</Text>
-                <SettingSwitch label="Tryb ciemny" value={darkMode} onValueChange={setDarkMode} />
-                <SettingButton label="Rozmiar czcionki" />
-                <SettingButton label="Kolorystyka" />
+                <Text style={styles.sectionTitle}>{t.themeAppearance}</Text>
+                {/* <SettingSwitch label={t.darkMode} value={darkMode} onValueChange={setDarkMode} />
+                <SettingButton label={t.fontSize} onPress={() => openModal(t.fontSize)} /> */}
+                <SettingButton label={t.colorScheme} onPress={() => openModal(t.colorScheme)} />
 
-                {/* 4. Język i lokalizacja */}
-                <Text style={styles.sectionTitle}>Język i lokalizacja</Text>
-                <SettingButton label="Wybór języka" />
-                <SettingButton label="Format daty i godziny" />
-                <SettingButton label="Strefa czasowa" />
+                <Text style={styles.sectionTitle}>{t.languageLocation}</Text>
+                <SettingButton label={t.selectLanguage} onPress={() => openModal(t.selectLanguage)} />
+                {/* <SettingButton label={t.dateFormat} onPress={() => openModal(t.dateFormat)} />
+                <SettingButton label={t.timeZone} onPress={() => openModal(t.timeZone)} /> */}
 
-                {/* 5. Prywatność i bezpieczeństwo */}
-                <Text style={styles.sectionTitle}>Prywatność i bezpieczeństwo</Text>
-                <SettingButton label="Zarządzaj urządzeniami" />
-                <SettingButton label="Historia logowania" />
+                {/* 
+            <Text style={styles.sectionTitle}>{t.privacySecurity}</Text>
+            <SettingButton label={t.manageDevices} onPress={() => openModal(t.manageDevices)} />
+            <SettingButton label={t.loginHistory} onPress={() => openModal(t.loginHistory)} />
+            */}
 
-                {/* 6. Dane i synchronizacja */}
-                <Text style={styles.sectionTitle}>Dane i synchronizacja</Text>
-                <SettingButton label="Użycie danych komórkowych vs Wi-Fi" />
-
-                {/* 7. Pomoc i Inne */}
-                <Text style={styles.sectionTitle}>Pomoc i Inne</Text>
-                <SettingButton label="Centrum pomocy / FAQ" />
-                <SettingButton label="Zgłoś problem" />
-                <SettingButton label="Wersja aplikacji" />
-                <SettingButton label="Resetuj ustawienia" />
-                <SettingButton label="O aplikacji" />
+                <Text style={styles.sectionTitle}>{t.helpOther}</Text>
+                <SettingButton label={t.helpCenter} onPress={() => openModal(t.helpCenter)} />
+                <SettingButton label={t.reportProblem} onPress={() => openModal(t.reportProblem)} />
+                <SettingButton label={t.appVersion} onPress={() => openModal(t.appVersion)} />
+                <SettingButton label={t.resetSettings} onPress={() => openModal(t.resetSettings)} />
+                <SettingButton label={t.aboutApp} onPress={() => openModal(t.aboutApp)} />
 
                 <LogoutButton />
             </ScrollView>
+
+            <Modal
+                visible={modalVisible}
+                transparent={true}
+                animationType="fade"
+            >
+                <TouchableWithoutFeedback onPress={closeModal}>
+                    <View style={styles.ModalAroundBox}>
+                        <TouchableWithoutFeedback>
+                            <View style={styles.card}>
+                                <Text style={styles.title}>{selectedLabel}</Text>
+
+                                <View style={styles.form}>
+
+                                    <View style={styles.formGroup}>
+                                        <Text style={styles.label}>{t.nameLabel}</Text>
+                                        <View style={styles.inputContainer}>
+                                            <Ionicons name="chevron-forward" style={styles.inputIcon} size={20} color={COLORS.textSecondary} />
+                                            <TextInput
+                                                style={styles.input}
+                                                placeholder={t.namePlaceholder}
+                                                placeholderTextColor={COLORS.placeholderText}
+                                                value={inputValue}
+
+                                                onChangeText={setInputValue}
+                                            />
+                                        </View>
+                                    </View>
+
+
+                                    <TouchableOpacity style={styles.button} onPress={() => {
+                                        console.log("Wprowadzone:", inputValue); // np. API call
+                                        closeModal();
+                                    }}>
+                                        <Text style={styles.buttonText}>{t.save}</Text>
+                                    </TouchableOpacity>
+
+                                </View>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </View>
+                </TouchableWithoutFeedback>
+            </Modal>
         </View>
     );
 };
 
 // Setting Button Component
-const SettingButton = ({ label, destination }) => {
-    const router = useRouter();  // Call useRouter here to handle navigation
-
-    const handleNavigate = () => {
-        router.push(destination);  // Navigate to the provided destination
-    };
-
+const SettingButton = ({ label, onPress }) => {
+    // Call useRouter here to handle navigation
     return (
-        <TouchableOpacity style={styles.settingButton} onPress={handleNavigate}>
+        <TouchableOpacity style={styles.settingButton} onPress={onPress}>
             <Text style={styles.settingText}>{label}</Text>
         </TouchableOpacity>
     );
