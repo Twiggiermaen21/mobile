@@ -84,42 +84,38 @@ export const useAuthStore = create((set) => ({
 
     },
 
-    updateUsername: async (token, newUsername) => {
+    updateUser: async (token, updateData) => {
         set({ isLoading: true });
         try {
-            // Jeśli używasz API, podstaw URL i metodę aktualizacji
-            const response = await fetch(`${API_URL}/auth/update-username`, {
+            const response = await fetch(`${API_URL}/auth/update-user`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}` // jeśli używasz autoryzacji
+                    Authorization: `Bearer ${token}` // Bearer token
                 },
-                body: JSON.stringify({ username: newUsername })
+                body: JSON.stringify(updateData) // Wysyłasz dowolne pola
             });
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.message || 'Failed to update username');
 
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to update user');
             }
 
+            // Aktualizacja w store jak chcesz
+            // set({ user: data.user });
 
-
-            // Jeśli masz lokalny store (np. Zustand):
-            // set({ username: data.username });
             set({ isLoading: false });
-            console.log('Username updated successfully:', data.username);
-            return { success: true };
+            console.log('User updated successfully:', data.user);
+            return { success: true, user: data.user };
         } catch (error) {
             set({ isLoading: false });
-            console.error('Error updating username:', error);
+            console.error('Error updating user:', error);
             return { success: false, error: error.message };
         }
-    }
-    , updatePassword: async () => {
-
-    }, updateEmail: async () => {
-
     },
+
+
 
 
 
