@@ -71,7 +71,13 @@ const SettingsText = {
         resetSettings: "Resetuj ustawienia",
         aboutApp: "O aplikacji",
         save: "Zapisz",
-        close: "Zamknij"
+        close: "Zamknij",
+        info: {
+            1: "Wprowadź nową nazwę użytkownika (min. 3 znaki)",
+            2: "Wprowadź nowy adres e-mail (np. test@example.com)",
+            3: "Wprowadź nowe hasło (min. 8 znaków)",
+            4: `Zaktualizuj swoje zdjęcie profilowe.`
+        }
     }
 };
 

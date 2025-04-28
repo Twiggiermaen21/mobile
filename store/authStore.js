@@ -102,12 +102,10 @@ export const useAuthStore = create((set) => ({
                 throw new Error(data.message || 'Failed to update user');
             }
 
-            // Aktualizacja w store jak chcesz
-            // set({ user: data.user });
+
 
             set({ isLoading: false });
-            console.log('User updated successfully:', data.user);
-            return { success: true, user: data.user };
+            return { success: true, };
         } catch (error) {
             set({ isLoading: false });
             console.error('Error updating user:', error);

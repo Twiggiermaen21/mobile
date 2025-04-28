@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, Switch, TouchableOpacity, TextInput, TouchableWithoutFeedback, ScrollView, Alert } from 'react-native';
+import { Modal, View, Text, Switch, TouchableOpacity, TextInput, TouchableWithoutFeedback, ScrollView, Alert, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
+import HTML from 'react-native-render-html';
 import COLORS from '@/constants/colorsApp';
 import styles from '@/assets/styles/settings.styles';
 import { useSettingsStore } from '@/store/settingStore';
@@ -31,7 +31,10 @@ export default function SettingsScreen() {
         setInputValue('');
         setSelectedFunction(null);
     };
-
+    const handleLinkPress = () => {
+        const url = 'https://www.dicebear.com/styles/avataaars/';
+        Linking.openURL(url).catch((err) => console.error('Failed to open URL', err));
+    };
     const fieldMap = {
         1: { username: inputValue },
         2: { email: inputValue },
@@ -104,7 +107,12 @@ export default function SettingsScreen() {
                                 <Text style={styles.title}>{selectedLabel}</Text>
                                 <View style={styles.form}>
                                     <View style={styles.formGroup}>
-                                        <Text style={styles.label}>{t.nameLabel}</Text>
+                                        <Text style={styles.label}>{t.info[selectedFunction]}</Text>
+                                        {selectedFunction === 4 ? (
+                                            <Text style={styles.link} onPress={handleLinkPress}>
+                                                Kliknij tutaj, aby stworzyć awatara!
+                                            </Text>
+                                        ) : null}
                                         <View style={styles.inputContainer}>
                                             <Ionicons name="chevron-forward" style={styles.inputIcon} size={20} color={COLORS.textSecondary} />
                                             <TextInput
@@ -124,9 +132,9 @@ export default function SettingsScreen() {
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-                </TouchableWithoutFeedback>
-            </Modal>
-        </View>
+                </TouchableWithoutFeedback >
+            </Modal >
+        </View >
     );
 }
 
