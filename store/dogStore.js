@@ -72,8 +72,9 @@ export const useDogStore = create((set) => ({
         set({ isLoading: true });
         try {
             const response = await fetch(`${API_URL}/dogs/${dogId}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` }
+                method: "PATCH",
+                headers: { Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ isDeleted: true })
             })
 
             const data = await response.json();
