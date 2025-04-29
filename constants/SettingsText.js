@@ -26,7 +26,12 @@ const SettingsText = {
 
         dataSync: "Data and Synchronization",
         dataUsage: "Mobile Data vs Wi-Fi",
-
+        info: {
+            1: "Enter a new username (min. 3 characters)",
+            2: "Enter a new email address (e.g. test@example.com)",
+            3: "Enter a new password (min. 8 characters)",
+            4: "Update your profile picture."
+        },
         helpOther: "Help and Other",
         helpCenter: "Help Center / FAQ",
         reportProblem: "Report a Problem",

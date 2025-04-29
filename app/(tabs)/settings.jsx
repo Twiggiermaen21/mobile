@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, Switch, TouchableOpacity, TextInput, TouchableWithoutFeedback, ScrollView, Alert, Linking } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, TextInput, TouchableWithoutFeedback, ScrollView, Alert, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import HTML from 'react-native-render-html';
 import COLORS from '@/constants/colorsApp';
 import styles from '@/assets/styles/settings.styles';
 import { useSettingsStore } from '@/store/settingStore';
@@ -145,10 +144,3 @@ const SettingButton = ({ label, onPress }) => (
     </TouchableOpacity>
 );
 
-// Setting Switch Component (jeśli chcesz używać)
-const SettingSwitch = ({ label, value, onValueChange }) => (
-    <View style={styles.settingSwitch}>
-        <Text style={styles.settingText}>{label}</Text>
-        <Switch value={value} onValueChange={onValueChange} />
-    </View>
-);
