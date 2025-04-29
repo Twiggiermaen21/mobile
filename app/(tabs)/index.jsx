@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Alert, TouchableOpacity, Text, KeyboardAvoidingView, Image, Modal, FlatList, Pressable, RefreshControl } from 'react-native';
-import { TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native';
 import { useAuthStore } from '@/store/authStore';
 import MapView, { Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -13,7 +13,9 @@ import { useSettingsStore } from '@/store/settingStore';
 import { useWalkStore } from "@/store/walkStore"
 import formatTime from "@/components/PetWalkComponents/timeUtils"
 import haversineDistance from "@/components/PetWalkComponents/haversineDistance"
-
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { openNativeCamera } from "@/constants/camera"
 export default function Index() {
     const [refreshing, setRefreshing] = useState(false);
     const [isTracking, setIsTracking] = useState(false);
@@ -29,7 +31,7 @@ export default function Index() {
     const [selectedDogIds, setSelectedDogIds] = useState([]);
     const [isPaused, setIsPaused] = useState(false);
     const { dogsFromDB, getDogs } = useDogStore()
-
+    const router = useRouter();
     const { saveWalk } = useWalkStore()
     const { lang } = useSettingsStore();
     const t = IndexText[lang];
@@ -181,6 +183,23 @@ export default function Index() {
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
             <View style={styles.container}>
                 <View style={styles.mapCard}>
+                    <Pressable
+                        // onPress={() => router.push('/(notabs)/camera')}
+                        onPress={async () => {
+                            const photoUri = await openNativeCamera();
+                            if (photoUri) {
+                                console.log('Zrobione zdjęcie:', photoUri);
+                                // możesz tu wysłać do Firebase, Supabase itp.
+                            }
+                        }}
+                        style={({ pressed }) => [
+                            styles.cameraButton,
+                            { backgroundColor: pressed ? '#e0e0e0' : 'white' }, // Szare po naciśnięciu
+                        ]}>
+                        <View style={styles.iconBackground}>
+                            <Ionicons name="camera" size={24} color="#777" />
+                        </View>
+                    </Pressable>
                     <MapView
                         style={styles.map}
                         ref={mapRef}

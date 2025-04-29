@@ -22,6 +22,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
   },
+  cameraButton: {
+    position: 'absolute',
+    top: 12,
+    left: 12,
+    width: 40,
+    height: 40,
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    // Subtelny cień
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 2,
+    elevation: 2, // cień na Androidzie
+    zIndex: 10,
+  },
   mapCard: {
     flex: 1,
     backgroundColor: COLORS.cardBackground,
