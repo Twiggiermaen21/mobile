@@ -130,7 +130,7 @@ export default function HistoryScreen() {
                                     <FlatList
                                         horizontal={true}
                                         data={item.dogs}
-                                        keyExtractor={(dog, index) => dog?._id?.toString() || `dog-${index}`}
+                                        keyExtractor={(dog, index) => dog?._id ? dog._id.toString() : `dog-${index}-${dog.createdAt}`}
                                         renderItem={({ item: dog }) => (
                                             <View style={styles.dogContainer}>
                                                 <Image
