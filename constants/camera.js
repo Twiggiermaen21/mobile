@@ -2,7 +2,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
 
 /**
- * Otwiera natywną aplikację aparatu i zwraca URI zdjęcia lub null jeśli anulowano.
+ * Otwiera natywną aplikację aparatu i zwraca obiekt z URI i base64 zdjęcia.
  */
 export async function openNativeCamera() {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -12,23 +12,24 @@ export async function openNativeCamera() {
         return null;
     }
 
-
     try {
         const result = await ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ['images'],
             quality: 1,
             aspect: [4, 3],
+            base64: true
         });
 
         if (!result.canceled) {
-            return result.assets[0].uri;
+            return {
+                uri: result.assets[0].uri,
+                base64: result.assets[0].base64
+            };
         } else {
             return null;
         }
     } catch (error) {
         console.log("Error occurred while launching the camera: ", error);
+        return null;
     }
-
-
-
 }

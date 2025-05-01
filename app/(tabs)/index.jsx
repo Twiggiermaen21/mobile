@@ -183,23 +183,25 @@ export default function Index() {
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
             <View style={styles.container}>
                 <View style={styles.mapCard}>
-                    <Pressable
-                        // onPress={() => router.push('/(notabs)/camera')}
-                        onPress={async () => {
-                            const photoUri = await openNativeCamera();
-                            if (photoUri) {
-                                console.log('Zrobione zdjęcie:', photoUri);
-                                // możesz tu wysłać do Firebase, Supabase itp.
-                            }
-                        }}
-                        style={({ pressed }) => [
-                            styles.cameraButton,
-                            { backgroundColor: pressed ? '#e0e0e0' : 'white' }, // Szare po naciśnięciu
-                        ]}>
-                        <View style={styles.iconBackground}>
-                            <Ionicons name="camera" size={24} color="#777" />
-                        </View>
-                    </Pressable>
+                    {selectedDogIds.length > 0 ? (
+                        <Pressable
+                            // onPress={() => router.push('/(notabs)/camera')}
+                            onPress={async () => {
+                                const photo = await openNativeCamera();
+                                if (photo) {
+                                    console.log('Zrobione zdjęcie:', photo.base64);
+                                    // możesz tu wysłać do Firebase, Supabase itp.
+                                }
+                            }}
+                            style={({ pressed }) => [
+                                styles.cameraButton,
+                                { backgroundColor: pressed ? '#e0e0e0' : 'white' }, // Szare po naciśnięciu
+                            ]}>
+                            <View style={styles.iconBackground}>
+                                <Ionicons name="camera" size={24} color="#777" />
+                            </View>
+                        </Pressable>
+                    ) : null}
                     <MapView
                         style={styles.map}
                         ref={mapRef}
