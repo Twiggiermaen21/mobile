@@ -16,7 +16,7 @@ export const usePhotoStore = create((set) => ({
         else set({ isLoading: true });
 
         try {
-            const response = await fetch(`${API_URL}/photo?page=${pageNumber}&limit=9`, {
+            const response = await fetch(`${API_URL}/photo?page=${pageNumber}&limit=18`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 

@@ -151,6 +151,9 @@ export default function Index() {
     };
 
     const savePhoto = async () => {
+
+        console.log("Image", image);
+        console.log("Image64", imageBase64);
         const result = await uploadImage(token, image, imageBase64, user);
         if (!result.success) Alert.alert("Error", result.error);
         else Alert.alert("Sukces", "Zdjecie zostało zapisane!");
@@ -202,6 +205,7 @@ export default function Index() {
                             onPress={async () => {
                                 const result = await openNativeCamera();
                                 if (!result.canceled) {
+
                                     setImage(result.uri)
 
                                     if (result.base64) {
@@ -212,7 +216,10 @@ export default function Index() {
                                         });
                                         setImageBase64(base64);
                                     }
+
                                     savePhoto();
+                                } else {
+                                    Alert.alert("Error", result.error);
                                 }
 
                             }}

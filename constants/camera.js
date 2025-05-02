@@ -15,18 +15,17 @@ export async function openNativeCamera() {
     try {
         const result = await ImagePicker.launchCameraAsync({
             mediaTypes: ['images'],
+            allowsEditing: true,
             quality: 0.1,
             aspect: [4, 3],
             base64: true
         });
-
+        console.log(result);
         if (!result.canceled) {
             return {
                 uri: result.assets[0].uri,
                 base64: result.assets[0].base64
             };
-        } else {
-            return null;
         }
     } catch (error) {
         console.log("Error occurred while launching the camera: ", error);
