@@ -9,8 +9,6 @@ import { Image } from 'expo-image';
 import * as   ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system"
 import { useAuthStore } from '@/store/authStore';
-
-
 import { useDogStore } from "@/store/dogStore"
 import AddDogText from "@/constants/AddDogText"
 import { useSettingsStore } from '@/store/settingStore';

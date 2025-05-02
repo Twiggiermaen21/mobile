@@ -27,14 +27,16 @@ export default function Index() {
     const [averageSpeed, setAverageSpeed] = useState(0);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [isDogModalVisible, setIsDogModalVisible] = useState(false);
-    const { token } = useAuthStore();
+    const { token, user } = useAuthStore();
     const [selectedDogIds, setSelectedDogIds] = useState([]);
     const [isPaused, setIsPaused] = useState(false);
     const { dogsFromDB, getDogs } = useDogStore()
     const router = useRouter();
-    const { saveWalk } = useWalkStore()
+    const { saveWalk, uploadImage } = useWalkStore()
     const { lang } = useSettingsStore();
     const t = IndexText[lang];
+    const [image, setImage] = useState(null);
+    const [imageBase64, setImageBase64] = useState(null);
 
     const mapRef = useRef(null);
     const watchSubscription = useRef(null);
@@ -146,6 +148,15 @@ export default function Index() {
 
     };
 
+    const savePhoto = async () => {
+        const result = await uploadImage(token, image, imageBase64, user);
+        if (!result.success) Alert.alert("Error", result.error);
+        else Alert.alert("Sukces", "Zdjecie zostało zapisane!");
+
+    }
+
+
+
     useEffect(() => {
         if (distance > 0 && timeElapsed > 0) {
             const avg = distance / (timeElapsed / 3600);
@@ -187,11 +198,21 @@ export default function Index() {
                         <Pressable
                             // onPress={() => router.push('/(notabs)/camera')}
                             onPress={async () => {
-                                const photo = await openNativeCamera();
-                                if (photo) {
-                                    console.log('Zrobione zdjęcie:', photo.base64);
-                                    // możesz tu wysłać do Firebase, Supabase itp.
+                                const result = await openNativeCamera();
+                                if (!result.canceled) {
+                                    setImage(result.uri)
+
+                                    if (result.base64) {
+                                        setImageBase64(result.base64);
+                                    } else {
+                                        const base64 = await FileSystem.readAsStringAsync(result.uri, {
+                                            encoding: FileSystem.EncodingType.base64
+                                        });
+                                        setImageBase64(base64);
+                                    }
+                                    savePhoto();
                                 }
+
                             }}
                             style={({ pressed }) => [
                                 styles.cameraButton,
