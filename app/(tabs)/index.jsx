@@ -11,10 +11,11 @@ import { useDogStore } from "@/store/dogStore"
 import IndexText from "@/constants/IndexText";
 import { useSettingsStore } from '@/store/settingStore';
 import { useWalkStore } from "@/store/walkStore"
+import { usePhotoStore } from "@/store/photoStore"
 import formatTime from "@/components/PetWalkComponents/timeUtils"
 import haversineDistance from "@/components/PetWalkComponents/haversineDistance"
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+// import { useRouter } from 'expo-router';
 import { openNativeCamera } from "@/constants/camera"
 export default function Index() {
     const [refreshing, setRefreshing] = useState(false);
@@ -31,8 +32,9 @@ export default function Index() {
     const [selectedDogIds, setSelectedDogIds] = useState([]);
     const [isPaused, setIsPaused] = useState(false);
     const { dogsFromDB, getDogs } = useDogStore()
-    const router = useRouter();
-    const { saveWalk, uploadImage } = useWalkStore()
+    // const router = useRouter();
+    const { saveWalk, } = useWalkStore();
+    const { uploadImage } = usePhotoStore();
     const { lang } = useSettingsStore();
     const t = IndexText[lang];
     const [image, setImage] = useState(null);

@@ -80,7 +80,9 @@ export default function HistoryScreen() {
                 onEndReachedThreshold={0.5}
                 ListFooterComponent={isLoadingMore ? <Text style={styles.loading}>{t.loading}</Text> : null}
                 renderItem={({ item }) => (
-                    <Pressable onLongPress={() => handleDeleteWalk(item._id)}>
+                    <Pressable
+                        onLongPress={() => handleDeleteWalk(item._id)}
+                    >
                         <View style={styles.bookItem}>
                             <View style={styles.mapCard}>
                                 {item.path && item.path.length > 0 ? (
@@ -142,6 +144,7 @@ export default function HistoryScreen() {
                                 </View>
                             </View>
                         </View>
+
                     </Pressable>
                 )} />
         </View>
