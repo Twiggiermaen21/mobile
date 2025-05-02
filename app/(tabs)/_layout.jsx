@@ -73,6 +73,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="gallery"
+        options={{
+          title: 'Gallery',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="image-multiple" size={32} color={color} />
+          )
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           title: 'Ustawienia',

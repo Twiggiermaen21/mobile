@@ -87,4 +87,5 @@ export const useWalkStore = create((set) => ({
         }
     },
 
+
 }));
