@@ -1,22 +1,18 @@
 // styles/login.styles.js
 import { StyleSheet, Dimensions } from "react-native";
-import texture from "@/constants/colorsApp";
-import { useSettingsStore } from "@/store/settingStore";
-
-const { color } = useSettingsStore();
 
 const { width } = Dimensions.get("window");
 
-const styles = StyleSheet.create({
+const styles = (COLORS) => StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: texture[color].background,
+    backgroundColor: COLORS.background,
     padding: 20,
     justifyContent: "center",
   },
   scrollViewStyle: {
     flex: 1,
-    backgroundColor: texture[color].background,
+    backgroundColor: COLORS.background,
   },
   topIllustration: {
     alignItems: "center",
@@ -27,16 +23,16 @@ const styles = StyleSheet.create({
     height: width * 0.75,
   },
   card: {
-    backgroundColor: texture[color].cardBackground,
+    backgroundColor: COLORS.cardBackground,
     borderRadius: 16,
     padding: 24,
-    shadowColor: texture[color].black,
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
     borderWidth: 2,
-    borderColor: texture[color].border,
+    borderColor: COLORS.border,
     marginTop: -24,
   },
   header: {
@@ -46,12 +42,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "700",
-    color: texture[color].textPrimary,
+    color: COLORS.textPrimary,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: texture[color].textSecondary,
+    color: COLORS.textSecondary,
     textAlign: "center",
   },
   formContainer: {
@@ -63,16 +59,16 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     marginBottom: 8,
-    color: texture[color].textPrimary,
+    color: COLORS.textPrimary,
     fontWeight: "500",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: texture[color].inputBackground,
+    backgroundColor: COLORS.inputBackground,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: texture[color].border,
+    borderColor: COLORS.border,
     paddingHorizontal: 12,
   },
   inputIcon: {
@@ -81,26 +77,26 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 48,
-    color: texture[color].textDark,
+    color: COLORS.textDark,
   },
   eyeIcon: {
     padding: 8,
   },
   button: {
-    backgroundColor: texture[color].primary,
+    backgroundColor: COLORS.primary,
     borderRadius: 12,
     height: 50,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 16,
-    shadowColor: texture[color].black,
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
   },
   buttonText: {
-    color: texture[color].white,
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -110,11 +106,11 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   footerText: {
-    color: texture[color].textSecondary,
+    color: COLORS.textSecondary,
     marginRight: 5,
   },
   link: {
-    color: texture[color].primary,
+    color: COLORS.primary,
     fontWeight: "600",
   },
 });

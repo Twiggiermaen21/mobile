@@ -35,10 +35,12 @@ export default function GalleryScreen() {
         getPhotos,
         deletePhoto // ← upewnij się, że ta funkcja istnieje w photoStore
     } = usePhotoStore();
-
     const [selectedPhoto, setSelectedPhoto] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const COLORS = texture[color];
+    const dynamicStyles = styles(COLORS);
+
+
     const fetchData = async (pageNumber = 1, refreshing = false) => {
         const result = await getPhotos(pageNumber, refreshing, token);
         if (!result.success) Alert.alert("Error", result.error);
@@ -109,8 +111,8 @@ export default function GalleryScreen() {
 
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>{t.galleryTitle}</Text>
+        <View style={dynamicStyles.container}>
+            <Text style={dynamicStyles.title}>{t.galleryTitle}</Text>
 
             {photos && photos.length > 0 ? (
                 <FlatList
@@ -125,7 +127,7 @@ export default function GalleryScreen() {
                     }
                     onEndReached={handleLoadMore}
                     onEndReachedThreshold={0.5}
-                    ListFooterComponent={isLoadingMore ? <Text style={styles.loading}>{t.loading}</Text> : null}
+                    ListFooterComponent={isLoadingMore ? <Text style={dynamicStyles.loading}>{t.loading}</Text> : null}
                     numColumns={3}
                     renderItem={({ item }) => (
                         <TouchableOpacity onPress={() => {
@@ -133,28 +135,28 @@ export default function GalleryScreen() {
 
                             setModalVisible(true);
                         }}>
-                            <Image source={{ uri: item.photo }} style={styles.image} />
+                            <Image source={{ uri: item.photo }} style={dynamicStyles.image} />
                         </TouchableOpacity>
                     )}
                 />
             ) : (
-                <View style={styles.noPhotosContainer}>
-                    <Text style={styles.noPhotosText}>{t.noPhoto}</Text>
+                <View style={dynamicStyles.noPhotosContainer}>
+                    <Text style={dynamicStyles.noPhotosText}>{t.noPhoto}</Text>
                 </View>
             )}
 
             {selectedPhoto && (
                 <Modal visible={modalVisible} transparent={true} animationType="fade">
-                    <View style={styles.modalWrapper}>
-                        <View style={styles.ImageContainer}>
+                    <View style={dynamicStyles.modalWrapper}>
+                        <View style={dynamicStyles.ImageContainer}>
                             <Image
                                 source={{ uri: selectedPhoto?.photo }}
-                                style={styles.fullImage}
+                                style={dynamicStyles.fullImage}
                                 resizeMode="contain"
                             />
                         </View>
 
-                        <View style={styles.bottomBar}>
+                        <View style={dynamicStyles.bottomBar}>
                             <Pressable onPress={() => setModalVisible(false)}>
                                 <Ionicons name="chevron-back" size={32} color={COLORS.white} />
                             </Pressable>

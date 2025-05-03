@@ -19,6 +19,8 @@ export default function Login() {
     const { lang, color } = useSettingsStore();
     const t = LoginText[lang];
     const COLORS = texture[color];
+    const dynamicStyles = styles(COLORS);
+
     const handleLogin = async () => {
         const result = await login(email, password);
         if (!result.success) Alert.alert("Error", result.error);
@@ -26,24 +28,24 @@ export default function Login() {
 
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
-            <View style={styles.container}>
-                <View style={styles.topIllustration}>
+            <View style={dynamicStyles.container}>
+                <View style={dynamicStyles.topIllustration}>
                     <Image source={require("../../assets/images/DogWalking-rafiki.png")}
-                        style={styles.illustrationImage}
+                        style={dynamicStyles.illustrationImage}
                         resizeMode='contain' />
                 </View>
-                <View style={styles.card}>
-                    <View style={styles.formContainer}>
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Email</Text>
-                            <View style={styles.inputContainer}>
+                <View style={dynamicStyles.card}>
+                    <View style={dynamicStyles.formContainer}>
+                        <View style={dynamicStyles.inputGroup}>
+                            <Text style={dynamicStyles.label}>Email</Text>
+                            <View style={dynamicStyles.inputContainer}>
                                 <Ionicons
                                     name='mail-outline'
                                     size={20}
                                     color={COLORS.primary}
-                                    style={styles.inputIcon} />
+                                    style={dynamicStyles.inputIcon} />
                                 <TextInput
-                                    style={styles.input}
+                                    style={dynamicStyles.input}
                                     placeholder={t.email}
                                     placeholderTextColor={COLORS.placeholderText}
                                     value={email}
@@ -54,32 +56,32 @@ export default function Login() {
                             </View>
                         </View>
 
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>{t.labelPassword}</Text>
-                            <View style={styles.inputContainer}>
-                                <Ionicons name='lock-closed-outline' size={20} color={COLORS.primary} style={styles.inputIcon} />
-                                <TextInput style={styles.input}
+                        <View style={dynamicStyles.inputGroup}>
+                            <Text style={dynamicStyles.label}>{t.labelPassword}</Text>
+                            <View style={dynamicStyles.inputContainer}>
+                                <Ionicons name='lock-closed-outline' size={20} color={COLORS.primary} style={dynamicStyles.inputIcon} />
+                                <TextInput style={dynamicStyles.input}
                                     placeholder={t.password}
                                     placeholderTextColor={COLORS.placeholderText}
                                     value={password}
                                     onChangeText={setPassword}
                                     secureTextEntry={!showPassword}
                                 />
-                                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
-                                    <Ionicons name={showPassword ? 'eye-outline' : 'eye-off-outline'} size={20} color={COLORS.primary} style={styles.inputIcon} />
+                                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={dynamicStyles.eyeIcon}>
+                                    <Ionicons name={showPassword ? 'eye-outline' : 'eye-off-outline'} size={20} color={COLORS.primary} style={dynamicStyles.inputIcon} />
                                 </TouchableOpacity>
                             </View>
                         </View>
 
-                        <TouchableOpacity onPress={handleLogin} style={styles.button} disabled={isLoading}>
-                            {isLoading ? (<ActivityIndicator color={COLORS.white} />) : (<Text style={styles.buttonText}>{t.loginButton}</Text>)}
+                        <TouchableOpacity onPress={handleLogin} style={dynamicStyles.button} disabled={isLoading}>
+                            {isLoading ? (<ActivityIndicator color={COLORS.white} />) : (<Text style={dynamicStyles.buttonText}>{t.loginButton}</Text>)}
                         </TouchableOpacity>
 
-                        <View style={styles.footer}>
-                            <Text style={styles.footerText}>{t.footerText}</Text>
+                        <View style={dynamicStyles.footer}>
+                            <Text style={dynamicStyles.footerText}>{t.footerText}</Text>
                             <Link href="/signup" asChild>
                                 <TouchableOpacity>
-                                    <Text style={styles.link}>{t.signUpLink}</Text>
+                                    <Text style={dynamicStyles.link}>{t.signUpLink}</Text>
                                 </TouchableOpacity>
                             </Link>
                         </View>

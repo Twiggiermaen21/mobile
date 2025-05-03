@@ -1,13 +1,10 @@
 
 import { StyleSheet } from "react-native";
-import texture from "@/constants/colorsApp";
-import { useSettingsStore } from "@/store/settingStore";
 
-const { color } = useSettingsStore();
-const styles = StyleSheet.create({
+const styles = (COLORS) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: texture[color].background,
+        backgroundColor: COLORS.background,
         padding: 16,
         paddingBottom: 0,
     },
@@ -42,17 +39,17 @@ const styles = StyleSheet.create({
     profileHeader: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: texture[color].cardBackground,
+        backgroundColor: COLORS.cardBackground,
         borderRadius: 16,
         padding: 16,
         marginBottom: 16,
-        shadowColor: texture[color].black,
+        shadowColor: COLORS.black,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 3,
         borderWidth: 1,
-        borderColor: texture[color].border,
+        borderColor: COLORS.border,
     },
 
     tierText: {
@@ -70,17 +67,17 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: texture[color].cardBackground,
+        backgroundColor: COLORS.cardBackground,
         borderRadius: 12,
         padding: 12,
         marginBottom: 12,
-        shadowColor: texture[color].black,
+        shadowColor: COLORS.black,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 2,
         borderWidth: 1,
-        borderColor: texture[color].border,
+        borderColor: COLORS.border,
     },
     profileImage: {
         width: 50,

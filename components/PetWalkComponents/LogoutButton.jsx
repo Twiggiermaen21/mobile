@@ -11,7 +11,9 @@ export default function LogoutButton() {
 
     const { logout } = useAuthStore();
     const { color } = useSettingsStore();
+
     const COLORS = texture[color];
+    const dynamicStyles = styles(COLORS);
     const confirmLogout = () => {
         Alert.alert("Logout", "Are you sure you want to logout?", [
             { text: "Cancel", style: "cancel" },
@@ -20,9 +22,9 @@ export default function LogoutButton() {
     }
 
     return (
-        <TouchableOpacity style={styles.logoutButton} onPress={confirmLogout}>
+        <TouchableOpacity style={dynamicStyles.logoutButton} onPress={confirmLogout}>
             <Ionicons name='log-out-outline' size={20} color={COLORS.white} />
-            <Text style={styles.logoutText}>Logout </Text>
+            <Text style={dynamicStyles.logoutText}>Logout </Text>
         </TouchableOpacity >
     )
 

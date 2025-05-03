@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvo
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
-import styles from '../../assets/styles/login.styles';
+import styles from '../../assets/styles/signup.styles';
 import texture from '@/constants/colorsApp';
 import SigninText from '@/constants/SigninText';
 import { useAuthStore } from '../../store/authStore';
@@ -19,7 +19,7 @@ export default function Signup() {
     const t = SigninText[lang];
     const COLORS = texture[color];
     const router = useRouter();
-
+    const dynamicStyles = styles(COLORS);
     const handleSignup = async () => {
         const result = await register(username, email, password);
         if (!result.success) Alert.alert("Error", result.error);
@@ -27,24 +27,24 @@ export default function Signup() {
 
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
-            <View style={styles.container}>
-                <View style={styles.card}>
-                    <View style={styles.header}>
-                        <Text style={styles.title}>PetWalk</Text>
-                        <Text style={styles.subtitle}>{t.subtitle}</Text>
+            <View style={dynamicStyles.container}>
+                <View style={dynamicStyles.card}>
+                    <View style={dynamicStyles.header}>
+                        <Text style={dynamicStyles.title}>PetWalk</Text>
+                        <Text style={dynamicStyles.subtitle}>{t.subtitle}</Text>
                     </View>
 
-                    <View style={styles.formContainer}>
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>{t.username}</Text>
-                            <View style={styles.inputContainer}>
+                    <View style={dynamicStyles.formContainer}>
+                        <View style={dynamicStyles.inputGroup}>
+                            <Text style={dynamicStyles.label}>{t.username}</Text>
+                            <View style={dynamicStyles.inputContainer}>
                                 <Ionicons
                                     name='person-outline'
                                     size={20}
                                     color={COLORS.primary}
-                                    style={styles.inputIcon} />
+                                    style={dynamicStyles.inputIcon} />
                                 <TextInput
-                                    style={styles.input}
+                                    style={dynamicStyles.input}
                                     placeholder={t.placeholderUsername}
                                     placeholderTextColor={COLORS.placeholderText}
                                     value={username}
@@ -53,16 +53,16 @@ export default function Signup() {
                                 />
                             </View>
                         </View>
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Email</Text>
-                            <View style={styles.inputContainer}>
+                        <View style={dynamicStyles.inputGroup}>
+                            <Text style={dynamicStyles.label}>Email</Text>
+                            <View style={dynamicStyles.inputContainer}>
                                 <Ionicons
                                     name='mail-outline'
                                     size={20}
                                     color={COLORS.primary}
-                                    style={styles.inputIcon} />
+                                    style={dynamicStyles.inputIcon} />
                                 <TextInput
-                                    style={styles.input}
+                                    style={dynamicStyles.input}
                                     placeholder={t.placeholderEmail}
                                     placeholderTextColor={COLORS.placeholderText}
                                     value={email}
@@ -73,42 +73,42 @@ export default function Signup() {
                             </View>
                         </View>
 
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>{t.password}</Text>
-                            <View style={styles.inputContainer}>
+                        <View style={dynamicStyles.inputGroup}>
+                            <Text style={dynamicStyles.label}>{t.password}</Text>
+                            <View style={dynamicStyles.inputContainer}>
                                 <Ionicons
                                     name='lock-closed-outline'
                                     size={20}
                                     color={COLORS.primary}
-                                    style={styles.inputIcon} />
+                                    style={dynamicStyles.inputIcon} />
                                 <TextInput
-                                    style={styles.input}
+                                    style={dynamicStyles.input}
                                     placeholder={t.placeholderPassword}
                                     placeholderTextColor={COLORS.placeholderText}
                                     value={password}
                                     onChangeText={setPassword}
                                     secureTextEntry={!showPassword}
                                 />
-                                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
+                                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={dynamicStyles.eyeIcon}>
                                     <Ionicons
                                         name={showPassword ? 'eye-outline' : 'eye-off-outline'}
                                         size={20}
                                         color={COLORS.primary}
-                                        style={styles.inputIcon} />
+                                        style={dynamicStyles.inputIcon} />
                                 </TouchableOpacity>
                             </View>
                         </View>
 
 
 
-                        <TouchableOpacity onPress={handleSignup} style={styles.button} disabled={isLoading}>
-                            {isLoading ? (<ActivityIndicator color={COLORS.white} />) : (<Text style={styles.buttonText}>{t.button}</Text>)}
+                        <TouchableOpacity onPress={handleSignup} style={dynamicStyles.button} disabled={isLoading}>
+                            {isLoading ? (<ActivityIndicator color={COLORS.white} />) : (<Text style={dynamicStyles.buttonText}>{t.button}</Text>)}
                         </TouchableOpacity>
 
-                        <View style={styles.footer}>
-                            <Text style={styles.footerText}>{t.bottom}</Text>
+                        <View style={dynamicStyles.footer}>
+                            <Text style={dynamicStyles.footerText}>{t.bottom}</Text>
                             <TouchableOpacity onPress={() => router.back()}>
-                                <Text style={styles.link}>{t.login}</Text>
+                                <Text style={dynamicStyles.link}>{t.login}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

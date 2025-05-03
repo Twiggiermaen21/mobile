@@ -1,16 +1,15 @@
 
 import { StyleSheet } from "react-native";
-import texture from "@/constants/colorsApp";
-import { useSettingsStore } from "@/store/settingStore";
+
 import { Dimensions } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const imageSize = windowWidth / 3 - 20;
-const { color } = useSettingsStore();
-const styles = StyleSheet.create({
+
+const styles = (COLORS) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: texture[color].background,
+        backgroundColor: COLORS.background,
         padding: 16,
         paddingBottom: 0,
     },
@@ -20,7 +19,7 @@ const styles = StyleSheet.create({
     },
     modalWrapper: {
         flex: 1,
-        backgroundColor: texture[color].background,
+        backgroundColor: COLORS.background,
         justifyContent: 'space-between',
     },
     fullImage: {
@@ -38,14 +37,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         paddingVertical: 15,
-        // backgroundColor: texture[color].border,
+        // backgroundColor: COLORS.border,
 
-        backgroundColor: texture[color].primary,
+        backgroundColor: COLORS.primary,
         borderRadius: 12,
         padding: 12,
 
         marginHorizontal: 24,
-        shadowColor: texture[color].black,
+        shadowColor: COLORS.black,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -69,7 +68,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: "700",
-        color: texture[color].textPrimary,
+        color: COLORS.textPrimary,
         marginBottom: 8,
     },
     image: {
@@ -85,7 +84,7 @@ const styles = StyleSheet.create({
     },
     noPhotosText: {
         fontSize: 14,
-        color: texture[color].textSecondary,
+        color: COLORS.textSecondary,
         marginBottom: 4,
     },
 });

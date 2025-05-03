@@ -27,7 +27,7 @@ export default function AddDog() {
     const { lang, color } = useSettingsStore();
     const t = AddDogText[lang];
     const COLORS = texture[color];
-
+    const dynamicStyles = styles(COLORS);
     const pickImage = async () => {
         try {
             if (Platform.OS !== "web") {
@@ -95,29 +95,29 @@ export default function AddDog() {
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
             <ScrollView
-                contentContainerStyle={styles.container}
-                style={styles.scrollViewStyle}
+                contentContainerStyle={dynamicStyles.container}
+                style={dynamicStyles.scrollViewStyle}
                 keyboardShouldPersistTaps="handled"
             >
-                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                <TouchableOpacity onPress={() => router.back()} style={dynamicStyles.backButton}>
                     <Ionicons name="arrow-back" size={24} color={COLORS.white} />
-                    <Text style={styles.buttonText} >{t.backButton}</Text>
+                    <Text style={dynamicStyles.buttonText} >{t.backButton}</Text>
                 </TouchableOpacity>
-                <View style={styles.card}>
+                <View style={dynamicStyles.card}>
 
-                    <View style={styles.header}>
-                        <Text style={styles.title}>{t.title}</Text>
-                        <Text style={styles.subtitle}>{t.subtitle}</Text>
+                    <View style={dynamicStyles.header}>
+                        <Text style={dynamicStyles.title}>{t.title}</Text>
+                        <Text style={dynamicStyles.subtitle}>{t.subtitle}</Text>
                     </View>
 
-                    <View style={styles.form}>
+                    <View style={dynamicStyles.form}>
 
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>{t.nameLabel}</Text>
-                            <View style={styles.inputContainer}>
-                                <Ionicons name="chevron-forward" style={styles.inputIcon} size={20} color={COLORS.textSecondary} />
+                        <View style={dynamicStyles.formGroup}>
+                            <Text style={dynamicStyles.label}>{t.nameLabel}</Text>
+                            <View style={dynamicStyles.inputContainer}>
+                                <Ionicons name="chevron-forward" style={dynamicStyles.inputIcon} size={20} color={COLORS.textSecondary} />
                                 <TextInput
-                                    style={styles.input}
+                                    style={dynamicStyles.input}
                                     placeholder={t.namePlaceholder}
                                     placeholderTextColor={COLORS.placeholderText}
                                     value={name}
@@ -126,12 +126,12 @@ export default function AddDog() {
                             </View>
                         </View>
 
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>{t.breedLabel}</Text>
-                            <View style={styles.inputContainer}>
-                                <Ionicons name="chevron-forward" style={styles.inputIcon} size={20} color={COLORS.textSecondary} />
+                        <View style={dynamicStyles.formGroup}>
+                            <Text style={dynamicStyles.label}>{t.breedLabel}</Text>
+                            <View style={dynamicStyles.inputContainer}>
+                                <Ionicons name="chevron-forward" style={dynamicStyles.inputIcon} size={20} color={COLORS.textSecondary} />
                                 <TextInput
-                                    style={styles.input}
+                                    style={dynamicStyles.input}
                                     placeholder={t.breedPlaceholder}
                                     placeholderTextColor={COLORS.placeholderText}
                                     value={breed}
@@ -140,10 +140,10 @@ export default function AddDog() {
                             </View>
                         </View>
 
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>{t.weightLabel(weight)}</Text>
+                        <View style={dynamicStyles.formGroup}>
+                            <Text style={dynamicStyles.label}>{t.weightLabel(weight)}</Text>
                             <Slider
-                                style={styles.slider}
+                                style={dynamicStyles.slider}
                                 minimumValue={0}
                                 maximumValue={100}
                                 step={1}
@@ -155,10 +155,10 @@ export default function AddDog() {
                             />
                         </View>
 
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>{t.ageLabel(age)}</Text>
+                        <View style={dynamicStyles.formGroup}>
+                            <Text style={dynamicStyles.label}>{t.ageLabel(age)}</Text>
                             <Slider
-                                style={styles.slider}
+                                style={dynamicStyles.slider}
                                 minimumValue={0}
                                 maximumValue={20}
                                 step={1}
@@ -170,10 +170,10 @@ export default function AddDog() {
                             />
                         </View>
 
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>{t.heightLabel(height)}</Text>
+                        <View style={dynamicStyles.formGroup}>
+                            <Text style={dynamicStyles.label}>{t.heightLabel(height)}</Text>
                             <Slider
-                                style={styles.slider}
+                                style={dynamicStyles.slider}
                                 minimumValue={0}
                                 maximumValue={100}
                                 step={1}
@@ -185,27 +185,27 @@ export default function AddDog() {
                             />
                         </View>
 
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>{t.imageLabel}</Text>
-                            <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
+                        <View style={dynamicStyles.formGroup}>
+                            <Text style={dynamicStyles.label}>{t.imageLabel}</Text>
+                            <TouchableOpacity style={dynamicStyles.imagePicker} onPress={pickImage}>
                                 {image ? (
-                                    <Image source={{ uri: image }} style={styles.previewImage} />
+                                    <Image source={{ uri: image }} style={dynamicStyles.previewImage} />
                                 ) : (
-                                    <View style={styles.placeholderContainer}>
-                                        <Ionicons name="image-outline" style={styles.inputIcon} size={40} color={COLORS.textSecondary} />
-                                        <Text style={styles.placeholderText}>{t.imagePlaceholder}</Text>
+                                    <View style={dynamicStyles.placeholderContainer}>
+                                        <Ionicons name="image-outline" style={dynamicStyles.inputIcon} size={40} color={COLORS.textSecondary} />
+                                        <Text style={dynamicStyles.placeholderText}>{t.imagePlaceholder}</Text>
                                     </View>
                                 )}
                             </TouchableOpacity>
                         </View>
 
-                        <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={isLoading}>
+                        <TouchableOpacity style={dynamicStyles.button} onPress={handleSubmit} disabled={isLoading}>
                             {isLoading ? (
                                 <ActivityIndicator color={COLORS.white} />
                             ) : (
                                 <>
-                                    <Ionicons name="add-circle-outline" size={20} color={COLORS.white} style={styles.buttonIcon} />
-                                    <Text style={styles.buttonText}>{t.uploadButton}</Text>
+                                    <Ionicons name="add-circle-outline" size={20} color={COLORS.white} style={dynamicStyles.buttonIcon} />
+                                    <Text style={dynamicStyles.buttonText}>{t.uploadButton}</Text>
                                 </>
                             )}
                         </TouchableOpacity>

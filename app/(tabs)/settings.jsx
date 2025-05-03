@@ -7,6 +7,7 @@ import { useSettingsStore } from '@/store/settingStore';
 import { useAuthStore } from '@/store/authStore';
 import SettingsText from "@/constants/SettingsText";
 import LogoutButton from '@/components/PetWalkComponents/LogoutButton';
+import SettingButton from '@/components/PetWalkComponents/SettingButton';
 
 export default function SettingsScreen() {
     const [selectedFunction, setSelectedFunction] = useState(null);
@@ -18,6 +19,8 @@ export default function SettingsScreen() {
     const { isLoading, updateUser, token } = useAuthStore();
     const t = SettingsText[lang];
     const COLORS = texture[color];
+    const dynamicStyles = styles(COLORS);
+
     const openModal = (label, number) => {
         setSelectedLabel(label);
         setSelectedFunction(number);
@@ -58,31 +61,31 @@ export default function SettingsScreen() {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>{t.settingsTitle}</Text>
+        <View style={dynamicStyles.container}>
+            <Text style={dynamicStyles.title}>{t.settingsTitle}</Text>
 
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <ScrollView contentContainerStyle={dynamicStyles.scrollContainer}>
                 {/* Account Section */}
-                <Text style={styles.sectionTitle}>{t.account}</Text>
+                <Text style={dynamicStyles.sectionTitle}>{t.account}</Text>
                 <SettingButton label={t.changeUsername} onPress={() => openModal(t.changeUsername, 1)} />
                 <SettingButton label={t.changeEmail} onPress={() => openModal(t.changeEmail, 2)} />
                 <SettingButton label={t.changePassword} onPress={() => openModal(t.changePassword, 3)} />
                 <SettingButton label={t.editProfilePicture} onPress={() => openModal(t.editProfilePicture, 4)} />
 
                 {/* Notifications */}
-                {/* <Text style={styles.sectionTitle}>{t.notifications}</Text>
+                {/* <Text style={dynamicStyles.sectionTitle}>{t.notifications}</Text>
                 <SettingButton label={t.emailSMSNotifications} onPress={() => openModal(t.emailSMSNotifications)} /> */}
 
                 {/* Appearance */}
-                <Text style={styles.sectionTitle}>{t.themeAppearance}</Text>
+                <Text style={dynamicStyles.sectionTitle}>{t.themeAppearance}</Text>
                 <SettingButton label={t.colorScheme} onPress={() => openModal(t.colorScheme)} />
 
                 {/* Language  */}
-                <Text style={styles.sectionTitle}>{t.languageLocation}</Text>
+                <Text style={dynamicStyles.sectionTitle}>{t.languageLocation}</Text>
                 <SettingButton label={t.selectLanguage} onPress={() => openModal(t.selectLanguage)} />
 
                 {/* Help & Other */}
-                <Text style={styles.sectionTitle}>{t.helpOther}</Text>
+                <Text style={dynamicStyles.sectionTitle}>{t.helpOther}</Text>
                 <SettingButton label={t.helpCenter} onPress={() => openModal(t.helpCenter)} />
                 <SettingButton label={t.reportProblem} onPress={() => openModal(t.reportProblem)} />
                 <SettingButton label={t.appVersion} onPress={() => openModal(t.appVersion)} />
@@ -100,22 +103,22 @@ export default function SettingsScreen() {
                 animationType="fade"
             >
                 <TouchableWithoutFeedback onPress={closeModal}>
-                    <View style={styles.ModalAroundBox}>
+                    <View style={dynamicStyles.ModalAroundBox}>
                         <TouchableWithoutFeedback>
-                            <View style={styles.card}>
-                                <Text style={styles.title}>{selectedLabel}</Text>
-                                <View style={styles.form}>
-                                    <View style={styles.formGroup}>
-                                        <Text style={styles.label}>{t.info[selectedFunction]}</Text>
+                            <View style={dynamicStyles.card}>
+                                <Text style={dynamicStyles.title}>{selectedLabel}</Text>
+                                <View style={dynamicStyles.form}>
+                                    <View style={dynamicStyles.formGroup}>
+                                        <Text style={dynamicStyles.label}>{t.info[selectedFunction]}</Text>
                                         {selectedFunction === 4 ? (
-                                            <Text style={styles.link} onPress={handleLinkPress}>
+                                            <Text style={dynamicStyles.link} onPress={handleLinkPress}>
                                                 Kliknij tutaj, aby stworzyć awatara!
                                             </Text>
                                         ) : null}
-                                        <View style={styles.inputContainer}>
-                                            <Ionicons name="chevron-forward" style={styles.inputIcon} size={20} color={COLORS.textSecondary} />
+                                        <View style={dynamicStyles.inputContainer}>
+                                            <Ionicons name="chevron-forward" style={dynamicStyles.inputIcon} size={20} color={COLORS.textSecondary} />
                                             <TextInput
-                                                style={styles.input}
+                                                style={dynamicStyles.input}
                                                 placeholder={t.namePlaceholder}
                                                 placeholderTextColor={COLORS.placeholderText}
                                                 value={inputValue}
@@ -124,8 +127,8 @@ export default function SettingsScreen() {
                                         </View>
                                     </View>
 
-                                    <TouchableOpacity style={styles.button} onPress={updateButton}>
-                                        <Text style={styles.buttonText}>{t.save}</Text>
+                                    <TouchableOpacity style={dynamicStyles.button} onPress={updateButton}>
+                                        <Text style={dynamicStyles.buttonText}>{t.save}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -138,9 +141,5 @@ export default function SettingsScreen() {
 }
 
 // Setting Button Component
-const SettingButton = ({ label, onPress }) => (
-    <TouchableOpacity style={styles.settingButton} onPress={onPress}>
-        <Text style={styles.settingText}>{label}</Text>
-    </TouchableOpacity>
-);
+
 

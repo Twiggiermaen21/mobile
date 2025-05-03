@@ -12,6 +12,7 @@ export default function TabLayout() {
   const insets = useSafeAreaInsets();
 
   const { color } = useSettingsStore();
+  
   return (
     <Tabs
       screenOptions={{

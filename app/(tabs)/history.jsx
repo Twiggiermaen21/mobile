@@ -18,6 +18,10 @@ export default function HistoryScreen() {
     const { lang, color } = useSettingsStore();
     const t = HistoryText[lang];
     const COLORS = texture[color];
+    const dynamicStyles = styles(COLORS);
+
+
+
     const handleDeleteWalk = (id) => {
         Alert.alert(
             t.deleteTitle,
@@ -66,8 +70,8 @@ export default function HistoryScreen() {
 
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>{t.historyTitle}</Text>
+        <View style={dynamicStyles.container}>
+            <Text style={dynamicStyles.title}>{t.historyTitle}</Text>
             <FlatList
                 data={walks}
                 keyExtractor={(item) => item._id}
@@ -78,16 +82,16 @@ export default function HistoryScreen() {
                         colors={[COLORS.primary]} />}
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={0.5}
-                ListFooterComponent={isLoadingMore ? <Text style={styles.loading}>{t.loading}</Text> : null}
+                ListFooterComponent={isLoadingMore ? <Text style={dynamicStyles.loading}>{t.loading}</Text> : null}
                 renderItem={({ item }) => (
                     <Pressable
                         onLongPress={() => handleDeleteWalk(item._id)}
                     >
-                        <View style={styles.bookItem}>
-                            <View style={styles.mapCard}>
+                        <View style={dynamicStyles.bookItem}>
+                            <View style={dynamicStyles.mapCard}>
                                 {item.path && item.path.length > 0 ? (
                                     <MapView
-                                        style={styles.map}
+                                        style={dynamicStyles.map}
                                         scrollEnabled={false}
                                         zoomEnabled={false}
                                         rotateEnabled={false}
@@ -107,37 +111,37 @@ export default function HistoryScreen() {
                                         />
                                     </MapView>
                                 ) : (
-                                    <View style={[styles.map, { justifyContent: 'center', alignItems: 'center' }]}>
+                                    <View style={[dynamicStyles.map, { justifyContent: 'center', alignItems: 'center' }]}>
                                         <Text style={{ color: COLORS.gray }}>{t.noPath}</Text>
                                     </View>
                                 )}
                             </View>
-                            <View style={styles.infoContainer}>
-                                <Text style={styles.email}>
+                            <View style={dynamicStyles.infoContainer}>
+                                <Text style={dynamicStyles.email}>
                                     {t.date} {new Date(item.createdAt).toLocaleDateString()}
                                 </Text>
 
-                                <Text style={styles.email}>
+                                <Text style={dynamicStyles.email}>
                                     {t.time}{formatTime(item.time)}
                                 </Text>
 
-                                <Text style={styles.email}>
+                                <Text style={dynamicStyles.email}>
                                     {t.distance} {(item.distance).toFixed(2)} km
                                 </Text>
 
-                                <Text style={styles.email}>
+                                <Text style={dynamicStyles.email}>
                                     {t.speed} {item.speed.toFixed(2)} km/h
                                 </Text>
-                                <View style={styles.dogsContainer}>
+                                <View style={dynamicStyles.dogsContainer}>
                                     <FlatList
                                         horizontal={true}
                                         data={item.dogs}
                                         keyExtractor={(dog, index) => dog?._id ? dog._id.toString() : `dog-${index}-${dog.createdAt}`}
                                         renderItem={({ item: dog }) => (
-                                            <View style={styles.dogContainer}>
+                                            <View style={dynamicStyles.dogContainer}>
                                                 <Image
                                                     source={dog.dogImage ? { uri: dog.dogImage } : noDog}
-                                                    style={styles.dogImage} />
+                                                    style={dynamicStyles.dogImage} />
                                             </View>
                                         )}
                                         showsHorizontalScrollIndicator={false} />

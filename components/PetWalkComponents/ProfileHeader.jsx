@@ -6,12 +6,15 @@ import { Image } from 'expo-image';
 import ProfileText from "@/constants/ProfileText";
 import { useSettingsStore } from '@/store/settingStore';
 import noProfil from "@/assets/ImagesPetWalk/profil.jpg";
+import texture from "@/constants/colorsApp";
 
 
 export default function ProfileHeader() {
     const { user } = useAuthStore();
     if (!user) return null;
-    const { lang } = useSettingsStore();
+    const { lang, color } = useSettingsStore();
+    const COLORS = texture[color];
+    const dynamicStyles = styles(COLORS);
     const t = ProfileText[lang] || ProfileText.pl;
     const formatDate = (isoString) => {
         const date = new Date(isoString);
@@ -22,13 +25,13 @@ export default function ProfileHeader() {
     };
 
     return (
-        <View style={styles.profileHeader}>
-            <Image source={{ uri: user.profileImage || noProfil }} style={styles.profileImage} />
-            <View style={styles.profileInfo}>
-                <Text style={styles.username} >{user.username}</Text>
+        <View style={dynamicStyles.profileHeader}>
+            <Image source={{ uri: user.profileImage || noProfil }} style={dynamicStyles.profileImage} />
+            <View style={dynamicStyles.profileInfo}>
+                <Text style={dynamicStyles.username} >{user.username}</Text>
 
-                <Text style={styles.email} >{user.email}</Text>
-                <Text style={styles.memberSince} >{t.Joined} {formatDate(user.createdAt)}</Text>
+                <Text style={dynamicStyles.email} >{user.email}</Text>
+                <Text style={dynamicStyles.memberSince} >{t.Joined} {formatDate(user.createdAt)}</Text>
 
             </View>
         </View>

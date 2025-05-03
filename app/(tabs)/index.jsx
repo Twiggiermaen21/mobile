@@ -38,6 +38,8 @@ export default function Index() {
     const { lang, color } = useSettingsStore();
     const t = IndexText[lang];
     const COLORS = texture[color];
+    const dynamicStyles = styles(COLORS);
+
     const [image, setImage] = useState(null);
     const [imageBase64, setImageBase64] = useState(null);
 
@@ -198,8 +200,8 @@ export default function Index() {
 
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
-            <View style={styles.container}>
-                <View style={styles.mapCard}>
+            <View style={dynamicStyles.container}>
+                <View style={dynamicStyles.mapCard}>
                     {selectedDogIds.length > 0 ? (
                         <Pressable
                             // onPress={() => router.push('/(notabs)/camera')}
@@ -225,16 +227,16 @@ export default function Index() {
 
                             }}
                             style={({ pressed }) => [
-                                styles.cameraButton,
+                                dynamicStyles.cameraButton,
                                 { backgroundColor: pressed ? '#e0e0e0' : 'white' }, // Szare po naciśnięciu
                             ]}>
-                            <View style={styles.iconBackground}>
+                            <View style={dynamicStyles.iconBackground}>
                                 <Ionicons name="camera" size={24} color="#777" />
                             </View>
                         </Pressable>
                     ) : null}
                     <MapView
-                        style={styles.map}
+                        style={dynamicStyles.map}
                         ref={mapRef}
                         initialRegion={{
                             latitude: location?.latitude || 37.78825,
@@ -259,66 +261,66 @@ export default function Index() {
                     </MapView>
                 </View>
 
-                <View style={styles.card}>
-                    <View style={styles.header}>
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>{t.time}</Text>
-                            <Text style={styles.info}>{formatTime(timeElapsed)}</Text>
+                <View style={dynamicStyles.card}>
+                    <View style={dynamicStyles.header}>
+                        <View style={dynamicStyles.formGroup}>
+                            <Text style={dynamicStyles.label}>{t.time}</Text>
+                            <Text style={dynamicStyles.info}>{formatTime(timeElapsed)}</Text>
                         </View>
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>{t.speed}</Text>
-                            <Text style={styles.info}>{currentSpeed} km/h</Text>
+                        <View style={dynamicStyles.formGroup}>
+                            <Text style={dynamicStyles.label}>{t.speed}</Text>
+                            <Text style={dynamicStyles.info}>{currentSpeed} km/h</Text>
                         </View>
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>{t.distance}</Text>
-                            <Text style={styles.info}>{distance.toFixed(2)} km</Text>
+                        <View style={dynamicStyles.formGroup}>
+                            <Text style={dynamicStyles.label}>{t.distance}</Text>
+                            <Text style={dynamicStyles.info}>{distance.toFixed(2)} km</Text>
                         </View>
                     </View>
 
-                    <View style={styles.footer}>
+                    <View style={dynamicStyles.footer}>
                         {selectedDogIds.length > 0 ? (
-                            <View style={styles.selectedDogsContainer}>
+                            <View style={dynamicStyles.selectedDogsContainer}>
                                 <FlatList
                                     horizontal
                                     data={dogsFromDB.filter(dogsFromDB => selectedDogIds.includes(dogsFromDB._id))}
                                     keyExtractor={(item) => item._id?.toString()}
                                     showsHorizontalScrollIndicator={false}
-                                    contentContainerStyle={styles.dogsListContent}
+                                    contentContainerStyle={dynamicStyles.dogsListContent}
                                     renderItem={({ item }) => (
-                                        <View style={styles.dogItem}>
+                                        <View style={dynamicStyles.dogItem}>
                                             <Image
                                                 source={item.dogImage ? { uri: item.dogImage } : noDog}
-                                                style={styles.dogImage}
+                                                style={dynamicStyles.dogImage}
                                             />
-                                            <Text style={styles.dogName}>{item.name}</Text>
+                                            <Text style={dynamicStyles.dogName}>{item.name}</Text>
                                         </View>
                                     )}
                                 />
                                 <View style={{ flexDirection: 'row', marginTop: 15 }}>
                                     <TouchableOpacity
-                                        style={[styles.button, { marginHorizontal: 10, backgroundColor: isPaused ? '#90ee90' : '#FFD700' }]}
+                                        style={[dynamicStyles.button, { marginHorizontal: 10, backgroundColor: isPaused ? '#90ee90' : '#FFD700' }]}
                                         onPress={togglePause}
                                     >
-                                        <Text style={styles.buttonText}>
+                                        <Text style={dynamicStyles.buttonText}>
                                             {isPaused ? (t.resume) : (t.pause)}
                                         </Text>
                                     </TouchableOpacity>
 
                                     <TouchableOpacity
-                                        style={[styles.button, { backgroundColor: '#FF6347' }]}
+                                        style={[dynamicStyles.button, { backgroundColor: '#FF6347' }]}
                                         onPress={stopTracking}
                                     >
-                                        <Text style={styles.buttonText}>{t.endWalk}</Text>
+                                        <Text style={dynamicStyles.buttonText}>{t.endWalk}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
                         ) : (
                             <View >
                                 <TouchableOpacity
-                                    style={styles.button}
+                                    style={dynamicStyles.button}
                                     onPress={() => setIsDogModalVisible(true)}
                                 >
-                                    <Text style={styles.buttonText}>{t.startWalkPrompt}</Text>
+                                    <Text style={dynamicStyles.buttonText}>{t.startWalkPrompt}</Text>
 
                                 </TouchableOpacity>
                             </View>
@@ -338,10 +340,10 @@ export default function Index() {
                             }
                         }}
                     >
-                        <View style={styles.ModalAroundBox}>
+                        <View style={dynamicStyles.ModalAroundBox}>
                             <TouchableWithoutFeedback onPress={() => { }}>
-                                <View style={styles.ModalBox}>
-                                    <Text style={styles.title}>{t.selectDog}</Text>
+                                <View style={dynamicStyles.ModalBox}>
+                                    <Text style={dynamicStyles.title}>{t.selectDog}</Text>
                                     <FlatList
                                         data={dogsFromDB}
                                         keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
@@ -358,7 +360,7 @@ export default function Index() {
                                             return (
                                                 <Pressable
                                                     style={[
-                                                        styles.pressableDogs,
+                                                        dynamicStyles.pressableDogs,
                                                         { backgroundColor: isSelected ? '#d0f0d0' : '#f0f0f0' }
                                                     ]}
                                                     onPress={() => {
@@ -372,7 +374,7 @@ export default function Index() {
                                                         });
                                                     }}
                                                 >
-                                                    <Text style={[styles.info, { fontSize: 16 }]}>{item.name}</Text>
+                                                    <Text style={[dynamicStyles.info, { fontSize: 16 }]}>{item.name}</Text>
                                                     <Text style={{ fontSize: 18, color: isSelected ? 'green' : '#ccc' }}>
                                                         {isSelected ? '✓' : '○'}
                                                     </Text>
@@ -381,7 +383,7 @@ export default function Index() {
                                         }}
                                     />
 
-                                    <View style={styles.buttonDone}>
+                                    <View style={dynamicStyles.buttonDone}>
                                         <TouchableOpacity
                                             onPress={async () => {
                                                 if (selectedDogIds.length === 0) {
@@ -392,10 +394,10 @@ export default function Index() {
                                                 setIsDogModalVisible(false);
                                                 await startTracking();
                                             }}
-                                            style={[styles.button, selectedDogIds.length === 0 && styles.buttonDisabled]}
+                                            style={[dynamicStyles.button, selectedDogIds.length === 0 && dynamicStyles.buttonDisabled]}
                                             disabled={selectedDogIds.length === 0}
                                         >
-                                            <Text style={styles.buttonText}>{t.done}</Text>
+                                            <Text style={dynamicStyles.buttonText}>{t.done}</Text>
                                         </TouchableOpacity>
                                     </View>
 
