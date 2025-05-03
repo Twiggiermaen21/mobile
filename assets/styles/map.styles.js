@@ -1,26 +1,32 @@
 // styles/create.styles.js
 import { StyleSheet } from "react-native";
-import COLORS from "../../constants/colorsApp";
+import texture from "../../constants/colorsApp";
+import { useSettingsStore } from "@/store/settingStore";
+
+const { color } = useSettingsStore();
+
+
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: texture[color].background,
     paddingHorizontal: 16,
     paddingTop: 16,
   },
   card: {
-    backgroundColor: COLORS.cardBackground,
+    backgroundColor: texture[color].cardBackground,
     borderRadius: 16,
     padding: 20,
     marginVertical: 8,
-    shadowColor: COLORS.black,
+    shadowColor: texture[color].black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 3,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: texture[color].border,
   },
   cameraButton: {
     position: 'absolute',
@@ -42,30 +48,30 @@ const styles = StyleSheet.create({
   },
   mapCard: {
     flex: 1,
-    backgroundColor: COLORS.cardBackground,
+    backgroundColor: texture[color].cardBackground,
     borderRadius: 16,
     marginBottom: 4,
     overflow: "hidden",
-    shadowColor: COLORS.black,
+    shadowColor: texture[color].black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 3,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: texture[color].border,
     flex: 1, padding: 0, overflow: 'hidden'
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: COLORS.white,
+    backgroundColor: texture[color].white,
     borderRadius: 50,
     padding: 10
   },
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: COLORS.textPrimary,
+    color: texture[color].textPrimary,
     marginBottom: 8,
   },
   formGroup: {
@@ -80,7 +86,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: COLORS.textPrimary,
+    color: texture[color].textPrimary,
     textAlign: "center",
     fontWeight: "500",
   },
@@ -93,13 +99,13 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: texture[color].primary,
     borderRadius: 25,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     padding: 4,
-    shadowColor: COLORS.black,
+    shadowColor: texture[color].black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -115,7 +121,7 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: COLORS.white,
+    color: texture[color].white,
     fontSize: 20,
     fontWeight: "600",
     marginHorizontal: 16,
@@ -129,16 +135,16 @@ const styles = StyleSheet.create({
   ModalBox: {
     borderRadius: 10,
     width: '80%',
-    backgroundColor: COLORS.cardBackground,
+    backgroundColor: texture[color].cardBackground,
     padding: 20,
     marginVertical: 8,
-    shadowColor: COLORS.black,
+    shadowColor: texture[color].black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 3,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: texture[color].border,
   },
   pressableDogs: {
     paddingVertical: 10,

@@ -3,12 +3,15 @@ import React from 'react'
 
 import { useAuthStore } from '@/store/authStore'
 import styles from '@/assets/styles/settings.styles'
-import COLORS from '@/constants/colorsApp'
+import texture from '@/constants/colorsApp'
 import { Ionicons } from '@expo/vector-icons'
+import { useSettingsStore } from '@/store/settingStore'
 
 export default function LogoutButton() {
 
     const { logout } = useAuthStore();
+    const { color } = useSettingsStore();
+    const COLORS = texture[color];
     const confirmLogout = () => {
         Alert.alert("Logout", "Are you sure you want to logout?", [
             { text: "Cancel", style: "cancel" },

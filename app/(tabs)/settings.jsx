@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, TouchableOpacity, TextInput, TouchableWithoutFeedback, ScrollView, Alert, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import COLORS from '@/constants/colorsApp';
+import texture from '@/constants/colorsApp';
 import styles from '@/assets/styles/settings.styles';
 import { useSettingsStore } from '@/store/settingStore';
 import { useAuthStore } from '@/store/authStore';
@@ -14,10 +14,10 @@ export default function SettingsScreen() {
     const [selectedLabel, setSelectedLabel] = useState('');
     const [inputValue, setInputValue] = useState('');
 
-    const { lang } = useSettingsStore();
+    const { lang, color } = useSettingsStore();
     const { isLoading, updateUser, token } = useAuthStore();
     const t = SettingsText[lang];
-
+    const COLORS = texture[color];
     const openModal = (label, number) => {
         setSelectedLabel(label);
         setSelectedFunction(number);
@@ -70,14 +70,14 @@ export default function SettingsScreen() {
                 <SettingButton label={t.editProfilePicture} onPress={() => openModal(t.editProfilePicture, 4)} />
 
                 {/* Notifications */}
-                <Text style={styles.sectionTitle}>{t.notifications}</Text>
-                <SettingButton label={t.emailSMSNotifications} onPress={() => openModal(t.emailSMSNotifications)} />
+                {/* <Text style={styles.sectionTitle}>{t.notifications}</Text>
+                <SettingButton label={t.emailSMSNotifications} onPress={() => openModal(t.emailSMSNotifications)} /> */}
 
                 {/* Appearance */}
                 <Text style={styles.sectionTitle}>{t.themeAppearance}</Text>
                 <SettingButton label={t.colorScheme} onPress={() => openModal(t.colorScheme)} />
 
-                {/* Language & Location */}
+                {/* Language  */}
                 <Text style={styles.sectionTitle}>{t.languageLocation}</Text>
                 <SettingButton label={t.selectLanguage} onPress={() => openModal(t.selectLanguage)} />
 

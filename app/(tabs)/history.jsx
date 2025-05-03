@@ -3,7 +3,7 @@ import { View, Text, FlatList, RefreshControl, Alert, Pressable } from 'react-na
 import MapView, { Polyline } from 'react-native-maps';
 import { Image } from 'expo-image';
 import { useAuthStore } from '@/store/authStore';
-import COLORS from '@/constants/colorsApp';
+import texture from '@/constants/colorsApp';
 import styles from '@/assets/styles/history.styles';
 import noDog from "../../assets/ImagesPetWalk/noDog.jpeg";
 import HistoryText from "@/constants/HistoryText"
@@ -15,9 +15,9 @@ export default function HistoryScreen() {
     const { token } = useAuthStore();
     const { walks, page, totalPages, isLoadingMore, refreshing, getWalks, deleteWalk } = useWalkStore()
 
-    const { lang } = useSettingsStore();
+    const { lang, color } = useSettingsStore();
     const t = HistoryText[lang];
-
+    const COLORS = texture[color];
     const handleDeleteWalk = (id) => {
         Alert.alert(
             t.deleteTitle,

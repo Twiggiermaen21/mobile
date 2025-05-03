@@ -1,29 +1,31 @@
 // styles/create.styles.js
 import { StyleSheet } from "react-native";
-import COLORS from "../../constants/colorsApp";
+import texture from "@/constants/colorsApp";
+import { useSettingsStore } from "@/store/settingStore";
 
+const { color } = useSettingsStore();
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: texture[color].background,
     padding: 16,
   },
   scrollViewStyle: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: texture[color].background,
   },
   card: {
-    backgroundColor: COLORS.cardBackground,
+    backgroundColor: texture[color].cardBackground,
     borderRadius: 16,
     padding: 20,
     marginVertical: 16,
-    shadowColor: COLORS.black,
+    shadowColor: texture[color].black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 3,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: texture[color].border,
   },
   header: {
     alignItems: "center",
@@ -32,12 +34,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: COLORS.textPrimary,
+    color: texture[color].textPrimary,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 14,
-    color: COLORS.textSecondary,
+    color: texture[color].textSecondary,
     textAlign: "center",
   },
   slider: {
@@ -52,16 +54,16 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     marginBottom: 8,
-    color: COLORS.textPrimary,
+    color: texture[color].textPrimary,
     fontWeight: "500",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.inputBackground,
+    backgroundColor: texture[color].inputBackground,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: texture[color].border,
     paddingHorizontal: 12,
   },
   inputIcon: {
@@ -70,16 +72,16 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 48,
-    color: COLORS.textDark,
+    color: texture[color].textDark,
   },
 
   imagePicker: {
     width: "100%",
     height: 200,
-    backgroundColor: COLORS.inputBackground,
+    backgroundColor: texture[color].inputBackground,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: texture[color].border,
     overflow: "hidden",
   },
   previewImage: {
@@ -93,31 +95,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   placeholderText: {
-    color: COLORS.textSecondary,
+    color: texture[color].textSecondary,
     marginTop: 8,
   },
   button: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: texture[color].primary,
     borderRadius: 12,
     height: 50,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     marginTop: 16,
-    shadowColor: COLORS.black,
+    shadowColor: texture[color].black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
   },
   backButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: texture[color].primary,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 8,
     flexDirection: "row",
-    shadowColor: COLORS.black,
+    shadowColor: texture[color].black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: COLORS.white,
+    color: texture[color].white,
     fontSize: 16,
     fontWeight: "600",
   },

@@ -5,7 +5,7 @@ import { useAuthStore } from '@/store/authStore';
 import ProfileHeader from '@/components/PetWalkComponents/ProfileHeader'
 import styles from "@/assets/styles/profile.styles"
 import { Ionicons } from '@expo/vector-icons';
-import COLORS from '@/constants/colorsApp';
+import texture from '@/constants/colorsApp';
 import noDog from "../../assets/ImagesPetWalk/noDog.jpeg";
 import { useDogStore } from "@/store/dogStore"
 import ProfileText from "@/constants/ProfileText";
@@ -15,7 +15,8 @@ import { useSettingsStore } from '@/store/settingStore';
 export default function ProfileScreen() {
     const { token } = useAuthStore();
     const [refreshing, setRefreshing] = useState(false);
-    const { lang } = useSettingsStore();
+    const { lang, color } = useSettingsStore();
+    const COLORS = texture[color];
     const t = ProfileText[lang];
     const router = useRouter();
     const { dogsFromDB, getDogs, isLoading, DeletedDogId } = useDogStore()

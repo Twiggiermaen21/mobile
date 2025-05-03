@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 
 import styles from '../../assets/styles/login.styles';
-import COLORS from '@/constants/colorsApp';
+import texture from '@/constants/colorsApp';
 import LoginText from '@/constants/LoginText';
 import { useAuthStore } from '@/store/authStore';
 import { useSettingsStore } from '@/store/settingStore';
@@ -16,9 +16,9 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const { isLoading, login } = useAuthStore();
 
-    const { lang } = useSettingsStore();
+    const { lang, color } = useSettingsStore();
     const t = LoginText[lang];
-
+    const COLORS = texture[color];
     const handleLogin = async () => {
         const result = await login(email, password);
         if (!result.success) Alert.alert("Error", result.error);

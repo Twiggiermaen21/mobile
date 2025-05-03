@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useRouter } from "expo-router"
 import styles from '@/assets/styles/addDog.styles'
 import { Ionicons } from '@expo/vector-icons';
-import COLORS from '@/constants/colorsApp';
+import texture from '@/constants/colorsApp';
 import Slider from '@react-native-community/slider';
 import { Image } from 'expo-image';
 import * as   ImagePicker from "expo-image-picker"
@@ -24,9 +24,9 @@ export default function AddDog() {
     const router = useRouter();
     const { token } = useAuthStore();
     const { addDog, isLoading } = useDogStore()
-    const { lang } = useSettingsStore();
+    const { lang, color } = useSettingsStore();
     const t = AddDogText[lang];
-
+    const COLORS = texture[color];
 
     const pickImage = async () => {
         try {

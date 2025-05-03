@@ -16,12 +16,14 @@ import GalleryText from "@/constants/GalleryText";
 import { useSettingsStore } from '@/store/settingStore';
 import { usePhotoStore } from "@/store/photoStore";
 import { useAuthStore } from '@/store/authStore';
-import COLORS from '@/constants/colorsApp';
+
 import styles from '@/assets/styles/gallery.styles';
 import { Ionicons } from '@expo/vector-icons';
+import texture from "@/constants/colorsApp";
+
 
 export default function GalleryScreen() {
-    const { lang } = useSettingsStore();
+    const { lang, color } = useSettingsStore();
     const t = GalleryText[lang];
     const { token } = useAuthStore();
     const {
@@ -36,7 +38,7 @@ export default function GalleryScreen() {
 
     const [selectedPhoto, setSelectedPhoto] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
-
+    const COLORS = texture[color];
     const fetchData = async (pageNumber = 1, refreshing = false) => {
         const result = await getPhotos(pageNumber, refreshing, token);
         if (!result.success) Alert.alert("Error", result.error);
@@ -56,6 +58,7 @@ export default function GalleryScreen() {
                         const result = await deletePhoto(selectedPhoto._id, token);
                         if (!result.success) Alert.alert("Error", result.error);
                         else {
+                            Alert.alert(t.success, t.deletePhoto);
                             setModalVisible(false);
                             fetchData(1, true);
                         }
@@ -69,21 +72,21 @@ export default function GalleryScreen() {
 
         if (!selectedPhoto) return;
 
-        // try {
-        //     const { status } = await MediaLibrary.requestPermissionsAsync();
-        //     if (status !== 'granted') {
-        //         Alert.alert("Permission denied", "You need to allow media access to save photos.");
-        //         return;
-        //     }
+        try {
+            const { status } = await MediaLibrary.requestPermissionsAsync();
+            if (status !== 'granted') {
+                Alert.alert("Permission denied", "You need to allow media access to save photos.");
+                return;
+            }
 
-        //     const fileUri = FileSystem.documentDirectory + selectedPhoto._id + '.jpg';
-        //     await FileSystem.downloadAsync(selectedPhoto.photo, fileUri);
-        //     await MediaLibrary.createAssetAsync(fileUri);
-        //     Alert.alert("Saved", "Photo saved to your gallery.");
-        // } catch (error) {
-        //     Alert.alert("Error", "Could not save photo.");
-        //     console.log(error);
-        // }
+            const fileUri = FileSystem.documentDirectory + selectedPhoto._id + '.jpg';
+            await FileSystem.downloadAsync(selectedPhoto.photo, fileUri);
+            await MediaLibrary.createAssetAsync(fileUri);
+            Alert.alert("Saved", "Photo saved to your gallery.");
+        } catch (error) {
+            Alert.alert("Error", "Could not save photo.");
+            console.log(error);
+        }
     };
 
     useEffect(() => {

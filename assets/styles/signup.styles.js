@@ -1,25 +1,27 @@
 // styles/signup.styles.js
 import { StyleSheet } from "react-native";
-import COLORS from "../../constants/colors";
+import texture from "@/constants/colorsApp";
+import { useSettingsStore } from "@/store/settingStore";
 
+const { color } = useSettingsStore();
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: texture[color].background,
     padding: 20,
     justifyContent: "center",
   },
   card: {
-    backgroundColor: COLORS.cardBackground,
+    backgroundColor: texture[color].cardBackground,
     borderRadius: 16,
     padding: 24,
-    shadowColor: COLORS.black,
+    shadowColor: texture[color].black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
     borderWidth: 2,
-    borderColor: COLORS.border,
+    borderColor: texture[color].border,
   },
   header: {
     alignItems: "center",
@@ -29,12 +31,12 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "700",
     fontFamily: "JetBrainsMono-Medium",
-    color: COLORS.primary,
+    color: texture[color].primary,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: COLORS.textSecondary,
+    color: texture[color].textSecondary,
     textAlign: "center",
   },
   formContainer: { marginBottom: 16 },
@@ -42,40 +44,40 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     marginBottom: 8,
-    color: COLORS.textPrimary,
+    color: texture[color].textPrimary,
     fontWeight: "500",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.inputBackground,
+    backgroundColor: texture[color].inputBackground,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: texture[color].border,
     paddingHorizontal: 12,
   },
   inputIcon: { marginRight: 10 },
   input: {
     flex: 1,
     height: 48,
-    color: COLORS.textDark,
+    color: texture[color].textDark,
   },
   eyeIcon: { padding: 8 },
   button: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: texture[color].primary,
     borderRadius: 12,
     height: 50,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 16,
-    shadowColor: COLORS.black,
+    shadowColor: texture[color].black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
   },
   buttonText: {
-    color: COLORS.white,
+    color: texture[color].white,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -85,11 +87,11 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   footerText: {
-    color: COLORS.textSecondary,
+    color: texture[color].textSecondary,
     marginRight: 5,
   },
   link: {
-    color: COLORS.primary,
+    color: texture[color].primary,
     fontWeight: "600",
   },
 });

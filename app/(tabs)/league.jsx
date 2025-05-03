@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, RefreshControl, Alert } from "react-native";
 import styles from "../../assets/styles/league.styles";
 import { Ionicons } from "@expo/vector-icons";
-import COLORS from "@/constants/colorsApp";
+import texture from "@/constants/colorsApp";
 import { useAuthStore } from '@/store/authStore';
 import { Image } from 'expo-image';
 import LeagueText from "@/constants/LeagueText"
@@ -11,7 +11,8 @@ import { useSettingsStore } from '@/store/settingStore';
 import { useLeagueStore } from "@/store/leagueStore"
 export default function LeagueScreen() {
     const [selectedTier, setSelectedTier] = useState("Emerald");
-    const { lang } = useSettingsStore();
+    const { lang, color } = useSettingsStore();
+    const COLORS = texture[color];
     const t = LeagueText[lang];
     const { token } = useAuthStore();
     const { getLeague, users, isLoading, refreshing } = useLeagueStore()

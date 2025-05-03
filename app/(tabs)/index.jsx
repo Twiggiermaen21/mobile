@@ -5,7 +5,7 @@ import { useAuthStore } from '@/store/authStore';
 import MapView, { Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import styles from '@/assets/styles/map.styles';
-import COLORS from "../../constants/colorsApp";
+import texture from "../../constants/colorsApp";
 import noDog from "../../assets/ImagesPetWalk/noDog.jpeg";
 import { useDogStore } from "@/store/dogStore"
 import IndexText from "@/constants/IndexText";
@@ -35,8 +35,9 @@ export default function Index() {
     // const router = useRouter();
     const { saveWalk, } = useWalkStore();
     const { uploadImage } = usePhotoStore();
-    const { lang } = useSettingsStore();
+    const { lang, color } = useSettingsStore();
     const t = IndexText[lang];
+    const COLORS = texture[color];
     const [image, setImage] = useState(null);
     const [imageBase64, setImageBase64] = useState(null);
 
