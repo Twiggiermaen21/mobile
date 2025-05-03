@@ -3,7 +3,6 @@ import {
     View,
     FlatList,
     Image,
-
     Alert,
     RefreshControl,
     Text,
@@ -11,12 +10,18 @@ import {
     Pressable,
     TouchableOpacity
 } from 'react-native';
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
+import GalleryText from "@/constants/GalleryText"
+import { useSettingsStore } from '@/store/settingStore';
 import { usePhotoStore } from "@/store/photoStore"
 import { useAuthStore } from '@/store/authStore';
 import COLORS from '@/constants/colorsApp';
 import styles from '@/assets/styles/gallery.styles';
+import { Ionicons } from '@expo/vector-icons';
 export default function GalleryScreen() {
-
+    const { lang } = useSettingsStore();
+    const t = GalleryText[lang];
     const { token } = useAuthStore();
     const { photos, page, totalPages, isLoadingMore, refreshing, getPhotos } = usePhotoStore();
     const [selectedPhoto, setSelectedPhoto] = useState(null);
@@ -24,10 +29,43 @@ export default function GalleryScreen() {
     const fetchData = async (pageNumber = 1, refreshing = false) => {
         const result = await getPhotos(pageNumber, refreshing, token);
         if (!result.success) Alert.alert("Error", result.error);
-        // console.log(photos);
     };
+    const handleDeletePhoto = (id) => {
+        Alert.alert(
+            t.deleteTitle,
+            t.deleteMessage,
+            [
+                { text: t.deleteCancel, style: "cancel" },
+                {
+                    text: t.deleteConfirm,
+                    style: "destructive",
+                    onPress: async () => {
+                        // const result = await deleteWalk(id, token);
+                        if (!result.success) Alert.alert("Error", result.error);
+                        else fetchData();
+                    }
+                }
+            ]
+        );
 
+    };
+    const handleDownload = async (id) => {
+        try {
+            const { status } = await MediaLibrary.requestPermissionsAsync();
+            if (status !== 'granted') {
+                Alert.alert("Permission denied", "You need to allow media access to save photos.");
+                return;
+            }
 
+            const fileUri = FileSystem.documentDirectory + selectedPhoto._id + '.jpg';
+            await FileSystem.downloadAsync(selectedPhoto.photo, fileUri);
+            await MediaLibrary.createAssetAsync(fileUri);
+            Alert.alert("Saved", "Photo saved to your gallery.");
+        } catch (error) {
+            Alert.alert("Error", "Could not save photo.");
+            console.log(error);
+        }
+    };
     useEffect(() => {
         if (token) {
             fetchData();
@@ -47,7 +85,7 @@ export default function GalleryScreen() {
     };
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Galeria</Text>
+            <Text style={styles.title}>{t.galleryTitle}</Text>
 
             {photos && photos.length > 0 ? (
                 <FlatList
@@ -62,24 +100,35 @@ export default function GalleryScreen() {
                     }
                     onEndReached={handleLoadMore}
                     onEndReachedThreshold={0.5}
-                    ListFooterComponent={isLoadingMore ? <Text style={styles.loading}>Ładowanie..</Text> : null}
+                    ListFooterComponent={isLoadingMore ? <Text style={styles.loading}>{t.loading}</Text> : null}
                     numColumns={3}
                     renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => handlePhotoPress(item.photo)}>
+                        <TouchableOpacity onPress={() => handlePhotoPress(item)}>
                             <Image source={{ uri: item.photo }} style={styles.image} />
                         </TouchableOpacity>
                     )}
                 />
             ) : (
                 <View style={styles.noPhotosContainer}>
-                    <Text style={styles.noPhotosText}>Brak zdjęć do wyświetlenia</Text>
+                    <Text style={styles.noPhotosText}>{t.noPhoto}</Text>
                 </View>
             )}
 
             <Modal visible={modalVisible} transparent={true} animationType="fade">
-                <Pressable style={styles.overlay} onPress={() => setModalVisible(false)}>
-                    <Image source={{ uri: selectedPhoto }} style={styles.fullImage} resizeMode="contain" />
-                </Pressable>
+                <View style={styles.modalContainer}>
+                    <Pressable style={styles.overlay} onPress={() => setModalVisible(false)}>
+                        <Image source={{ uri: selectedPhoto.photo }} style={styles.fullImage} resizeMode="contain" />
+                    </Pressable>
+
+                    <View style={styles.iconContainer}>
+                        <Pressable onPress={handleDownload}>
+                            <Ionicons name="download-outline" size={32} color="white" />
+                        </Pressable>
+                        <Pressable onPress={handleDeletePhoto}>
+                            <Ionicons name="trash-outline" size={32} color="white" />
+                        </Pressable>
+                    </View>
+                </View>
             </Modal>
         </View>
     );

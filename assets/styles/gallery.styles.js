@@ -25,7 +25,20 @@ const styles = StyleSheet.create({
         width: '90%',
         height: '80%',
     },
-
+    modalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.9)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    iconContainer: {
+        position: 'absolute',
+        bottom: 40,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        width: '100%',
+        paddingHorizontal: 40,
+    },
     bookItem: {
         flexDirection: "row",
         backgroundColor: COLORS.cardBackground,
