@@ -8,7 +8,12 @@ import texture from '@/constants/colorsApp';
 import LoginText from '@/constants/LoginText';
 import { useAuthStore } from '@/store/authStore';
 import { useSettingsStore } from '@/store/settingStore';
-
+const dogImages = {
+    FOREST: require('../../assets/images/DogFOREST.png'),
+    RETRO: require('../../assets/images/DogRETRO.png'),
+    OCEAN: require('../../assets/images/DogOCEAN.png'),
+    BLOSSOM: require('../../assets/images/DogBLOSSOM.png'),
+};
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -30,7 +35,7 @@ export default function Login() {
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
             <View style={dynamicStyles.container}>
                 <View style={dynamicStyles.topIllustration}>
-                    <Image source={require("../../assets/images/DogWalking-rafiki.png")}
+                    <Image source={dogImages[color]}
                         style={dynamicStyles.illustrationImage}
                         resizeMode='contain' />
                 </View>

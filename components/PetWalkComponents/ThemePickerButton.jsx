@@ -4,7 +4,7 @@ import { useSettingsStore } from '@/store/settingStore';
 import texture from '@/constants/colorsApp';
 import styles from '@/assets/styles/settings.styles';
 
-const colorOptions = ['default', 'dark', 'light', 'blue', 'green']; // Dodaj tutaj swoje nazwy styli
+const colorOptions = Object.keys(texture);
 
 export default function ThemePickerButton({ label = "Wybierz motyw", onConfirm }) {
     const { color } = useSettingsStore();

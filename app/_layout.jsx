@@ -5,15 +5,17 @@ import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SafeScreen from '@/components/SafeScreen';
 import { useAuthStore } from '@/store/authStore';
+import { useSettingsStore } from '@/store/settingStore';
 
 export default function RootLayout() {
 
   const router = useRouter();
   const segments = useSegments();
   const { checkAuth, user, token } = useAuthStore();
-
+  const { initializeSettings } = useSettingsStore();
   useEffect(() => {
     checkAuth();
+    initializeSettings();
   }, [])
 
   useEffect(() => {

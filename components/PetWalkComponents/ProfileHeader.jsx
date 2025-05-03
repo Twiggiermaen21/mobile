@@ -26,7 +26,7 @@ export default function ProfileHeader() {
 
     return (
         <View style={dynamicStyles.profileHeader}>
-            <Image source={{ uri: user.profileImage || noProfil }} style={dynamicStyles.profileImage} />
+            <Image source={user.profileImage ? { uri: user.profileImage } : noProfil} style={dynamicStyles.profileImage} />
             <View style={dynamicStyles.profileInfo}>
                 <Text style={dynamicStyles.username} >{user.username}</Text>
 

@@ -15,7 +15,7 @@ export default function SettingsScreen() {
     const [selectedLabel, setSelectedLabel] = useState('');
     const [inputValue, setInputValue] = useState('');
 
-    const { lang, color } = useSettingsStore();
+    const { lang, color, setLang, setColor } = useSettingsStore();
     const { isLoading, updateUser, token } = useAuthStore();
     const t = SettingsText[lang];
     const COLORS = texture[color];
@@ -82,6 +82,7 @@ export default function SettingsScreen() {
                     label={t.colorScheme}
                     onConfirm={(newColor) => {
                         console.log(newColor); // lub Twój sposób na zapis stylu
+                        setColor(newColor);
                     }}
                 />
 
