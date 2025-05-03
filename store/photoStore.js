@@ -73,5 +73,22 @@ export const usePhotoStore = create((set) => ({
             return { success: false, error: error.message };
         }
 
+    },
+    deletePhoto: async (id, token) => {
+        set({ isLoading: true, });
+        try {
+            const response = await fetch(`${API_URL}/photo/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            set({ isLoading: false });
+            const data = await response.json();
+            return { success: response.ok, error: data.message };
+        } catch (err) {
+            set({ isLoading: false });
+            return { success: false, error: err.message };
+        }
     }
 }));

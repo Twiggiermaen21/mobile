@@ -15,21 +15,44 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         padding: 8
     },
-    overlay: {
+    modalWrapper: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.9)',
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: COLORS.background,
+        justifyContent: 'space-between',
     },
     fullImage: {
         width: '90%',
         height: '80%',
+
     },
-    modalContainer: {
+    ImageContainer: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.9)',
         justifyContent: 'center',
+        alignItems: 'center'
+    },
+    bottomBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
         alignItems: 'center',
+        paddingVertical: 15,
+        // backgroundColor: COLORS.border,
+
+        backgroundColor: COLORS.primary,
+        borderRadius: 12,
+        padding: 12,
+
+        marginHorizontal: 24,
+        shadowColor: COLORS.black,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+
+        bottom: 10,
+        left: 0,
+        right: 0,
+
+
     },
     iconContainer: {
         position: 'absolute',
@@ -39,20 +62,7 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 40,
     },
-    bookItem: {
-        flexDirection: "row",
-        backgroundColor: COLORS.cardBackground,
-        borderRadius: 12,
-        padding: 12,
-        marginBottom: 12,
-        shadowColor: COLORS.black,
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
-        borderWidth: 1,
-        borderColor: COLORS.border,
-    },
+
     title: {
         fontSize: 24,
         fontWeight: "700",
