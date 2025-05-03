@@ -8,7 +8,7 @@ import { useAuthStore } from '@/store/authStore';
 import SettingsText from "@/constants/SettingsText";
 import LogoutButton from '@/components/PetWalkComponents/LogoutButton';
 import SettingButton from '@/components/PetWalkComponents/SettingButton';
-
+import ThemePickerButton from '@/components/PetWalkComponents/ThemePickerButton';
 export default function SettingsScreen() {
     const [selectedFunction, setSelectedFunction] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -78,7 +78,12 @@ export default function SettingsScreen() {
 
                 {/* Appearance */}
                 <Text style={dynamicStyles.sectionTitle}>{t.themeAppearance}</Text>
-                <SettingButton label={t.colorScheme} onPress={() => openModal(t.colorScheme)} />
+                <ThemePickerButton
+                    label={t.colorScheme}
+                    onConfirm={(newColor) => {
+                        console.log(newColor); // lub Twój sposób na zapis stylu
+                    }}
+                />
 
                 {/* Language  */}
                 <Text style={dynamicStyles.sectionTitle}>{t.languageLocation}</Text>
