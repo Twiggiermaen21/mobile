@@ -7,12 +7,13 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import texture from '@/constants/colorsApp';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSettingsStore } from '@/store/settingStore';
-
+import TabsBarText from '@/assets/lang/TabsBar.text'
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
 
-  const { color } = useSettingsStore();
+  const { color, lang } = useSettingsStore();
 
+  const t = TabsBarText[lang];
   return (
 
     <Tabs
@@ -43,7 +44,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profil',
+          title: t.profil,
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="account" size={28} color={color} />
           )
@@ -52,7 +53,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="league"
         options={{
-          title: 'League',
+          title: t.league,
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="arrow-up-bold-hexagon-outline" size={28} color={color} />
           )
@@ -61,7 +62,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Start',
+          title: t.start,
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="dog-service" size={32} color={color} />
           )
@@ -70,7 +71,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="history"
         options={{
-          title: 'Historia',
+          title: t.history,
           tabBarIcon: ({ color }) => (
             <MaterialIcons size={28} name="history" color={color} />
           )
@@ -79,7 +80,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="gallery"
         options={{
-          title: 'Gallery',
+          title: t.gallery,
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="image-multiple" size={28} color={color} />
           )
@@ -88,7 +89,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'Ustawienia',
+          title: t.settings,
           tabBarIcon: ({ color }) => (
             <MaterialIcons size={28} name="settings" color={color} />
           )

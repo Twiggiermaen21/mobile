@@ -15,9 +15,10 @@ const languageNames = {
     de: "Deutsch",
     it: "Italiano",
     ua: "Українська",
-    ru: "Русский",         // Rosyjski
-    zh: "中文 (Chinese)",   // Chiński (uproszczony)
-    ja: "日本語 (Japanese)" // Japoński
+    ru: "Русский",
+    zh: "中文 (Chinese)",
+    ja: "日本語 (Japanese)",
+    pt: "Português"
 };
 
 export default function ThemePickerButton({ label, onConfirm, typ }) {
