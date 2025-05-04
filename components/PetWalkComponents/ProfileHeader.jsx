@@ -3,7 +3,9 @@ import React from 'react'
 import { useAuthStore } from '@/store/authStore'
 import styles from '@/assets/styles/profile.styles';
 import { Image } from 'expo-image';
+
 import ProfileText from "@/assets/lang/Profile.text";
+
 import { useSettingsStore } from '@/store/settingStore';
 import noProfil from "@/assets/ImagesPetWalk/profil.jpg";
 import texture from "@/constants/colorsApp";
@@ -11,6 +13,7 @@ import texture from "@/constants/colorsApp";
 
 export default function ProfileHeader() {
     const { user } = useAuthStore();
+
     const { lang, color } = useSettingsStore();
     const COLORS = texture[color];
     const dynamicStyles = styles(COLORS);

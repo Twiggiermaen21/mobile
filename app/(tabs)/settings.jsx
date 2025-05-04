@@ -15,20 +15,28 @@ export default function SettingsScreen() {
     const [selectedLabel, setSelectedLabel] = useState('');
     const [inputValue, setInputValue] = useState('');
 
+
+
     const { lang, color, setLang, setColor, resetSettings } = useSettingsStore();
     const { isLoading, updateUser, token } = useAuthStore();
     const t = SettingsText[lang];
     const COLORS = texture[color];
     const dynamicStyles = styles(COLORS);
     const textMap = {
-        8: t.about,
-        6: t.appVersion,
+        7: t.about,
+        5: t.version,
     };
     const openModal = (label, number) => {
         setSelectedLabel(label);
         setSelectedFunction(number);
         setModalVisible(true);
     };
+    const confirmReset = () => {
+        Alert.alert("Reset app", "Are you sure you want to reset app?", [
+            { text: "Cancel", style: "cancel" },
+            { text: "Reset", onPress: () => resetSettings(), style: "destructive" }
+        ])
+    }
 
     const closeModal = () => {
         setModalVisible(false);
@@ -62,12 +70,7 @@ export default function SettingsScreen() {
             closeModal();
         }
     };
-    const confirmResetSettings = () => {
-        Alert.alert("Reset App", "Are you sure you want to reset app?", [
-            { text: "Cancel", style: "cancel" },
-            { text: "Reset", onPress: () => resetSettings(), style: "destructive" }
-        ])
-    }
+
     return (
         <View style={dynamicStyles.container}>
             <Text style={dynamicStyles.title}>{t.settingsTitle}</Text>
@@ -80,12 +83,17 @@ export default function SettingsScreen() {
                 <SettingButton label={t.changePassword} onPress={() => openModal(t.changePassword, 3)} />
                 <SettingButton label={t.editProfilePicture} onPress={() => openModal(t.editProfilePicture, 4)} />
 
+                {/* Notifications */}
+                {/* <Text style={dynamicStyles.sectionTitle}>{t.notifications}</Text>
+                <SettingButton label={t.emailSMSNotifications} onPress={() => openModal(t.emailSMSNotifications)} /> */}
 
+                {/* Appearance */}
                 <Text style={dynamicStyles.sectionTitle}>{t.themeAppearance}</Text>
                 <ThemePickerButton
                     label={t.colorScheme}
                     typ={1}
                     onConfirm={(newColor) => {
+
                         setColor(newColor);
                     }}
                 />
@@ -93,6 +101,7 @@ export default function SettingsScreen() {
                     label={t.selectLanguage}
                     typ={2}
                     onConfirm={(newLang) => {
+
                         setLang(newLang);
                     }}
                 />
@@ -101,9 +110,9 @@ export default function SettingsScreen() {
                 {/* Help & Other */}
                 <Text style={dynamicStyles.sectionTitle}>{t.helpOther}</Text>
 
-                <SettingButton label={t.appVersion} onPress={() => openModal(t.appVersion, 7)} />
-                <SettingButton label={t.resetSettings} onPress={() => confirmResetSettings()} />
-                <SettingButton label={t.aboutApp} onPress={() => openModal(t.aboutApp, 8)} />
+                <SettingButton label={t.appVersion} onPress={() => openModal(t.appVersion, 5)} />
+                <SettingButton label={t.resetSettings} onPress={() => confirmReset()} />
+                <SettingButton label={t.aboutApp} onPress={() => openModal(t.aboutApp, 7)} />
 
                 {/* Logout */}
                 <LogoutButton />
@@ -113,7 +122,8 @@ export default function SettingsScreen() {
             <Modal
                 visible={modalVisible}
                 transparent={true}
-                animationType="fade">
+                animationType="fade"
+            >
                 <TouchableWithoutFeedback onPress={closeModal}>
                     <View style={dynamicStyles.ModalAroundBox}>
                         <TouchableWithoutFeedback>
@@ -145,10 +155,7 @@ export default function SettingsScreen() {
                                         </View>
                                     ) : (
                                         // Display this when selectedFunction !== 0
-                                        <Text> {textMap[selectedFunction] || null}
-
-
-                                        </Text>
+                                        <Text>{textMap[selectedFunction] || null}</Text>
                                     )}
 
                                     {/* Save Button */}

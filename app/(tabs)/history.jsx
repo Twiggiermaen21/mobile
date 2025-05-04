@@ -6,7 +6,9 @@ import { useAuthStore } from '@/store/authStore';
 import texture from '@/constants/colorsApp';
 import styles from '@/assets/styles/history.styles';
 import noDog from "../../assets/ImagesPetWalk/noDog.jpeg";
+
 import HistoryText from "@/assets/lang/History.text"
+
 import { useSettingsStore } from '@/store/settingStore';
 import { useWalkStore } from "@/store/walkStore"
 import formatTime from "@/components/PetWalkComponents/timeUtils"

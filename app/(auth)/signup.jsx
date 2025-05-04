@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import styles from '../../assets/styles/signup.styles';
 import texture from '@/constants/colorsApp';
 import SigninText from '@/assets/lang/Signin.text';
+
 import { useAuthStore } from '../../store/authStore';
 import { useSettingsStore } from '@/store/settingStore';
 export default function Signup() {

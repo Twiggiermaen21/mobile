@@ -6,6 +6,7 @@ import { Link } from 'expo-router';
 import styles from '../../assets/styles/login.styles';
 import texture from '@/constants/colorsApp';
 import LoginText from '@/assets/lang/Login.text';
+
 import { useAuthStore } from '@/store/authStore';
 import { useSettingsStore } from '@/store/settingStore';
 const dogImages = {

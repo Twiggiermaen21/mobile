@@ -1,10 +1,33 @@
-# Welcome to your Expo app 👋
+# 🐾 PetWalk – Frontend mobilny
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+To jest frontend mobilnej aplikacji **PetWalk**, stworzonej przy użyciu [Expo](https://expo.dev) oraz React Native. Aplikacja umożliwia użytkownikom organizowanie i umawianie spacerów z psami w łatwy i intuicyjny sposób.
 
-## Get started
+## 🧩 Funkcje aplikacji
 
-1. Install dependencies
+- 🔐 **Logowanie i rejestracja użytkowników**
+- 🐶 **Dodawanie psów** do swojego profilu
+- 🚶 **Wybieranie psów na spacer**
+- 🗺️ **Śledzenie spaceru** w czasie rzeczywistym:
+  - Trasa na mapie
+  - Czas trwania
+  - Prędkość
+  - Dystans
+- 📖 **Historia spacerów**:
+  - Lista poprzednich spacerów
+  - Szczegóły spaceru (data, trasa, czas itd.)
+
+## 🛠️ Planowane funkcje
+
+W przyszłych wersjach aplikacji planujemy wdrożenie następujących funkcjonalności:
+
+- 📸 **Dodawanie zdjęć ze spaceru** – możliwość robienia zdjęć w trakcie spaceru i zapisywania ich w historii
+- 🎨 **Ustawienia aplikacji** – zmiana koloru motywu, języka i innych preferencji
+- ✅ **Weryfikacja e-mailowa po rejestracji** – dodatkowa warstwa bezpieczeństwa i potwierdzenie tożsamości użytkownika
+
+
+## 🚀 Jak zacząć?
+
+1. Zainstaluj zależności:
 
    ```bash
    npm install
@@ -24,27 +47,3 @@ In the output, you'll find options to open the app in a
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.

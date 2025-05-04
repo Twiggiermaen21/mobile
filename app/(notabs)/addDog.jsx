@@ -11,6 +11,7 @@ import * as FileSystem from "expo-file-system"
 import { useAuthStore } from '@/store/authStore';
 import { useDogStore } from "@/store/dogStore"
 import AddDogText from "@/assets/lang/AddDog.text"
+
 import { useSettingsStore } from '@/store/settingStore';
 export default function AddDog() {
     const [name, setName] = useState("");

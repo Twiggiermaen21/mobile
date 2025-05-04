@@ -3,6 +3,7 @@ import { Modal, View, Text, TouchableOpacity, TouchableWithoutFeedback, ScrollVi
 import { useSettingsStore } from '@/store/settingStore';
 import texture from '@/constants/colorsApp';
 import styles from '@/assets/styles/settings.styles';
+
 import SettingsText from "@/assets/lang/Settings.text";
 
 const languageNames = {
@@ -32,11 +33,11 @@ export default function ThemePickerButton({ label, onConfirm, typ }) {
     const COLORS = texture[color];
     const dynamicStyles = styles(COLORS);
     const t = SettingsText[lang];
+
     const handleConfirm = () => {
         onConfirm(selectedColor);
         setModalVisible(false);
     };
-
 
     return (
         <>
@@ -50,6 +51,7 @@ export default function ThemePickerButton({ label, onConfirm, typ }) {
                         <TouchableWithoutFeedback>
                             <View style={dynamicStyles.card}>
                                 <Text style={dynamicStyles.title}>{typ === 1 ? t.selectTheme : t.selectLanguage}</Text>
+
                                 <ScrollView style={{ maxHeight: 200 }}>
                                     {colorOptions.map((option) => (
                                         <TouchableOpacity
@@ -60,12 +62,16 @@ export default function ThemePickerButton({ label, onConfirm, typ }) {
                                             ]}
                                             onPress={() => setSelectedColor(option)}
                                         >
+
                                             <Text style={dynamicStyles.settingText}>{typ === 1 ? option : languageNames[option] || option}</Text>
+
                                         </TouchableOpacity>
                                     ))}
                                 </ScrollView>
                                 <TouchableOpacity style={dynamicStyles.button} onPress={handleConfirm}>
+
                                     <Text style={dynamicStyles.buttonText}>{t.save}</Text>
+
                                 </TouchableOpacity>
                             </View>
                         </TouchableWithoutFeedback>

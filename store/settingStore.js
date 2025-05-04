@@ -26,10 +26,12 @@ export const useSettingsStore = create((set) => ({
             console.error('Failed to load settings from storage', error);
         }
     },
+
     resetSettings: async () => {
         await AsyncStorage.removeItem("lang");
         await AsyncStorage.removeItem("color");
         set({ lang: 'pl', color: 'FOREST' });
 
     },
+
 }));

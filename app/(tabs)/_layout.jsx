@@ -12,9 +12,9 @@ export default function TabLayout() {
   const insets = useSafeAreaInsets();
 
   const { color } = useSettingsStore();
-  
+
   return (
-    
+
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: texture[color].primary,
@@ -81,7 +81,7 @@ export default function TabLayout() {
         options={{
           title: 'Gallery',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="image-multiple" size={32} color={color} />
+            <MaterialCommunityIcons name="image-multiple" size={28} color={color} />
           )
         }}
       />

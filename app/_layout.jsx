@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SafeScreen from '@/components/SafeScreen';
 import { useAuthStore } from '@/store/authStore';
 import { useSettingsStore } from '@/store/settingStore';
+
 import texture from '@/constants/colorsApp';
 
 
@@ -14,6 +15,7 @@ export default function RootLayout() {
 
   const router = useRouter();
   const segments = useSegments();
+
   const { authReady, checkAuth, user, token } = useAuthStore();
   const { initializeSettings, color } = useSettingsStore();
 
@@ -40,6 +42,7 @@ export default function RootLayout() {
     checkAuth(); // Runs once
     initializeSettings();
   }, []); // ✅ Tylko raz przy uruchomieniu
+
 
   useEffect(() => {
     if (!authReady) return; // ✅ Poczekaj aż auth będzie gotowy
