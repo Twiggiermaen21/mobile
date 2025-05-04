@@ -39,10 +39,14 @@ export const usePhotoStore = create((set) => ({
             return { success: false, error: error.message };
         }
     },
-    uploadImage: async (token, image, imageBase64, user) => {
+    uploadImage: async (token, res, user) => {
         set({ isLoading: true, });
         try {
+            console.log("Image w store:", res.uri);
+            console.log("Image64 w store:", res.base64);
 
+            const image = res.uri;
+            const imageBase64 = res.base64;
             let imageDataUrl = null;
             if (image && imageBase64) {
                 const uriParts = image.split(".");
@@ -58,10 +62,11 @@ export const usePhotoStore = create((set) => ({
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    image: imageDataUrl,
-                    user
-                })
+                body:
+                    JSON.stringify({
+                        image: imageDataUrl,
+                        user
+                    })
             })
 
             const data = await response.json();

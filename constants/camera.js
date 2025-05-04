@@ -16,15 +16,15 @@ export async function openNativeCamera() {
         const result = await ImagePicker.launchCameraAsync({
             mediaTypes: ['images'],
             allowsEditing: true,
-            quality: 0.1,
+            quality: 1,
             aspect: [4, 3],
             base64: true
         });
-        console.log(result);
         if (!result.canceled) {
             return {
                 uri: result.assets[0].uri,
-                base64: result.assets[0].base64
+                base64: result.assets[0].base64,
+
             };
         }
     } catch (error) {

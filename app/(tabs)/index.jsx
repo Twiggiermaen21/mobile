@@ -153,11 +153,10 @@ export default function Index() {
 
     };
 
-    const savePhoto = async () => {
+    const savePhoto = async (res) => {
+        console.log(res);
 
-        console.log("Image", image);
-        console.log("Image64", imageBase64);
-        const result = await uploadImage(token, image, imageBase64, user);
+        const result = await uploadImage(token, res, user);
         if (!result.success) Alert.alert("Error", result.error);
         else Alert.alert("Sukces", "Zdjecie zostało zapisane!");
 
@@ -220,7 +219,7 @@ export default function Index() {
                                         setImageBase64(base64);
                                     }
 
-                                    savePhoto();
+                                    savePhoto(result);
                                 } else {
                                     Alert.alert("Error", result.error);
                                 }

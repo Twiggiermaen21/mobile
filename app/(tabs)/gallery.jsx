@@ -126,7 +126,7 @@ export default function GalleryScreen() {
                         />
                     }
                     onEndReached={handleLoadMore}
-                    onEndReachedThreshold={0.5}
+                    onEndReachedThreshold={0.1}
                     ListFooterComponent={isLoadingMore ? <Text style={dynamicStyles.loading}>{t.loading}</Text> : null}
                     numColumns={3}
                     renderItem={({ item }) => (
