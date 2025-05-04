@@ -1,122 +1,173 @@
 import React, { useState } from 'react';
-import { View, Text, Switch, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
-import LogoutButton from '@/components/LogoutButton';
-import COLORS from '@/constants/colorsApp';
+import { Modal, View, Text, TouchableOpacity, TextInput, TouchableWithoutFeedback, ScrollView, Alert, Linking } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import texture from '@/constants/colorsApp';
 import styles from '@/assets/styles/settings.styles';
-
-
+import { useSettingsStore } from '@/store/settingStore';
+import { useAuthStore } from '@/store/authStore';
+import SettingsText from "@/assets/lang/Settings.text";
+import LogoutButton from '@/components/PetWalkComponents/LogoutButton';
+import SettingButton from '@/components/PetWalkComponents/SettingButton';
+import ThemePickerButton from '@/components/PetWalkComponents/ThemePickerButton';
 export default function SettingsScreen() {
-    const [notifications, setNotifications] = useState(true);
-    const [darkMode, setDarkMode] = useState(false);
+    const [selectedFunction, setSelectedFunction] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedLabel, setSelectedLabel] = useState('');
+    const [inputValue, setInputValue] = useState('');
 
+    const { lang, color, setLang, setColor, resetSettings } = useSettingsStore();
+    const { isLoading, updateUser, token } = useAuthStore();
+    const t = SettingsText[lang];
+    const COLORS = texture[color];
+    const dynamicStyles = styles(COLORS);
+    const textMap = {
+        8: t.about,
+        6: t.appVersion,
+    };
+    const openModal = (label, number) => {
+        setSelectedLabel(label);
+        setSelectedFunction(number);
+        setModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setModalVisible(false);
+        setSelectedLabel('');
+        setInputValue('');
+        setSelectedFunction(null);
+    };
+    const handleLinkPress = () => {
+        const url = 'https://www.dicebear.com/styles/avataaars/';
+        Linking.openURL(url).catch((err) => console.error('Failed to open URL', err));
+    };
+    const fieldMap = {
+        1: { username: inputValue },
+        2: { email: inputValue },
+        3: { password: inputValue },
+        4: { profileImage: inputValue }
+    };
+
+    const updateButton = async () => {
+        if (!fieldMap[selectedFunction]) {
+            Alert.alert("Error", "Invalid selection");
+            return;
+        }
+
+        const result = await updateUser(token, fieldMap[selectedFunction]);
+
+        if (!result.success) {
+            Alert.alert("Error", result.error);
+        } else {
+            Alert.alert("Success", "Profile updated successfully!");
+            closeModal();
+        }
+    };
+    const confirmResetSettings = () => {
+        Alert.alert("Reset App", "Are you sure you want to reset app?", [
+            { text: "Cancel", style: "cancel" },
+            { text: "Reset", onPress: () => resetSettings(), style: "destructive" }
+        ])
+    }
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Ustawienia</Text>
+        <View style={dynamicStyles.container}>
+            <Text style={dynamicStyles.title}>{t.settingsTitle}</Text>
 
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <ScrollView contentContainerStyle={dynamicStyles.scrollContainer}>
+                {/* Account Section */}
+                <Text style={dynamicStyles.sectionTitle}>{t.account}</Text>
+                <SettingButton label={t.changeUsername} onPress={() => openModal(t.changeUsername, 1)} />
+                <SettingButton label={t.changeEmail} onPress={() => openModal(t.changeEmail, 2)} />
+                <SettingButton label={t.changePassword} onPress={() => openModal(t.changePassword, 3)} />
+                <SettingButton label={t.editProfilePicture} onPress={() => openModal(t.editProfilePicture, 4)} />
 
-                {/* 1. Konto użytkownika */}
-                <Text style={styles.sectionTitle}>Konto użytkownika</Text>
-                <SettingButton label="Zmień username" />
-                <SettingButton label="Zmień adres e-mail" />
-                <SettingButton label="Zmień hasło" />
-                <SettingButton label="Edytuj zdjęcie profilowe" />
 
-                {/* 2. Powiadomienia */}
-                <Text style={styles.sectionTitle}>Powiadomienia</Text>
-                <SettingButton label="Powiadomienia e-mail/SMS" />
+                <Text style={dynamicStyles.sectionTitle}>{t.themeAppearance}</Text>
+                <ThemePickerButton
+                    label={t.colorScheme}
+                    typ={1}
+                    onConfirm={(newColor) => {
+                        setColor(newColor);
+                    }}
+                />
+                <ThemePickerButton
+                    label={t.selectLanguage}
+                    typ={2}
+                    onConfirm={(newLang) => {
+                        setLang(newLang);
+                    }}
+                />
 
-                {/* 3. Motyw i wygląd */}
-                <Text style={styles.sectionTitle}>Motyw i wygląd</Text>
-                <SettingSwitch label="Tryb ciemny" value={darkMode} onValueChange={setDarkMode} />
-                <SettingButton label="Rozmiar czcionki" />
-                <SettingButton label="Kolorystyka" />
 
-                {/* 4. Język i lokalizacja */}
-                <Text style={styles.sectionTitle}>Język i lokalizacja</Text>
-                <SettingButton label="Wybór języka" />
-                <SettingButton label="Format daty i godziny" />
-                <SettingButton label="Strefa czasowa" />
+                {/* Help & Other */}
+                <Text style={dynamicStyles.sectionTitle}>{t.helpOther}</Text>
 
-                {/* 5. Prywatność i bezpieczeństwo */}
-                <Text style={styles.sectionTitle}>Prywatność i bezpieczeństwo</Text>
-                <SettingButton label="Zarządzaj urządzeniami" />
-                <SettingButton label="Historia logowania" />
+                <SettingButton label={t.appVersion} onPress={() => openModal(t.appVersion, 7)} />
+                <SettingButton label={t.resetSettings} onPress={() => confirmResetSettings()} />
+                <SettingButton label={t.aboutApp} onPress={() => openModal(t.aboutApp, 8)} />
 
-                {/* 6. Dane i synchronizacja */}
-                <Text style={styles.sectionTitle}>Dane i synchronizacja</Text>
-                <SettingButton label="Użycie danych komórkowych vs Wi-Fi" />
-
-                {/* 7. Pomoc i Inne */}
-                <Text style={styles.sectionTitle}>Pomoc i Inne</Text>
-                <SettingButton label="Centrum pomocy / FAQ" />
-                <SettingButton label="Zgłoś problem" />
-                <SettingButton label="Wersja aplikacji" />
-                <SettingButton label="Resetuj ustawienia" />
-                <SettingButton label="O aplikacji" />
-
-                {/* <View style={{ height: 20 }} />  */}
+                {/* Logout */}
                 <LogoutButton />
             </ScrollView>
 
-            {/* Przycisk wylogowania przyklejony na dole */}
+            {/* Modal */}
+            <Modal
+                visible={modalVisible}
+                transparent={true}
+                animationType="fade">
+                <TouchableWithoutFeedback onPress={closeModal}>
+                    <View style={dynamicStyles.ModalAroundBox}>
+                        <TouchableWithoutFeedback>
+                            <View style={dynamicStyles.card}>
+                                <Text style={dynamicStyles.title}>{selectedLabel}</Text>
+                                <View style={dynamicStyles.form}>
+                                    {selectedFunction < 5 ? (
+                                        // Form content for `selectedFunction === 0`
+                                        <View style={dynamicStyles.formGroup}>
+                                            <Text style={dynamicStyles.label}>{t.info[selectedFunction]}</Text>
 
-        </View>
+                                            {/* Avatar link only for `selectedFunction === 4` */}
+                                            {selectedFunction === 4 && (
+                                                <Text style={dynamicStyles.link} onPress={handleLinkPress}>
+                                                    Kliknij tutaj, aby stworzyć awatara!
+                                                </Text>
+                                            )}
+
+                                            <View style={dynamicStyles.inputContainer}>
+                                                <Ionicons name="chevron-forward" style={dynamicStyles.inputIcon} size={20} color={COLORS.textSecondary} />
+                                                <TextInput
+                                                    style={dynamicStyles.input}
+                                                    placeholder={t.namePlaceholder}
+                                                    placeholderTextColor={COLORS.placeholderText}
+                                                    value={inputValue}
+                                                    onChangeText={setInputValue}
+                                                />
+                                            </View>
+                                        </View>
+                                    ) : (
+                                        // Display this when selectedFunction !== 0
+                                        <Text> {textMap[selectedFunction] || null}
+
+
+                                        </Text>
+                                    )}
+
+                                    {/* Save Button */}
+                                    {selectedFunction < 5 && (
+                                        <TouchableOpacity style={dynamicStyles.button} onPress={updateButton}>
+                                            <Text style={dynamicStyles.buttonText}>{t.save}</Text>
+                                        </TouchableOpacity>
+                                    )}
+                                </View>
+
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </View>
+                </TouchableWithoutFeedback >
+            </Modal >
+        </View >
     );
-};
+}
 
-const SettingButton = ({ label, onPress }) => (
-    <TouchableOpacity style={styles.settingButton} onPress={onPress}>
-        <Text style={styles.settingText}>{label}</Text>
-    </TouchableOpacity>
-);
-
-const SettingSwitch = ({ label, value, onValueChange }) => (
-    <View style={styles.settingSwitch}>
-        <Text style={styles.settingText}>{label}</Text>
-        <Switch value={value} onValueChange={onValueChange} />
-    </View>
-);
+// Setting Button Component
 
 
-const styles2 = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        paddingTop: 60,
-    },
-    scrollContainer: {
-        paddingHorizontal: 20,
-        paddingBottom: 80,
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        textAlign: 'center',
-    },
-    sectionTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginTop: 24,
-        marginBottom: 8,
-        color: COLORS.primary,
-    },
-    settingButton: {
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-    settingText: {
-        fontSize: 16,
-    },
-    settingSwitch: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-});

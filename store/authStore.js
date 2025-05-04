@@ -37,14 +37,14 @@ export const useAuthStore = create((set) => ({
         }
     },
 
-
+    authReady: false,
     checkAuth: async () => {
         try {
             const token = await AsyncStorage.getItem("token");
             const userJson = await AsyncStorage.getItem("user");
             const user = userJson ? JSON.parse(userJson) : null;
 
-            set({ token, user });
+            set({ token, user, authReady: true });
         } catch (error) {
             console.log("Auth check failed", error);
         }
@@ -82,6 +82,39 @@ export const useAuthStore = create((set) => ({
         await AsyncStorage.removeItem("user");
         set({ token: null, user: null });
 
-    }
+    },
+
+    updateUser: async (token, updateData) => {
+        set({ isLoading: true });
+        try {
+            const response = await fetch(`${API_URL}/auth/update-user`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}` // Bearer token
+                },
+                body: JSON.stringify(updateData) // Wysyłasz dowolne pola
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to update user');
+            }
+
+
+
+            set({ isLoading: false });
+            return { success: true, };
+        } catch (error) {
+            set({ isLoading: false });
+            console.error('Error updating user:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+
+
+
 
 }));

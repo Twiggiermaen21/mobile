@@ -1,10 +1,9 @@
 // styles/login.styles.js
 import { StyleSheet, Dimensions } from "react-native";
-import COLORS from "../../constants/colorsApp"
 
 const { width } = Dimensions.get("window");
 
-const styles = StyleSheet.create({
+const styles = (COLORS) => StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: COLORS.background,

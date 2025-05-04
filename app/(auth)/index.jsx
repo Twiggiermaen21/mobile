@@ -1,12 +1,19 @@
-import { View, Text, Image, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Alert } from 'react-native'
-import React, { useState } from 'react'
-import styles from '../../assets/styles/login.styles'
+import React, { useState } from 'react';
+import { View, Text, Image, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import COLORS from '@/constants/colorsApp';
 import { Link } from 'expo-router';
+
+import styles from '../../assets/styles/login.styles';
+import texture from '@/constants/colorsApp';
+import LoginText from '@/assets/lang/Login.text';
 import { useAuthStore } from '@/store/authStore';
 import { useSettingsStore } from '@/store/settingStore';
-import LoginText from '@/constants/LoginText';
+const dogImages = {
+    FOREST: require('../../assets/images/DogFOREST.png'),
+    RETRO: require('../../assets/images/DogRETRO.png'),
+    OCEAN: require('../../assets/images/DogOCEAN.png'),
+    BLOSSOM: require('../../assets/images/DogBLOSSOM.png'),
+};
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -14,8 +21,10 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const { isLoading, login } = useAuthStore();
 
-    const { lang } = useSettingsStore();
+    const { lang, color } = useSettingsStore();
     const t = LoginText[lang];
+    const COLORS = texture[color];
+    const dynamicStyles = styles(COLORS);
 
     const handleLogin = async () => {
         const result = await login(email, password);
@@ -24,24 +33,24 @@ export default function Login() {
 
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
-            <View style={styles.container}>
-                <View style={styles.topIllustration}>
-                    <Image source={require("../../assets/images/DogWalking-rafiki.png")}
-                        style={styles.illustrationImage}
+            <View style={dynamicStyles.container}>
+                <View style={dynamicStyles.topIllustration}>
+                    <Image source={dogImages[color]}
+                        style={dynamicStyles.illustrationImage}
                         resizeMode='contain' />
                 </View>
-                <View style={styles.card}>
-                    <View style={styles.formContainer}>
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Email</Text>
-                            <View style={styles.inputContainer}>
+                <View style={dynamicStyles.card}>
+                    <View style={dynamicStyles.formContainer}>
+                        <View style={dynamicStyles.inputGroup}>
+                            <Text style={dynamicStyles.label}>Email</Text>
+                            <View style={dynamicStyles.inputContainer}>
                                 <Ionicons
                                     name='mail-outline'
                                     size={20}
                                     color={COLORS.primary}
-                                    style={styles.inputIcon} />
+                                    style={dynamicStyles.inputIcon} />
                                 <TextInput
-                                    style={styles.input}
+                                    style={dynamicStyles.input}
                                     placeholder={t.email}
                                     placeholderTextColor={COLORS.placeholderText}
                                     value={email}
@@ -52,32 +61,32 @@ export default function Login() {
                             </View>
                         </View>
 
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>{t.LabalPassword}</Text>
-                            <View style={styles.inputContainer}>
-                                <Ionicons name='lock-closed-outline' size={20} color={COLORS.primary} style={styles.inputIcon} />
-                                <TextInput style={styles.input}
+                        <View style={dynamicStyles.inputGroup}>
+                            <Text style={dynamicStyles.label}>{t.labelPassword}</Text>
+                            <View style={dynamicStyles.inputContainer}>
+                                <Ionicons name='lock-closed-outline' size={20} color={COLORS.primary} style={dynamicStyles.inputIcon} />
+                                <TextInput style={dynamicStyles.input}
                                     placeholder={t.password}
                                     placeholderTextColor={COLORS.placeholderText}
                                     value={password}
                                     onChangeText={setPassword}
                                     secureTextEntry={!showPassword}
                                 />
-                                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
-                                    <Ionicons name={showPassword ? 'eye-outline' : 'eye-off-outline'} size={20} color={COLORS.primary} style={styles.inputIcon} />
+                                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={dynamicStyles.eyeIcon}>
+                                    <Ionicons name={showPassword ? 'eye-outline' : 'eye-off-outline'} size={20} color={COLORS.primary} style={dynamicStyles.inputIcon} />
                                 </TouchableOpacity>
                             </View>
                         </View>
 
-                        <TouchableOpacity onPress={handleLogin} style={styles.button} disabled={isLoading}>
-                            {isLoading ? (<ActivityIndicator color="fff" />) : (<Text style={styles.buttonText}>{t.loginButton}</Text>)}
+                        <TouchableOpacity onPress={handleLogin} style={dynamicStyles.button} disabled={isLoading}>
+                            {isLoading ? (<ActivityIndicator color={COLORS.white} />) : (<Text style={dynamicStyles.buttonText}>{t.loginButton}</Text>)}
                         </TouchableOpacity>
 
-                        <View style={styles.footer}>
-                            <Text style={styles.footerText}>{t.footerText}</Text>
+                        <View style={dynamicStyles.footer}>
+                            <Text style={dynamicStyles.footerText}>{t.footerText}</Text>
                             <Link href="/signup" asChild>
                                 <TouchableOpacity>
-                                    <Text style={styles.link}>{t.signUpLink}</Text>
+                                    <Text style={dynamicStyles.link}>{t.signUpLink}</Text>
                                 </TouchableOpacity>
                             </Link>
                         </View>

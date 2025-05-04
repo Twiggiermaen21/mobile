@@ -4,35 +4,39 @@ import { HapticTab } from '@/components/HapticTab';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import COLORS from '@/constants/colorsApp';
+import texture from '@/constants/colorsApp';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSettingsStore } from '@/store/settingStore';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
 
+  const { color } = useSettingsStore();
+  
   return (
+    
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: COLORS.inactiveIcon,
+        tabBarActiveTintColor: texture[color].primary,
+        tabBarInactiveTintColor: texture[color].inactiveIcon,
         headerShown: false,
         headerTitleStyle: {
           fontWeight: 'bold',
-          color: COLORS.textPrimary
+          color: texture[color].textPrimary
         },
         headerShadowVisible: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: {
-          backgroundColor: COLORS.cardBackground,
+          backgroundColor: texture[color].cardBackground,
           borderTopWidth: 1,
-          borderTopColor: COLORS.border,
+          borderTopColor: texture[color].border,
           paddingTop: 5,
           height: 60 + insets.bottom,
           paddingBottom: insets.bottom
         },
         tabBarIconStyle: {
-          color: COLORS.textPrimary
+          color: texture[color].textPrimary
         }
       }}
     >
@@ -69,6 +73,15 @@ export default function TabLayout() {
           title: 'Historia',
           tabBarIcon: ({ color }) => (
             <MaterialIcons size={28} name="history" color={color} />
+          )
+        }}
+      />
+      <Tabs.Screen
+        name="gallery"
+        options={{
+          title: 'Gallery',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="image-multiple" size={32} color={color} />
           )
         }}
       />

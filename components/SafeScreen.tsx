@@ -1,22 +1,18 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native'
+import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import COLORS from "../constants/colorsApp";
-
+import { useSettingsStore } from '@/store/settingStore';
+import texture from '@/constants/colorsApp';
+type TextureColor = 'FOREST' | 'RETRO' | 'OCEAN' | 'BLOSSOM';
 
 export default function SafeScreen({ children }: { children: React.ReactNode }) {
     const instes = useSafeAreaInsets();
+    const { color } = useSettingsStore();
+    const COLORS = texture[color as TextureColor];
+
     return (
-        <View style={[styles.container, { paddingTop: instes.top }]}>
+        <View style={[{ flex: 1, backgroundColor: COLORS.background }, { paddingTop: instes.top }]}>
             {children}
         </View>
     )
 }
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: COLORS.background
-    }
-})

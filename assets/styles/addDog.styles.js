@@ -1,8 +1,7 @@
 // styles/create.styles.js
 import { StyleSheet } from "react-native";
-import COLORS from "../../constants/colorsApp";
 
-const styles = StyleSheet.create({
+const styles = (COLORS) => StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: COLORS.background,
@@ -40,6 +39,9 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     textAlign: "center",
   },
+  slider: {
+    width: '100%', height: 40
+  },
   form: {
     marginBottom: 16,
   },
@@ -69,28 +71,7 @@ const styles = StyleSheet.create({
     height: 48,
     color: COLORS.textDark,
   },
-  textArea: {
-    backgroundColor: COLORS.inputBackground,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    padding: 12,
-    height: 100,
-    color: COLORS.textDark,
-  },
-  ratingContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    backgroundColor: COLORS.inputBackground,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    padding: 8,
-  },
-  starButton: {
-    padding: 8,
-  },
+
   imagePicker: {
     width: "100%",
     height: 200,
@@ -133,8 +114,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 8, // Dodajemy padding, aby dopasować wielkość przycisku do zawartości
-    flexDirection: "row", // Jeśli chcesz mieć ikonę i tekst obok siebie
+    padding: 8,
+    flexDirection: "row",
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

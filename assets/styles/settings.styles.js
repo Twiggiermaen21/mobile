@@ -1,10 +1,9 @@
 // styles/login.styles.js
 import { StyleSheet, Dimensions } from "react-native";
-import COLORS from "../../constants/colorsApp"
 
 const { width } = Dimensions.get("window");
 
-const styles = StyleSheet.create({
+const styles = (COLORS) => StyleSheet.create({
     container: {
         flexGrow: 1,
         backgroundColor: COLORS.background,
@@ -23,6 +22,31 @@ const styles = StyleSheet.create({
         width: width * 0.75,
         height: width * 0.75,
     },
+
+    logoutButton: {
+        backgroundColor: COLORS.primary,
+        borderRadius: 12,
+        padding: 12,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        marginHorizontal: 24,
+        shadowColor: COLORS.black,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+        position: "absolute",
+        bottom: 10,
+        left: 0,
+        right: 0,
+    },
+    logoutText: {
+        color: COLORS.white,
+        fontWeight: "600",
+        marginLeft: 8,
+    },
+
     card: {
         backgroundColor: COLORS.cardBackground,
         borderRadius: 16,
@@ -142,6 +166,61 @@ const styles = StyleSheet.create({
 
         paddingBottom: 80,
     },
+    ModalAroundBox: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    ModalBox: {
+        width: '80%',
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    // button: {
+    //     marginTop: 20,
+    //     padding: 10,
+    //     backgroundColor: '#007AFF',
+    //     borderRadius: 8,
+    // },
+    // buttonText: {
+    //     color: '#fff',
+    //     fontWeight: 'bold',
+    // },
+
+
+    form: {
+        marginBottom: 16,
+    },
+    formGroup: {
+        marginBottom: 20,
+    },
+    label: {
+        fontSize: 14,
+        marginBottom: 8,
+        color: COLORS.textPrimary,
+        fontWeight: "500",
+    },
+    inputContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: COLORS.inputBackground,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: COLORS.border,
+        paddingHorizontal: 12,
+    },
+    inputIcon: {
+        marginRight: 10,
+    },
+    input: {
+        flex: 1,
+        height: 48,
+        color: COLORS.textDark,
+    },
+
 });
 
 export default styles;

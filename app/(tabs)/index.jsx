@@ -1,55 +1,64 @@
 import React, { useRef, useState, useEffect } from 'react';
-import {
-    View,
-    Alert,
-    TouchableOpacity,
-    Text,
-    KeyboardAvoidingView,
-    Image,
-    Modal,
-    FlatList,
-    Pressable, RefreshControl
-} from 'react-native';
+import { View, Alert, TouchableOpacity, Text, KeyboardAvoidingView, Image, Modal, FlatList, Pressable, RefreshControl } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native';
 import { useAuthStore } from '@/store/authStore';
 import MapView, { Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import styles from '@/assets/styles/map.styles';
-import { API_URL } from '@/constants/api';
-import COLORS from "../../constants/colorsApp";
+import texture from "../../constants/colorsApp";
 import noDog from "../../assets/ImagesPetWalk/noDog.jpeg";
 import { useDogStore } from "@/store/dogStore"
-import IndexText from "@/constants/IndexText";
+import IndexText from "@/assets/lang/Index.text";
 import { useSettingsStore } from '@/store/settingStore';
+import { useWalkStore } from "@/store/walkStore"
+import { usePhotoStore } from "@/store/photoStore"
+import formatTime from "@/components/PetWalkComponents/timeUtils"
+import haversineDistance from "@/components/PetWalkComponents/haversineDistance"
+import { Ionicons } from '@expo/vector-icons';
+// import { useRouter } from 'expo-router';
+import { openNativeCamera } from "@/constants/camera"
 export default function Index() {
     const [refreshing, setRefreshing] = useState(false);
-    const [dogs, setDogs] = useState([]);
     const [isTracking, setIsTracking] = useState(false);
     const [location, setLocation] = useState(null);
     const [path, setPath] = useState([]);
     const [distance, setDistance] = useState(0);
+    const [dog, setDog] = useState([]);
     const [currentSpeed, setCurrentSpeed] = useState(0);
     const [averageSpeed, setAverageSpeed] = useState(0);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [isDogModalVisible, setIsDogModalVisible] = useState(false);
-    // const [isLoading, setIsLoading] = useState(true);
-    const [dog, setDog] = useState([]);
-    const { token } = useAuthStore();
+    const { token, user } = useAuthStore();
     const [selectedDogIds, setSelectedDogIds] = useState([]);
     const [isPaused, setIsPaused] = useState(false);
-    const { dogsFromDB, getDogs, isLoading } = useDogStore()
+    const { dogsFromDB, getDogs } = useDogStore()
+    // const router = useRouter();
+    const { saveWalk, } = useWalkStore();
+    const { uploadImage } = usePhotoStore();
+    const { lang, color } = useSettingsStore();
+    const t = IndexText[lang];
+    const COLORS = texture[color];
+    const dynamicStyles = styles(COLORS);
+
+    const [image, setImage] = useState(null);
+    const [imageBase64, setImageBase64] = useState(null);
+
+    const mapRef = useRef(null);
+    const watchSubscription = useRef(null);
+    const timerRef = useRef(null);
 
     const fetchData = async () => {
         const result = await getDogs(token);
         if (!result.success) Alert.alert("Error", result.error);
     };
 
-    useEffect(() => {
-        fetchData();
-    }, []);
 
-    const mapRef = useRef(null);
-    const watchSubscription = useRef(null);
-    const timerRef = useRef(null);
+    useEffect(() => {
+        if (token) {
+            fetchData();
+        }
+    }, [token]);
+
 
     const requestPermissions = async () => {
         const { status } = await Location.requestForegroundPermissionsAsync();
@@ -93,7 +102,7 @@ export default function Index() {
                 });
 
                 if (speed != null) {
-                    setCurrentSpeed((speed * 3.6).toFixed(2)); // m/s -> km/h
+                    setCurrentSpeed((speed * 3.6).toFixed(2));
                 }
 
                 if (mapRef.current) {
@@ -138,37 +147,27 @@ export default function Index() {
     };
 
     const savePath = async () => {
-        try {
-            //zmienic tutaj adres jak bede używał telefonu
-            const response = await fetch(`${API_URL}/walks`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    time: timeElapsed,
-                    speed: averageSpeed,
-                    distance,
-                    path, // lista lokalizacji
-                    dogs: selectedDogIds, // opcjonalnie, jeśli backend je przyjmuje
-                })
-            })
+        const result = await saveWalk(token, timeElapsed, averageSpeed, distance, path, selectedDogIds,);
+        if (!result.success) Alert.alert("Error", result.error);
+        else Alert.alert("Sukces", "Spacer został zapisany!");
 
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || "Something went wrong");
-
-            Alert.alert("Sukces", "Spacer został zapisany!");
-
-        } catch (error) {
-            console.error("Błąd zapisu spaceru:", error);
-            Alert.alert("Błąd", error.message);
-        }
     };
+
+    const savePhoto = async () => {
+
+        console.log("Image", image);
+        console.log("Image64", imageBase64);
+        const result = await uploadImage(token, image, imageBase64, user);
+        if (!result.success) Alert.alert("Error", result.error);
+        else Alert.alert("Sukces", "Zdjecie zostało zapisane!");
+
+    }
+
+
 
     useEffect(() => {
         if (distance > 0 && timeElapsed > 0) {
-            const avg = distance / (timeElapsed / 3600); // km/h
+            const avg = distance / (timeElapsed / 3600);
             setAverageSpeed(avg.toFixed(2));
         };
         if (isTracking && !isPaused) {
@@ -190,48 +189,54 @@ export default function Index() {
         };
     }, [distance, timeElapsed, isTracking, isPaused]);
 
-    const formatTime = (seconds) => {
-        const h = Math.floor(seconds / 3600);
-        const m = Math.floor((seconds % 3600) / 60);
-        const s = seconds % 60;
 
-        if (h > 0) {
-            return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        } else if (m > 0) {
-            return `${m}:${s.toString().padStart(2, '0')}`;
-        } else {
-            return `${s}s`;
-        }
-    };
-
-    const haversineDistance = (coord1, coord2) => {
-        const toRad = (value) => (value * Math.PI) / 180;
-        const R = 6371; // km
-
-        const dLat = toRad(coord2.latitude - coord1.latitude);
-        const dLon = toRad(coord2.longitude - coord1.longitude);
-        const lat1 = toRad(coord1.latitude);
-        const lat2 = toRad(coord2.latitude);
-
-        const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1) * Math.cos(lat2) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    };
     const handleRefresh = async () => {
         setRefreshing(true);
         await fetchData();
         setRefreshing(false);
     }
+
+
+
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
-            <View style={styles.container}>
-                <View style={[styles.mapCard, { flex: 1, padding: 0, overflow: 'hidden' }]}>
+            <View style={dynamicStyles.container}>
+                <View style={dynamicStyles.mapCard}>
+                    {selectedDogIds.length > 0 ? (
+                        <Pressable
+                            // onPress={() => router.push('/(notabs)/camera')}
+                            onPress={async () => {
+                                const result = await openNativeCamera();
+                                if (!result.canceled) {
+
+                                    setImage(result.uri)
+
+                                    if (result.base64) {
+                                        setImageBase64(result.base64);
+                                    } else {
+                                        const base64 = await FileSystem.readAsStringAsync(result.uri, {
+                                            encoding: FileSystem.EncodingType.base64
+                                        });
+                                        setImageBase64(base64);
+                                    }
+
+                                    savePhoto();
+                                } else {
+                                    Alert.alert("Error", result.error);
+                                }
+
+                            }}
+                            style={({ pressed }) => [
+                                dynamicStyles.cameraButton,
+                                { backgroundColor: pressed ? '#e0e0e0' : 'white' }, // Szare po naciśnięciu
+                            ]}>
+                            <View style={dynamicStyles.iconBackground}>
+                                <Ionicons name="camera" size={24} color="#777" />
+                            </View>
+                        </Pressable>
+                    ) : null}
                     <MapView
-                        style={styles.map}
+                        style={dynamicStyles.map}
                         ref={mapRef}
                         initialRegion={{
                             latitude: location?.latitude || 37.78825,
@@ -256,73 +261,66 @@ export default function Index() {
                     </MapView>
                 </View>
 
-                <View style={styles.card}>
-                    <View style={styles.header}>
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>Time</Text>
-                            <Text style={styles.info}>{formatTime(timeElapsed)}</Text>
+                <View style={dynamicStyles.card}>
+                    <View style={dynamicStyles.header}>
+                        <View style={dynamicStyles.formGroup}>
+                            <Text style={dynamicStyles.label}>{t.time}</Text>
+                            <Text style={dynamicStyles.info}>{formatTime(timeElapsed)}</Text>
                         </View>
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>Speed</Text>
-                            <Text style={styles.info}>{currentSpeed} km/h</Text>
+                        <View style={dynamicStyles.formGroup}>
+                            <Text style={dynamicStyles.label}>{t.speed}</Text>
+                            <Text style={dynamicStyles.info}>{currentSpeed} km/h</Text>
                         </View>
-                        <View style={styles.formGroup}>
-                            <Text style={styles.label}>Distance</Text>
-                            <Text style={styles.info}>{distance.toFixed(2)} km</Text>
+                        <View style={dynamicStyles.formGroup}>
+                            <Text style={dynamicStyles.label}>{t.distance}</Text>
+                            <Text style={dynamicStyles.info}>{distance.toFixed(2)} km</Text>
                         </View>
                     </View>
 
-                    <View style={styles.footer}>
+                    <View style={dynamicStyles.footer}>
                         {selectedDogIds.length > 0 ? (
-                            <View style={{ alignItems: 'center', paddingVertical: 10 }}>
+                            <View style={dynamicStyles.selectedDogsContainer}>
                                 <FlatList
                                     horizontal
                                     data={dogsFromDB.filter(dogsFromDB => selectedDogIds.includes(dogsFromDB._id))}
                                     keyExtractor={(item) => item._id?.toString()}
                                     showsHorizontalScrollIndicator={false}
-                                    contentContainerStyle={{ paddingHorizontal: 10 }}
+                                    contentContainerStyle={dynamicStyles.dogsListContent}
                                     renderItem={({ item }) => (
-                                        <View style={{ alignItems: 'center', marginRight: 10 }}>
+                                        <View style={dynamicStyles.dogItem}>
                                             <Image
                                                 source={item.dogImage ? { uri: item.dogImage } : noDog}
-                                                style={{
-                                                    width: 50,
-                                                    height: 50,
-                                                    borderRadius: 25,
-                                                    marginBottom: 5,
-                                                }}
+                                                style={dynamicStyles.dogImage}
                                             />
-                                            <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{item.name}</Text>
+                                            <Text style={dynamicStyles.dogName}>{item.name}</Text>
                                         </View>
                                     )}
                                 />
-
-                                {/* Przyciski pod listą */}
                                 <View style={{ flexDirection: 'row', marginTop: 15 }}>
                                     <TouchableOpacity
-                                        style={[styles.button, { marginHorizontal: 10, backgroundColor: isPaused ? '#90ee90' : '#FFD700' }]}
+                                        style={[dynamicStyles.button, { marginHorizontal: 10, backgroundColor: isPaused ? '#90ee90' : '#FFD700' }]}
                                         onPress={togglePause}
                                     >
-                                        <Text style={styles.buttonText}>
-                                            {isPaused ? '▶️ Wznów' : '⏸ Pauza'}
+                                        <Text style={dynamicStyles.buttonText}>
+                                            {isPaused ? (t.resume) : (t.pause)}
                                         </Text>
                                     </TouchableOpacity>
 
                                     <TouchableOpacity
-                                        style={[styles.button, { backgroundColor: '#FF6347' }]}
+                                        style={[dynamicStyles.button, { backgroundColor: '#FF6347' }]}
                                         onPress={stopTracking}
                                     >
-                                        <Text style={styles.buttonText}>⏹ Koniec spaceru</Text>
+                                        <Text style={dynamicStyles.buttonText}>{t.endWalk}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
                         ) : (
                             <View >
                                 <TouchableOpacity
-                                    style={styles.button}
+                                    style={dynamicStyles.button}
                                     onPress={() => setIsDogModalVisible(true)}
                                 >
-                                    <Text style={styles.buttonText}>🐶 Wybierz psa, ruszamy na spacer!</Text>
+                                    <Text style={dynamicStyles.buttonText}>{t.startWalkPrompt}</Text>
 
                                 </TouchableOpacity>
                             </View>
@@ -335,80 +333,78 @@ export default function Index() {
                     animationType="slide"
                     transparent={true}
                 >
-                    <View style={styles.ModalAroundBox}>
-                        <View style={styles.ModalBox}>
-                            <Text style={styles.title}>Wybierz psa</Text>
-                            <FlatList
-                                data={dogsFromDB}
-                                keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
-                                refreshControl={
-                                    <RefreshControl
-                                        refreshing={refreshing} // Przekazanie stanu odświeżania
-                                        onRefresh={handleRefresh} // Funkcja do wywołania po zainicjowaniu odświeżania
-                                        colors={[COLORS.primary]}// Możesz dostosować kolor ładowania
-                                    />
-                                }
-                                renderItem={({ item }) => {
-                                    const isSelected = selectedDogIds.includes(item._id); // Sprawdzamy, czy _id jest w selectedDogIds
-
-                                    return (
-                                        <Pressable
-                                            style={{
-                                                paddingVertical: 10,
-                                                flexDirection: 'row',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'center',
-                                                paddingHorizontal: 16,
-                                                backgroundColor: isSelected ? '#d0f0d0' : '#f0f0f0',
-                                                borderRadius: 8,
-                                                marginVertical: 4,
-                                            }}
-                                            onPress={() => {
-                                                setSelectedDogIds(prevSelected => {
-                                                    const isSelected = prevSelected.includes(item._id);
-                                                    const updatedSelection = isSelected
-                                                        ? prevSelected.filter(id => id !== item._id) // Usuń
-                                                        : [...prevSelected, item._id]; // Dodaj
-
-                                                    return updatedSelection;
-                                                });
-                                            }}
-                                        >
-                                            <Text style={[styles.info, { fontSize: 16 }]}>{item.name}</Text>
-                                            <Text style={{ fontSize: 18, color: isSelected ? 'green' : '#ccc' }}>
-                                                {isSelected ? '✓' : '○'}  {/* Zmieniamy kolor na zielony, jeśli wybrano */}
-                                            </Text>
-                                        </Pressable>
-                                    );
-                                }}
-                            />
-
-                            <View style={{
-                                marginTop: 20,
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}>
-                                <TouchableOpacity
-                                    onPress={async () => {
-                                        // Jeśli nie ma żadnego wybranego psa, nie wykonuj akcji
-                                        if (selectedDogIds.length === 0) {
-                                            return;  // Wstrzymaj akcję, jeśli nie ma wybranego psa
+                    <TouchableWithoutFeedback
+                        onPress={() => {
+                            if (selectedDogIds.length === 0) {
+                                setIsDogModalVisible(false);
+                            }
+                        }}
+                    >
+                        <View style={dynamicStyles.ModalAroundBox}>
+                            <TouchableWithoutFeedback onPress={() => { }}>
+                                <View style={dynamicStyles.ModalBox}>
+                                    <Text style={dynamicStyles.title}>{t.selectDog}</Text>
+                                    <FlatList
+                                        data={dogsFromDB}
+                                        keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
+                                        refreshControl={
+                                            <RefreshControl
+                                                refreshing={refreshing}
+                                                onRefresh={handleRefresh}
+                                                colors={[COLORS.primary]}
+                                            />
                                         }
+                                        renderItem={({ item }) => {
+                                            const isSelected = selectedDogIds.includes(item._id);
 
-                                        const selectedDogs = dogs.filter(d => selectedDogIds.includes(d.id));
-                                        setDog(selectedDogs);
-                                        setIsDogModalVisible(false);
-                                        await startTracking();
-                                    }}
-                                    style={[styles.button, selectedDogIds.length === 0 && styles.buttonDisabled]} // Dodanie stylu, gdy brak wybranych psów
-                                    disabled={selectedDogIds.length === 0}  // Zablokowanie kliknięcia, jeśli nie ma wybranych psów
-                                >
-                                    <Text style={styles.buttonText}>Gotowe</Text>
-                                </TouchableOpacity>
-                            </View>
+                                            return (
+                                                <Pressable
+                                                    style={[
+                                                        dynamicStyles.pressableDogs,
+                                                        { backgroundColor: isSelected ? '#d0f0d0' : '#f0f0f0' }
+                                                    ]}
+                                                    onPress={() => {
+                                                        setSelectedDogIds(prevSelected => {
+                                                            const isSelected = prevSelected.includes(item._id);
+                                                            const updatedSelection = isSelected
+                                                                ? prevSelected.filter(id => id !== item._id)
+                                                                : [...prevSelected, item._id];
+
+                                                            return updatedSelection;
+                                                        });
+                                                    }}
+                                                >
+                                                    <Text style={[dynamicStyles.info, { fontSize: 16 }]}>{item.name}</Text>
+                                                    <Text style={{ fontSize: 18, color: isSelected ? 'green' : '#ccc' }}>
+                                                        {isSelected ? '✓' : '○'}
+                                                    </Text>
+                                                </Pressable>
+                                            );
+                                        }}
+                                    />
+
+                                    <View style={dynamicStyles.buttonDone}>
+                                        <TouchableOpacity
+                                            onPress={async () => {
+                                                if (selectedDogIds.length === 0) {
+                                                    return;
+                                                }
+                                                const selectedDogs = dog.filter(d => selectedDogIds.includes(d.id));
+                                                setDog(selectedDogs);
+                                                setIsDogModalVisible(false);
+                                                await startTracking();
+                                            }}
+                                            style={[dynamicStyles.button, selectedDogIds.length === 0 && dynamicStyles.buttonDisabled]}
+                                            disabled={selectedDogIds.length === 0}
+                                        >
+                                            <Text style={dynamicStyles.buttonText}>{t.done}</Text>
+                                        </TouchableOpacity>
+                                    </View>
+
+                                </View>
+                            </TouchableWithoutFeedback>
                         </View>
-                    </View>
+                    </TouchableWithoutFeedback>
                 </Modal>
             </View >
         </KeyboardAvoidingView >

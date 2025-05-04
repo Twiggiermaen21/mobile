@@ -1,19 +1,12 @@
 // styles/profile.styles.js
 import { StyleSheet } from "react-native";
-import COLORS from "../../constants/colorsApp";
 
-const styles = StyleSheet.create({
+const styles = (COLORS) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
     padding: 16,
     paddingBottom: 0,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: COLORS.background,
   },
   profileHeader: {
     flexDirection: "row",
@@ -54,44 +47,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.textSecondary,
   },
-  logoutButton: {
-    backgroundColor: COLORS.primary,
-    borderRadius: 12,
-    padding: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 24,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-
-    position: "absolute",
-    bottom: 10,
-    left: 0,
-    right: 0,
-  },
-  logoutText: {
-    color: COLORS.white,
-    fontWeight: "600",
-    marginLeft: 8,
-  },
   booksHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 16,
-  },
-  booksTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: COLORS.textPrimary,
-  },
-  booksCount: {
-    fontSize: 14,
-    color: COLORS.textSecondary,
   },
   booksList: {
     paddingBottom: 20,
@@ -131,53 +91,38 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     marginBottom: 4,
   },
-  ratingContainer: {
-    flexDirection: "row",
-    marginBottom: 4,
-  },
   bookCaption: {
     fontSize: 14,
     color: COLORS.textDark,
     marginBottom: 4,
     flex: 1,
   },
-  bookDate: {
-    fontSize: 12,
-    color: COLORS.textSecondary,
-  },
   deleteButton: {
     padding: 8,
     justifyContent: "center",
   },
-  emptyContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 40,
-    marginTop: 20,
-  },
-  emptyText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: COLORS.textPrimary,
-    marginTop: 16,
-    marginBottom: 20,
-    textAlign: "center",
-  },
   addButton: {
     backgroundColor: COLORS.primary,
     borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    padding: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 24,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+    position: "absolute",
+    bottom: 10,
+    left: 0,
+    right: 0,
   },
   addButtonText: {
     color: COLORS.white,
     fontWeight: "600",
-    fontSize: 14,
+    marginLeft: 8,
   },
 });
 

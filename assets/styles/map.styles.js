@@ -1,24 +1,22 @@
 // styles/create.styles.js
 import { StyleSheet } from "react-native";
-import COLORS from "../../constants/colorsApp";
 
-const styles = StyleSheet.create({
+
+
+
+const styles = (COLORS) => StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
     paddingHorizontal: 16,
     paddingTop: 16,
   },
-  scrollViewStyle: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
   card: {
     backgroundColor: COLORS.cardBackground,
     borderRadius: 16,
     padding: 20,
     marginVertical: 8,
-    // marginHorizontal: 16,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -27,11 +25,28 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
   },
+  cameraButton: {
+    position: 'absolute',
+    top: 12,
+    left: 12,
+    width: 40,
+    height: 40,
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    // Subtelny cień
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 2,
+    elevation: 2, // cień na Androidzie
+    zIndex: 10,
+  },
   mapCard: {
     flex: 1,
     backgroundColor: COLORS.cardBackground,
     borderRadius: 16,
-    // marginHorizontal: 2,
     marginBottom: 4,
     overflow: "hidden",
     shadowColor: COLORS.black,
@@ -41,12 +56,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     borderWidth: 1,
     borderColor: COLORS.border,
-  },
-  bottomCard: {
-    position: "absolute",
-    bottom: 16,
-    left: 16,
-    right: 16,
+    flex: 1, padding: 0, overflow: 'hidden'
   },
   header: {
     flexDirection: "row",
@@ -61,15 +71,6 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     marginBottom: 8,
   },
-  subtitle: {
-    fontSize: 14,
-    color: COLORS.textSecondary,
-    textAlign: "center",
-  },
-  form: {
-
-    alignItems: "center",
-  },
   formGroup: {
     flex: 1,
     alignItems: "center",
@@ -77,8 +78,8 @@ const styles = StyleSheet.create({
   },
 
   buttonDisabled: {
-    backgroundColor: 'gray',  // Możesz wybrać kolor, który będzie wyglądał na nieaktywny
-    opacity: 0.5,             // Możesz dodać lekki efekt przezroczystości
+    backgroundColor: 'gray',
+    opacity: 0.5,
   },
   label: {
     fontSize: 14,
@@ -93,119 +94,34 @@ const styles = StyleSheet.create({
     color: "#000",
     marginTop: 4,
   },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: COLORS.inputBackground,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    paddingHorizontal: 12,
-  },
-  inputIcon: {
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    height: 48,
-    color: COLORS.textDark,
-  },
-  textArea: {
-    backgroundColor: COLORS.inputBackground,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    padding: 12,
-    height: 100,
-    color: COLORS.textDark,
-  },
-  ratingContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    backgroundColor: COLORS.inputBackground,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    padding: 8,
-  },
-  starButton: {
-    padding: 8,
-  },
-  imagePicker: {
-    width: "100%",
-    height: 200,
-    backgroundColor: COLORS.inputBackground,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    overflow: "hidden",
-  },
-  previewImage: {
-    width: "100%",
-    height: "100%",
-  },
-  placeholderContainer: {
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  placeholderText: {
-    color: COLORS.textSecondary,
-    marginTop: 8,
-  },
+
   button: {
     backgroundColor: COLORS.primary,
-    borderRadius: 25, // bardziej zaokrąglony, przy połowie wysokości
-    // height: 100,
-    // paddingHorizontal: 24, // żeby był dłuższy niezależnie od tekstu
+    borderRadius: 25,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    // marginTop: 16,
     padding: 4,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
-    alignSelf: "flex-start", // opcjonalnie, żeby nie rozciągał się na całą szerokość
+    alignSelf: "flex-start",
   },
-  img: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 2,
-    borderColor: COLORS.border,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    alignSelf: 'flex-start',
-  },
-
   footer: {
     marginTop: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 2, // tylko w nowszych wersjach React Native; alternatywa: użyj marginRight
+    gap: 2,
     justifyContent: 'center',
   },
-  buttonGroup: {
-    flexDirection: 'row',
-    gap: 16, // lub zamiast tego daj marginRight w button
-    marginHorizontal: 20
-  },
+
   buttonText: {
     color: COLORS.white,
     fontSize: 20,
     fontWeight: "600",
     marginHorizontal: 16,
-  },
-  buttonIcon: {
-    marginRight: 8,
   },
   ModalAroundBox: {
     flex: 1,
@@ -214,16 +130,11 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   ModalBox: {
-
-
     borderRadius: 10,
     width: '80%',
-
     backgroundColor: COLORS.cardBackground,
-
     padding: 20,
     marginVertical: 8,
-
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -231,17 +142,51 @@ const styles = StyleSheet.create({
     elevation: 3,
     borderWidth: 1,
     borderColor: COLORS.border,
+  },
+  pressableDogs: {
+    paddingVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
 
-
+    borderRadius: 8,
+    marginVertical: 4,
+  },
+  buttonDone: {
+    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectedDogsContainer: {
+    alignItems: 'center',
+    paddingVertical: 10,
   },
 
+  dogsListContent: {
+    paddingHorizontal: 10,
+  },
 
+  dogItem: {
+    alignItems: 'center',
+    marginRight: 10,
+  },
 
+  dogImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginBottom: 5,
+  },
 
-  // Styl do mapy
+  dogName: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+
   map: {
     ...StyleSheet.absoluteFillObject,
-
     position: "absolute",
   },
 });

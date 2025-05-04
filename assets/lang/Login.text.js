@@ -1,0 +1,101 @@
+const LoginText = {
+    pl: {
+        email: 'Wprowadź swój email',
+        password: 'Wprowadź swoje hasło',
+        loginButton: 'Zaloguj się',
+        footerText: 'Nie masz konta?',
+        signUpLink: 'Zarejestruj się',
+        labelPassword: "Hasło"
+    },
+    en: {
+        email: 'Enter your email',
+        password: 'Enter your password',
+        labelPassword: "Password",
+        loginButton: 'Login',
+        footerText: 'Don\'t have an account?',
+        signUpLink: 'Sign Up',
+    },
+    es: {
+        email: 'Introduce tu correo electrónico',
+        password: 'Introduce tu contraseña',
+        labelPassword: "Contraseña",
+        loginButton: 'Iniciar sesión',
+        footerText: '¿No tienes una cuenta?',
+        signUpLink: 'Registrarse',
+    },
+    fr: {
+        email: 'Entrez votre e-mail',
+        password: 'Entrez votre mot de passe',
+        labelPassword: "Mot de passe",
+        loginButton: 'Se connecter',
+        footerText: 'Vous n\'avez pas de compte ?',
+        signUpLink: 'S\'inscrire',
+    },
+    de: {
+        email: 'Geben Sie Ihre E-Mail-Adresse ein',
+        password: 'Geben Sie Ihr Passwort ein',
+        labelPassword: "Passwort",
+        loginButton: 'Anmelden',
+        footerText: 'Hast du kein Konto?',
+        signUpLink: 'Registrieren',
+    },
+    it: {
+        email: 'Inserisci la tua email',
+        password: 'Inserisci la tua password',
+        labelPassword: "Password",
+        loginButton: 'Accedi',
+        footerText: 'Non hai un account?',
+        signUpLink: 'Iscriviti',
+    },
+    pt: {
+        email: 'Digite seu e-mail',
+        password: 'Digite sua senha',
+        labelPassword: "Senha",
+        loginButton: 'Entrar',
+        footerText: 'Não tem uma conta?',
+        signUpLink: 'Inscreva-se',
+    },
+    ru: {
+        email: 'Введите свой e-mail',
+        password: 'Введите свой пароль',
+        labelPassword: "Пароль",
+        loginButton: 'Войти',
+        footerText: 'У вас нет аккаунта?',
+        signUpLink: 'Зарегистрироваться',
+    },
+    zh: {
+        email: '请输入您的电子邮件',
+        password: '请输入您的密码',
+        labelPassword: "密码",
+        loginButton: '登录',
+        footerText: '没有账户？',
+        signUpLink: '注册',
+    },
+    ja: {
+        email: 'メールアドレスを入力してください',
+        password: 'パスワードを入力してください',
+        labelPassword: "パスワード",
+        loginButton: 'ログイン',
+        footerText: 'アカウントをお持ちでない場合',
+        signUpLink: 'サインアップ',
+    },
+    ua: {
+        email: 'Введіть свою електронну пошту',
+        password: 'Введіть свій пароль',
+        labelPassword: "Пароль",
+        loginButton: 'Увійти',
+        footerText: 'Немає акаунта?',
+        signUpLink: 'Зареєструватися',
+    }
+    ,
+    cs: {
+        email: 'Zadejte svůj e-mail',
+        password: 'Zadejte své heslo',
+        labelPassword: "Heslo",
+        loginButton: 'Přihlásit se',
+        footerText: 'Nemáte účet?',
+        signUpLink: 'Zaregistrovat se',
+    }
+};
+
+export default LoginText;
