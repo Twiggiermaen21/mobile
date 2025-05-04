@@ -1,4 +1,3 @@
-
 import { StyleSheet } from "react-native";
 
 const styles = (COLORS) => StyleSheet.create({
@@ -23,14 +22,13 @@ const styles = (COLORS) => StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 16,
         borderRadius: 20,
-
         marginRight: 8,
         alignItems: "center",
         textAlign: "center",
     },
     selectedIconWrapper: {
         backgroundColor: 'white',
-        borderRadius: 30, // połowa nowego rozmiaru
+        borderRadius: 30, 
         height: 60,
         width: 60,
         alignItems: 'center',
@@ -51,7 +49,6 @@ const styles = (COLORS) => StyleSheet.create({
         borderWidth: 1,
         borderColor: COLORS.border,
     },
-
     tierText: {
         fontWeight: "600",
         color: "#333",

@@ -1,4 +1,3 @@
-
 import { StyleSheet } from "react-native";
 
 const styles = (COLORS) => StyleSheet.create({
@@ -68,11 +67,6 @@ const styles = (COLORS) => StyleSheet.create({
         elevation: 2,
         borderWidth: 1,
         borderColor: COLORS.border,
-    },
-    //Dodać
-    deleteButton: {
-        padding: 8,
-        justifyContent: "center",
     },
     title: {
         fontSize: 24,

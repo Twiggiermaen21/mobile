@@ -10,12 +10,9 @@ import { useSettingsStore } from '@/store/settingStore';
 import TabsBarText from '@/assets/lang/TabsBar.text'
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
-
   const { color, lang } = useSettingsStore();
-
   const t = TabsBarText[lang];
   return (
-
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: texture[color].primary,
@@ -39,8 +36,7 @@ export default function TabLayout() {
         tabBarIconStyle: {
           color: texture[color].textPrimary
         }
-      }}
-    >
+      }}>
       <Tabs.Screen
         name="profile"
         options={{

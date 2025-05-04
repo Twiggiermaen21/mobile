@@ -10,7 +10,6 @@ export const useAuthStore = create((set) => ({
 
         set({ isLoading: true });
         try {
-            //zmienic tutaj adres jak bede używał telefonu
             const response = await fetch(`${API_URL}/auth/register`, {
                 method: "POST",
                 headers: {
@@ -91,19 +90,15 @@ export const useAuthStore = create((set) => ({
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}` // Bearer token
+                    Authorization: `Bearer ${token}` 
                 },
-                body: JSON.stringify(updateData) // Wysyłasz dowolne pola
+                body: JSON.stringify(updateData) 
             });
 
             const data = await response.json();
-
             if (!response.ok) {
                 throw new Error(data.message || 'Failed to update user');
             }
-
-
-
             set({ isLoading: false });
             return { success: true, };
         } catch (error) {
@@ -112,9 +107,4 @@ export const useAuthStore = create((set) => ({
             return { success: false, error: error.message };
         }
     },
-
-
-
-
-
 }));

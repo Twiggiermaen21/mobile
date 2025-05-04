@@ -18,6 +18,24 @@ import { Ionicons } from '@expo/vector-icons';
 // import { useRouter } from 'expo-router';
 import { openNativeCamera } from "@/constants/camera"
 export default function Index() {
+    // npx expo install  expo-task-manager
+    //Zdefiniuj task do działania w tle
+    /*
+    🔍 Różnice między watchPositionAsync a startLocationUpdatesAsync
+    Cechy	watchPositionAsync	startLocationUpdatesAsync
+    Działa w tle, gdy app jest zminimalizowana	✅* (czasowo, zależnie od OS)	✅ (dedykowane do background tracking)
+    Działa po zamknięciu aplikacji	❌	✅
+    Zatrzymuje się automatycznie, np. po ubiciu procesu	✅	❌ (działa nadal, aż wywołasz stopLocationUpdatesAsync)
+    Wymaga tasków (TaskManager)	❌	✅
+    Prostszy w użyciu	✅	❌
+    
+    npx expo install expo-notifications
+    useEffect(() => {
+  registerForPushNotificationsAsync().then(() => {
+    scheduleDailyReminder();
+  });
+}, []);
+    */
     const [refreshing, setRefreshing] = useState(false);
     const [isTracking, setIsTracking] = useState(false);
     const [location, setLocation] = useState(null);

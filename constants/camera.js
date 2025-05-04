@@ -1,9 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
 
-/**
- * Otwiera natywną aplikację aparatu i zwraca obiekt z URI i base64 zdjęcia.
- */
 export async function openNativeCamera() {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 

@@ -1,6 +1,4 @@
-
 import { StyleSheet } from "react-native";
-
 import { Dimensions } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
@@ -25,7 +23,6 @@ const styles = (COLORS) => StyleSheet.create({
     fullImage: {
         width: '90%',
         height: '80%',
-
     },
     ImageContainer: {
         flex: 1,
@@ -37,24 +34,18 @@ const styles = (COLORS) => StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         paddingVertical: 15,
-        // backgroundColor: COLORS.border,
-
         backgroundColor: COLORS.primary,
         borderRadius: 12,
         padding: 12,
-
         marginHorizontal: 24,
         shadowColor: COLORS.black,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 2,
-
         bottom: 10,
         left: 0,
         right: 0,
-
-
     },
     iconContainer: {
         position: 'absolute',
@@ -64,7 +55,6 @@ const styles = (COLORS) => StyleSheet.create({
         width: '100%',
         paddingHorizontal: 40,
     },
-
     title: {
         fontSize: 24,
         fontWeight: "700",

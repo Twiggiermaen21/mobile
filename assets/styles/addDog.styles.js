@@ -1,4 +1,3 @@
-// styles/create.styles.js
 import { StyleSheet } from "react-native";
 
 const styles = (COLORS) => StyleSheet.create({
@@ -71,7 +70,6 @@ const styles = (COLORS) => StyleSheet.create({
     height: 48,
     color: COLORS.textDark,
   },
-
   imagePicker: {
     width: "100%",
     height: 200,

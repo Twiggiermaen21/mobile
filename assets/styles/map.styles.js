@@ -1,11 +1,6 @@
-// styles/create.styles.js
+
 import { StyleSheet } from "react-native";
-
-
-
-
 const styles = (COLORS) => StyleSheet.create({
-
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
@@ -34,13 +29,11 @@ const styles = (COLORS) => StyleSheet.create({
     borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
-
-    // Subtelny cień
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 2,
-    elevation: 2, // cień na Androidzie
+    elevation: 2, 
     zIndex: 10,
   },
   mapCard: {
@@ -76,7 +69,6 @@ const styles = (COLORS) => StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 4,
   },
-
   buttonDisabled: {
     backgroundColor: 'gray',
     opacity: 0.5,
@@ -94,7 +86,6 @@ const styles = (COLORS) => StyleSheet.create({
     color: "#000",
     marginTop: 4,
   },
-
   button: {
     backgroundColor: COLORS.primary,
     borderRadius: 25,
@@ -149,7 +140,6 @@ const styles = (COLORS) => StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-
     borderRadius: 8,
     marginVertical: 4,
   },
@@ -163,7 +153,6 @@ const styles = (COLORS) => StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
   },
-
   dogsListContent: {
     paddingHorizontal: 10,
   },
@@ -172,7 +161,6 @@ const styles = (COLORS) => StyleSheet.create({
     alignItems: 'center',
     marginRight: 10,
   },
-
   dogImage: {
     width: 50,
     height: 50,

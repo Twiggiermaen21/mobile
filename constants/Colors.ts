@@ -23,22 +23,5 @@ export const Colors = {
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
   },
-  natural: {
-    primary: '#4CAF50',     // Zieleń lasu
-    secondary: '#F5F5DC',   // Beż piasku
-    accent: '#2C3E50',      // Granat
-    background: '#ECF0F1',  // Biała mgła
-  },
-  dogFriendly: {
-    primary: '#DAB894',     // Karmelowy
-    secondary: '#AEDFF7',   // Jasny błękit
-    accent: '#FFF3B0',      // Pastelowy żółty
-    background: '#888888',  // Szary
-  },
-  urbanWalk: {
-    primary: '#D96C06',     // Ceglany czerwony
-    secondary: '#264653',   // Głęboki błękit
-    accent: '#81B29A',      // Jasna zieleń
-    background: '#F4A261',  // Piaskowy beż
-  },
+
 };

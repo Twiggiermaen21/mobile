@@ -1,6 +1,4 @@
-// styles/profile.styles.js
 import { StyleSheet } from "react-native";
-
 const styles = (COLORS) => StyleSheet.create({
   container: {
     flex: 1,

@@ -1,6 +1,4 @@
-// styles/login.styles.js
 import { StyleSheet, Dimensions } from "react-native";
-
 const { width } = Dimensions.get("window");
 
 const styles = (COLORS) => StyleSheet.create({
@@ -22,7 +20,6 @@ const styles = (COLORS) => StyleSheet.create({
         width: width * 0.75,
         height: width * 0.75,
     },
-
     logoutButton: {
         backgroundColor: COLORS.primary,
         borderRadius: 12,
@@ -179,18 +176,6 @@ const styles = (COLORS) => StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
     },
-    // button: {
-    //     marginTop: 20,
-    //     padding: 10,
-    //     backgroundColor: '#007AFF',
-    //     borderRadius: 8,
-    // },
-    // buttonText: {
-    //     color: '#fff',
-    //     fontWeight: 'bold',
-    // },
-
-
     form: {
         marginBottom: 16,
     },
