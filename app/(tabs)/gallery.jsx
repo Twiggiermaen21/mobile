@@ -114,36 +114,44 @@ export default function GalleryScreen() {
         <View style={dynamicStyles.container}>
             <Text style={dynamicStyles.title}>{t.galleryTitle}</Text>
 
-            {photos && photos.length > 0 ? (
-                <FlatList
-                    data={photos}
-                    keyExtractor={item => item._id}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={handleRefresh}
-                            colors={[COLORS.primary]}
-                        />
-                    }
-                    onEndReached={handleLoadMore}
-                    onEndReachedThreshold={0.1}
-                    ListFooterComponent={isLoadingMore ? <Text style={dynamicStyles.loading}>{t.loading}</Text> : null}
-                    numColumns={3}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => {
-                            setSelectedPhoto(item);
+            {/* {photos && photos.length > 0 ? ( */}
+            <FlatList
+                data={photos}
+                keyExtractor={item => item._id}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={handleRefresh}
+                        colors={[COLORS.primary]}
+                    />
+                }
+                onEndReached={handleLoadMore}
+                onEndReachedThreshold={0.1}
+                ListFooterComponent={isLoadingMore ? <Text style={dynamicStyles.loading}>{t.loading}</Text> : null}
+                numColumns={3}
+                ListEmptyComponent={
+                    !refreshing && (
+                        <View style={dynamicStyles.noPhotosContainer}>
+                            <Text style={dynamicStyles.noPhotosText}>{t.noPhoto}</Text>
+                        </View>
+                    )
+                }
+                renderItem={({ item }) => (
+                    <TouchableOpacity onPress={() => {
+                        setSelectedPhoto(item);
 
-                            setModalVisible(true);
-                        }}>
-                            <Image source={{ uri: item.photo }} style={dynamicStyles.image} />
-                        </TouchableOpacity>
-                    )}
-                />
-            ) : (
+                        setModalVisible(true);
+                    }}>
+                        <Image source={{ uri: item.photo }} style={dynamicStyles.image} />
+                    </TouchableOpacity>
+                )}
+            />
+            {/* ) : (
+            {photos || photos.length > 0 ? (
                 <View style={dynamicStyles.noPhotosContainer}>
                     <Text style={dynamicStyles.noPhotosText}>{t.noPhoto}</Text>
                 </View>
-            )}
+            ) : (null)} */}
 
             {selectedPhoto && (
                 <Modal visible={modalVisible} transparent={true} animationType="fade">

@@ -78,6 +78,7 @@ const styles = (COLORS) => StyleSheet.create({
         borderRadius: 5,
     },
     noPhotosContainer: {
+        paddingTop: 200,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
