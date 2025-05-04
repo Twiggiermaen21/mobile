@@ -93,7 +93,12 @@ const SettingsText = {
         close: "Закрити",
 
         selectTheme: "Вибір теми",
-
+        info: {
+            1: "Введіть нове ім’я користувача (мін. 3 символи)",
+            2: "Введіть нову електронну адресу (наприклад: test@example.com)",
+            3: "Введіть новий пароль (мін. 8 символів)",
+            4: "Оновіть своє фото профілю."
+        },
         about: `PetWalk — це сучасний додаток, розроблений для любителів собак і щоденних прогулянок. Незалежно від того, чи є у вас один пес або ціла команда, PetWalk допоможе вам організувати прогулянки, стежити за активністю вашого собаки та створювати спогади з кожної поїздки.
         
         За допомогою додатку ви не тільки можете відстежувати маршрути прогулянок, а й робити фотографії під час спільних моментів, створюючи галерею радісних спогадів про вашого улюбленця.
@@ -112,6 +117,13 @@ const SettingsText = {
     fr: {
         settingsTitle: "Paramètres",
         account: "Compte utilisateur",
+        info: {
+            1: "Entrez un nouveau nom d'utilisateur (min. 3 caractères)",
+            2: "Entrez une nouvelle adresse e-mail (ex. test@example.com)",
+            3: "Entrez un nouveau mot de passe (min. 8 caractères)",
+            4: "Mettez à jour votre photo de profil."
+        },
+
         changeUsername: "Changer le nom d'utilisateur",
         changeEmail: "Changer l'adresse e-mail",
         changePassword: "Changer le mot de passe",
@@ -188,6 +200,12 @@ const SettingsText = {
 
         dataSync: "Daten und Synchronisierung",
         dataUsage: "Mobile Daten vs. WLAN",
+        info: {
+            1: "Geben Sie einen neuen Benutzernamen ein (mind. 3 Zeichen)",
+            2: "Geben Sie eine neue E-Mail-Adresse ein (z. B. test@example.com)",
+            3: "Geben Sie ein neues Passwort ein (mind. 8 Zeichen)",
+            4: "Aktualisieren Sie Ihr Profilbild."
+        },
 
         helpOther: "Hilfe und Sonstiges",
         helpCenter: "Hilfezentrum / FAQ",
@@ -250,6 +268,12 @@ const SettingsText = {
         aboutApp: "Informazioni sull'app",
         save: "Salva",
         close: "Chiudi",
+        info: {
+            1: "Inserisci un nuovo nome utente (min. 3 caratteri)",
+            2: "Inserisci un nuovo indirizzo email (es. test@example.com)",
+            3: "Inserisci una nuova password (min. 8 caratteri)",
+            4: "Aggiorna la tua foto profilo."
+        },
 
         selectTheme: "Seleziona tema",
 
@@ -444,6 +468,237 @@ Dziękujemy za Twoje wsparcie i cierpliwość. Twoja opinia pomaga nam rozwijać
     
     ¡Gracias por tu apoyo y paciencia! Tus comentarios nos ayudan a desarrollar PetWalk y a crear una aplicación perfectamente adaptada a las necesidades de los cuidadores de perros. 🐶🚀`,
     },
+    ru: {
+        about: `PetWalk — это современное приложение, созданное с учетом потребностей любителей собак и ежедневных прогулок. Независимо от того, есть ли у вас один питомец или целая стая — PetWalk поможет вам лучше организовывать прогулки, заботиться о активности вашей собаки и создавать воспоминания о каждом походе.
+    
+    С помощью приложения вы можете не только отслеживать маршруты прогулок, но и делать фотографии во время совместных моментов, создавая галерею радостных воспоминаний вашего питомца.
+    
+    PetWalk был создан с любовью к животным и стремлением предоставить удобный и простой в использовании инструмент, который упрощает повседневную жизнь владельцев собак.
+    
+    Ведь каждый хвост заслуживает приключения! 🐾`,
+        version: `📱 Версия приложения (Beta)
+        Вы сейчас используете бета-версию приложения PetWalk.
+    
+        Это означает, что приложение находится на стадии тестирования — мы постоянно добавляем новые функции, исправляем ошибки и улучшаем работу, основываясь на ваших предложениях и опыте.
+    
+        Спасибо за вашу поддержку и терпение. Ваше мнение помогает нам развивать PetWalk и создавать приложение, идеально соответствующее потребностям владельцев собак! 🐶🚀`,
+        settingsTitle: "Настройки",
+        account: "Аккаунт пользователя",
+        changeUsername: "Изменить имя пользователя",
+        changeEmail: "Изменить адрес электронной почты",
+        changePassword: "Изменить пароль",
+        editProfilePicture: "Редактировать фотографию профиля",
+
+        notifications: "Уведомления",
+        emailSMSNotifications: "Уведомления по электронной почте/SMS",
+
+        themeAppearance: "Тема и язык",
+        darkMode: "Темная тема",
+        fontSize: "Размер шрифта",
+        colorScheme: "Цветовая схема",
+
+        selectLanguage: "Выбрать язык",
+        dateFormat: "Формат даты и времени",
+        timeZone: "Часовой пояс",
+
+        privacySecurity: "Конфиденциальность и безопасность",
+        manageDevices: "Управление устройствами",
+        loginHistory: "История входов",
+
+        dataSync: "Данные и синхронизация",
+        dataUsage: "Использование мобильных данных vs Wi-Fi",
+
+        helpOther: "Помощь и другое",
+        helpCenter: "Центр помощи / FAQ",
+        reportProblem: "Сообщить о проблеме",
+        appVersion: "Версия приложения",
+        resetSettings: "Сбросить настройки",
+        aboutApp: "О приложении",
+        save: "Сохранить",
+        close: "Закрыть",
+        info: {
+            1: "Введите новое имя пользователя (мин. 3 символа)",
+            2: "Введите новый адрес электронной почты (например, test@example.com)",
+            3: "Введите новый пароль (мин. 8 символов)",
+            4: "Обновите вашу фотографию профиля."
+        },
+
+        selectTheme: "Выберите тему",
+    },
+    zh: {
+        about: `PetWalk 是一款为狗狗爱好者和日常散步设计的现代应用。无论你是只有一只狗狗的主人，还是拥有一整个小群狗狗，PetWalk 都能帮助你更好地组织散步，照顾你狗狗的活动，并记录每一次出行的回忆。
+    
+    通过这个应用，你不仅可以跟踪散步路线，还可以在一起度过的时光中拍照，创建你宠物快乐回忆的画廊。
+    
+    PetWalk 诞生于对动物的热爱，以及想要创建一款友好、易于使用的工具，以简化狗主人的日常生活。
+    
+    因为每一条尾巴都值得一次冒险！🐾`,
+        version: `📱 应用版本 (Beta)
+        您正在使用 PetWalk 的 Beta 版本。
+    
+        这意味着应用处于测试阶段——我们不断添加新功能，修复错误，并根据您的建议和体验来改进性能。
+    
+        感谢您的支持和耐心。您的意见帮助我们发展 PetWalk，并打造一款完美符合狗主需求的应用！🐶🚀`,
+        settingsTitle: "设置",
+        account: "用户帐户",
+        changeUsername: "更改用户名",
+        changeEmail: "更改电子邮件地址",
+        changePassword: "更改密码",
+        editProfilePicture: "编辑头像",
+
+        notifications: "通知",
+        emailSMSNotifications: "电子邮件/SMS通知",
+
+        themeAppearance: "主题与语言",
+        darkMode: "黑暗模式",
+        fontSize: "字体大小",
+        colorScheme: "颜色方案",
+
+        selectLanguage: "选择语言",
+        dateFormat: "日期与时间格式",
+        timeZone: "时区",
+
+        privacySecurity: "隐私与安全",
+        manageDevices: "管理设备",
+        loginHistory: "登录历史",
+
+        dataSync: "数据与同步",
+        dataUsage: "移动数据与 Wi-Fi 使用",
+
+        helpOther: "帮助与其他",
+        helpCenter: "帮助中心 / 常见问题",
+        reportProblem: "报告问题",
+        appVersion: "应用版本",
+        resetSettings: "重置设置",
+        aboutApp: "关于应用",
+        save: "保存",
+        close: "关闭",
+        info: {
+            1: "请输入新的用户名（至少 3 个字符）",
+            2: "请输入新的电子邮件地址（例如：test@example.com）",
+            3: "请输入新的密码（至少 8 个字符）",
+            4: "更新您的头像图片。"
+        },
+
+        selectTheme: "选择主题",
+    },
+    ja: {
+        about: `PetWalkは、犬好きの人々と日常的な散歩を支援するために設計された最新のアプリケーションです。1匹の犬を飼っている場合でも、複数の犬を飼っている場合でも、PetWalkは散歩をうまく管理し、あなたの犬のアクティビティをサポートし、毎回の冒険の思い出を作成する手助けをします。
+    
+    このアプリを使えば、散歩のルートを追跡するだけでなく、一緒に過ごす時間の写真を撮ることもでき、愛犬の楽しい思い出のギャラリーを作成できます。
+    
+    PetWalkは動物への愛情から生まれ、犬の飼い主の日常をより簡単にするための使いやすいツールを作りたいという思いから開発されました。
+    
+    だって、すべての尻尾は冒険に値するんです！🐾`,
+        version: `📱 アプリのバージョン（ベータ版）
+        あなたは現在、PetWalkのベータ版を使用しています。
+    
+        これは、アプリがテスト段階にあることを意味します—新機能を追加したり、バグを修正したり、ユーザーのフィードバックをもとに改善を行っています。
+    
+        ご支援とご忍耐に感謝します。あなたの意見はPetWalkの成長を助け、犬の飼い主にぴったりのアプリを作るための重要な力となります！🐶🚀`,
+        settingsTitle: "設定",
+        account: "ユーザーアカウント",
+        changeUsername: "ユーザー名を変更",
+        changeEmail: "メールアドレスを変更",
+        changePassword: "パスワードを変更",
+        editProfilePicture: "プロフィール写真を編集",
+
+        notifications: "通知",
+        emailSMSNotifications: "メール/SMS通知",
+
+        themeAppearance: "テーマと言語",
+        darkMode: "ダークモード",
+        fontSize: "フォントサイズ",
+        colorScheme: "カラースキーム",
+
+        selectLanguage: "言語を選択",
+        dateFormat: "日付と時間の形式",
+        timeZone: "タイムゾーン",
+
+        privacySecurity: "プライバシーとセキュリティ",
+        manageDevices: "デバイスの管理",
+        loginHistory: "ログイン履歴",
+
+        dataSync: "データと同期",
+        dataUsage: "モバイルデータ vs Wi-Fiの使用",
+
+        helpOther: "ヘルプとその他",
+        helpCenter: "ヘルプセンター / よくある質問",
+        reportProblem: "問題を報告",
+        appVersion: "アプリのバージョン",
+        resetSettings: "設定をリセット",
+        aboutApp: "アプリについて",
+        save: "保存",
+        close: "閉じる",
+        info: {
+            1: "新しいユーザー名を入力してください（最低3文字）",
+            2: "新しいメールアドレスを入力してください（例：test@example.com）",
+            3: "新しいパスワードを入力してください（最低8文字）",
+            4: "プロフィール写真を更新してください。"
+        },
+
+        selectTheme: "テーマを選択",
+    },
+    pt: {
+        about: `O PetWalk é um aplicativo moderno criado para amantes de cães e passeios diários. Seja você dono de um único cão ou de uma matilha inteira — o PetWalk vai te ajudar a organizar melhor os passeios, cuidar da atividade do seu cão e registrar memórias de cada aventura.
+    
+    Com o aplicativo, você pode não apenas acompanhar as rotas dos passeios, mas também tirar fotos dos momentos compartilhados, criando uma galeria de lembranças felizes do seu companheiro de quatro patas.
+    
+    O PetWalk nasceu da paixão pelos animais e do desejo de criar uma ferramenta amigável e fácil de usar, que torne o dia a dia dos tutores mais prático.
+    
+    Porque toda cauda merece uma aventura! 🐾`,
+        version: `📱 Versão do aplicativo (Beta)
+    Você está usando a versão beta do PetWalk.
+    
+    Isso significa que o aplicativo está em fase de testes — estamos constantemente adicionando novas funcionalidades, corrigindo erros e melhorando a experiência com base no seu feedback.
+    
+    Agradecemos seu apoio e paciência. Sua opinião nos ajuda a desenvolver o PetWalk e criar um app perfeitamente adaptado às necessidades dos tutores de cães! 🐶🚀`,
+        settingsTitle: "Configurações",
+        account: "Conta do usuário",
+        changeUsername: "Alterar nome de usuário",
+        changeEmail: "Alterar e-mail",
+        changePassword: "Alterar senha",
+        editProfilePicture: "Editar foto de perfil",
+    
+        notifications: "Notificações",
+        emailSMSNotifications: "Notificações por e-mail/SMS",
+    
+        themeAppearance: "Tema e idioma",
+        darkMode: "Modo escuro",
+        fontSize: "Tamanho da fonte",
+        colorScheme: "Esquema de cores",
+    
+        selectLanguage: "Selecionar idioma",
+        dateFormat: "Formato de data e hora",
+        timeZone: "Fuso horário",
+    
+        privacySecurity: "Privacidade e segurança",
+        manageDevices: "Gerenciar dispositivos",
+        loginHistory: "Histórico de login",
+    
+        dataSync: "Dados e sincronização",
+        dataUsage: "Uso de dados móveis vs Wi-Fi",
+    
+        helpOther: "Ajuda e outros",
+        helpCenter: "Central de ajuda / FAQ",
+        reportProblem: "Reportar um problema",
+        appVersion: "Versão do aplicativo",
+        resetSettings: "Redefinir configurações",
+        aboutApp: "Sobre o aplicativo",
+        save: "Salvar",
+        close: "Fechar",
+        info: {
+            1: "Digite um novo nome de usuário (mín. 3 caracteres)",
+            2: "Digite um novo endereço de e-mail (ex: teste@example.com)",
+            3: "Digite uma nova senha (mín. 8 caracteres)",
+            4: "Atualize sua foto de perfil."
+        },
+    
+        selectTheme: "Selecionar tema",
+    }
+    
+
+
 
 };
 

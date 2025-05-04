@@ -12,7 +12,6 @@ const HistoryText = {
         deleteCancel: "Cancel",
         deleteConfirm: "Delete"
     },
-
     pl: {
         historyTitle: "Historia spacerów",
         loading: "Ładowanie...",
@@ -38,9 +37,7 @@ const HistoryText = {
         deleteMessage: "Ви впевнені, що хочете видалити цю прогулянку?",
         deleteCancel: "Скасувати",
         deleteConfirm: "Видалити"
-    }
-    ,
-
+    },
     es: {
         historyTitle: "Historial de Caminatas",
         loading: "Cargando...",
@@ -54,7 +51,6 @@ const HistoryText = {
         deleteCancel: "Cancelar",
         deleteConfirm: "Eliminar"
     },
-
     fr: {
         historyTitle: "Historique des promenades",
         loading: "Chargement...",
@@ -68,7 +64,6 @@ const HistoryText = {
         deleteCancel: "Annuler",
         deleteConfirm: "Supprimer"
     },
-
     de: {
         historyTitle: "Wanderhistorie",
         loading: "Lädt...",
@@ -82,7 +77,6 @@ const HistoryText = {
         deleteCancel: "Abbrechen",
         deleteConfirm: "Löschen"
     },
-
     it: {
         historyTitle: "Storico delle passeggiate",
         loading: "Caricamento...",
@@ -96,7 +90,6 @@ const HistoryText = {
         deleteCancel: "Annulla",
         deleteConfirm: "Elimina"
     },
-
     pt: {
         historyTitle: "Histórico de Caminhadas",
         loading: "Carregando...",
@@ -110,7 +103,6 @@ const HistoryText = {
         deleteCancel: "Cancelar",
         deleteConfirm: "Excluir"
     },
-
     ru: {
         historyTitle: "История прогулок",
         loading: "Загрузка...",
@@ -124,7 +116,6 @@ const HistoryText = {
         deleteCancel: "Отмена",
         deleteConfirm: "Удалить"
     },
-
     zh: {
         historyTitle: "散步历史",
         loading: "加载中...",
@@ -138,7 +129,6 @@ const HistoryText = {
         deleteCancel: "取消",
         deleteConfirm: "删除"
     },
-
     ja: {
         historyTitle: "散歩履歴",
         loading: "読み込み中...",
@@ -152,7 +142,6 @@ const HistoryText = {
         deleteCancel: "キャンセル",
         deleteConfirm: "削除"
     },
-
     cs: {
         historyTitle: "Historie procházek",
         loading: "Načítání...",

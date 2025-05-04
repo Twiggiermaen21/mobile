@@ -14,7 +14,6 @@ const AddDogText = {
         imagePlaceholder: "Tap to select image",
         uploadButton: "Upload",
     },
-
     pl: {
         backButton: "Wstecz",
         title: "Opowiedz nam o swoim piesku",
@@ -30,7 +29,6 @@ const AddDogText = {
         imagePlaceholder: "Kliknij, aby dodać zdjęcie",
         uploadButton: "Wyślij",
     },
-
     es: {
         backButton: "Atrás",
         title: "Cuéntanos sobre tu perrito",
@@ -46,7 +44,6 @@ const AddDogText = {
         imagePlaceholder: "Toca para seleccionar la imagen",
         uploadButton: "Subir",
     },
-
     fr: {
         backButton: "Retour",
         title: "Parlez-nous de votre chien",
@@ -62,7 +59,6 @@ const AddDogText = {
         imagePlaceholder: "Cliquez pour sélectionner l'image",
         uploadButton: "Télécharger",
     },
-
     de: {
         backButton: "Zurück",
         title: "Erzählen Sie uns von Ihrem Hund",
@@ -78,7 +74,6 @@ const AddDogText = {
         imagePlaceholder: "Tippen, um ein Bild auszuwählen",
         uploadButton: "Hochladen",
     },
-
     it: {
         backButton: "Indietro",
         title: "Parlaci del tuo cane",
@@ -94,7 +89,6 @@ const AddDogText = {
         imagePlaceholder: "Tocca per selezionare l'immagine",
         uploadButton: "Carica",
     },
-
     pt: {
         backButton: "Voltar",
         title: "Conte-nos sobre o seu cachorro",
@@ -110,7 +104,6 @@ const AddDogText = {
         imagePlaceholder: "Toque para selecionar a imagem",
         uploadButton: "Enviar",
     },
-
     ru: {
         backButton: "Назад",
         title: "Расскажите нам о вашей собаке",
@@ -126,7 +119,6 @@ const AddDogText = {
         imagePlaceholder: "Нажмите, чтобы выбрать изображение",
         uploadButton: "Загрузить",
     },
-
     zh: {
         backButton: "返回",
         title: "告诉我们关于你的狗狗",
@@ -157,7 +149,6 @@ const AddDogText = {
         imagePlaceholder: "Натисніть, щоб вибрати зображення",
         uploadButton: "Завантажити",
     },
-
     ja: {
         backButton: "戻る",
         title: "あなたの犬について教えてください",
@@ -173,7 +164,6 @@ const AddDogText = {
         imagePlaceholder: "画像を選択するにはタップしてください",
         uploadButton: "アップロード",
     },
-
     cs: {
         backButton: "Zpět",
         title: "Povězte nám o svém psovi",

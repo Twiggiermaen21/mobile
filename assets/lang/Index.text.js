@@ -10,7 +10,6 @@ const IndexText = {
         speed: "Speed",
         distance: "Distance",
     },
-
     pl: {
         done: "Gotowe",
         selectDog: "Wybierz psa",
@@ -22,7 +21,6 @@ const IndexText = {
         speed: "Szybkość",
         distance: "Dystans",
     },
-
     es: {
         done: "Hecho",
         selectDog: "Selecciona un perro",
@@ -34,7 +32,6 @@ const IndexText = {
         speed: "Velocidad",
         distance: "Distancia",
     },
-
     fr: {
         done: "Terminé",
         selectDog: "Sélectionner un chien",
@@ -46,7 +43,6 @@ const IndexText = {
         speed: "Vitesse",
         distance: "Distance",
     },
-
     de: {
         done: "Fertig",
         selectDog: "Wähle einen Hund",
@@ -68,9 +64,7 @@ const IndexText = {
         time: "Час",
         speed: "Швидкість",
         distance: "Відстань",
-    }
-    ,
-
+    },
     it: {
         done: "Fatto",
         selectDog: "Seleziona un cane",
@@ -82,7 +76,6 @@ const IndexText = {
         speed: "Velocità",
         distance: "Distanza",
     },
-
     pt: {
         done: "Feito",
         selectDog: "Selecione um cachorro",
@@ -94,7 +87,6 @@ const IndexText = {
         speed: "Velocidade",
         distance: "Distância",
     },
-
     ru: {
         done: "Готово",
         selectDog: "Выберите собаку",
@@ -106,7 +98,6 @@ const IndexText = {
         speed: "Скорость",
         distance: "Расстояние",
     },
-
     zh: {
         done: "完成",
         selectDog: "选择一只狗",
@@ -118,7 +109,6 @@ const IndexText = {
         speed: "速度",
         distance: "距离",
     },
-
     ja: {
         done: "完了",
         selectDog: "犬を選択",
@@ -130,7 +120,6 @@ const IndexText = {
         speed: "速度",
         distance: "距離",
     },
-
     cs: {
         done: "Hotovo",
         selectDog: "Vyberte psa",

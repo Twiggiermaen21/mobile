@@ -19,14 +19,17 @@ export default function SettingsScreen() {
 
     const { lang, color, setLang, setColor, resetSettings } = useSettingsStore();
     const { isLoading, updateUser, token } = useAuthStore();
+
     const t = SettingsText[lang];
     const COLORS = texture[color];
     const dynamicStyles = styles(COLORS);
     const textMap = {
-        7: t.about,
+        6: t.about,
         5: t.version,
     };
     const openModal = (label, number) => {
+        console.log('LANG:', lang);
+        console.log('TEXT:', SettingsText[lang]);
         setSelectedLabel(label);
         setSelectedFunction(number);
         setModalVisible(true);
@@ -112,7 +115,7 @@ export default function SettingsScreen() {
 
                 <SettingButton label={t.appVersion} onPress={() => openModal(t.appVersion, 5)} />
                 <SettingButton label={t.resetSettings} onPress={() => confirmReset()} />
-                <SettingButton label={t.aboutApp} onPress={() => openModal(t.aboutApp, 7)} />
+                <SettingButton label={t.aboutApp} onPress={() => openModal(t.aboutApp, 6)} />
 
                 {/* Logout */}
                 <LogoutButton />
@@ -155,7 +158,9 @@ export default function SettingsScreen() {
                                         </View>
                                     ) : (
                                         // Display this when selectedFunction !== 0
-                                        <Text>{textMap[selectedFunction] || null}</Text>
+                                        <Text>
+                                            {textMap[selectedFunction] || null}
+                                        </Text>
                                     )}
 
                                     {/* Save Button */}

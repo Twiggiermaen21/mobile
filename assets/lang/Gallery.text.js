@@ -10,7 +10,6 @@ const GalleryText = {
         success: "Success!",                   // Success message
         deletePhoto: "Photo deleted successfully" // Message when photo is deleted successfully
     },
-
     pl: {
         galleryTitle: "Galeria zdjęć",
         loading: "Ładowanie...",
@@ -22,7 +21,6 @@ const GalleryText = {
         success: "Sukces!",                   // Success message in Polish
         deletePhoto: "Zdjęcie zostało usunięte pomyślnie" // Message when photo is deleted successfully in Polish
     },
-
     es: {
         galleryTitle: "Galería de fotos",
         loading: "Cargando...",
@@ -34,7 +32,6 @@ const GalleryText = {
         success: "¡Éxito!",                   // Success message in Spanish
         deletePhoto: "Foto eliminada con éxito" // Message when photo is deleted successfully in Spanish
     },
-
     fr: {
         galleryTitle: "Galerie de photos",
         loading: "Chargement...",
@@ -46,7 +43,6 @@ const GalleryText = {
         success: "Succès!",                   // Success message in French
         deletePhoto: "Photo supprimée avec succès" // Message when photo is deleted successfully in French
     },
-
     de: {
         galleryTitle: "Fotogalerie",
         loading: "Lädt...",
@@ -58,7 +54,6 @@ const GalleryText = {
         success: "Erfolg!",                   // Success message in German
         deletePhoto: "Foto erfolgreich gelöscht" // Message when photo is deleted successfully in German
     },
-
     it: {
         galleryTitle: "Galleria fotografica",
         loading: "Caricamento...",
@@ -70,7 +65,6 @@ const GalleryText = {
         success: "Successo!",                   // Success message in Italian
         deletePhoto: "Foto eliminata con successo" // Message when photo is deleted successfully in Italian
     },
-
     pt: {
         galleryTitle: "Galeria de Fotos",
         loading: "Carregando...",
@@ -82,7 +76,6 @@ const GalleryText = {
         success: "Sucesso!",                   // Success message in Portuguese
         deletePhoto: "Foto excluída com sucesso" // Message when photo is deleted successfully in Portuguese
     },
-
     ru: {
         galleryTitle: "Галерея фотографий",
         loading: "Загрузка...",
@@ -105,7 +98,6 @@ const GalleryText = {
         success: "Успішно!",                   // Success message in Ukrainian
         deletePhoto: "Фото успішно видалено" // Message when photo is deleted successfully in Ukrainian
     },
-
     zh: {
         galleryTitle: "相册",
         loading: "加载中...",
@@ -117,7 +109,6 @@ const GalleryText = {
         success: "成功!",                   // Success message in Chinese
         deletePhoto: "照片删除成功" // Message when photo is deleted successfully in Chinese
     },
-
     ja: {
         galleryTitle: "フォトギャラリー",
         loading: "読み込み中...",
@@ -129,7 +120,6 @@ const GalleryText = {
         success: "成功！",                   // Success message in Japanese
         deletePhoto: "写真が削除されました" // Message when photo is deleted successfully in Japanese
     },
-
     cs: {
         galleryTitle: "Galerie fotografií",
         loading: "Načítání...",
