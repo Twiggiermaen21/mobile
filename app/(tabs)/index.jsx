@@ -1,8 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Alert, TouchableOpacity, Text, KeyboardAvoidingView, Image, Modal, FlatList, Pressable, RefreshControl } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native';
+import { View, Alert, TouchableOpacity, Text, KeyboardAvoidingView, Image, FlatList } from 'react-native';
 import { useAuthStore } from '@/store/authStore';
-import MapView, { Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import styles from '@/assets/styles/map.styles';
 import texture from "../../constants/colorsApp";
@@ -12,35 +10,23 @@ import IndexText from "@/assets/lang/Index.text";
 import { useSettingsStore } from '@/store/settingStore';
 import { useWalkStore } from "@/store/walkStore"
 import { usePhotoStore } from "@/store/photoStore"
-import formatTime from "@/components/PetWalkComponents/timeUtils"
-import haversineDistance from "@/components/PetWalkComponents/haversineDistance"
-import { Ionicons } from '@expo/vector-icons';
-// import { useRouter } from 'expo-router';
 import { openNativeCamera } from "@/constants/camera"
+import * as TaskManager from 'expo-task-manager';
+import MapIndex from '@/components/PetWalkComponents/MapIndex';
+import DogSelectionModal from '@/components/PetWalkComponents/DogSelectionModal';
+import CameraIndex from '@/components/PetWalkComponents/CameraIndex';
+import haversineDistance from '@/constants/haversineDistance';
+import HeaderIndexPanel from '@/components/PetWalkComponents/HeaderIndexPanel';
+
+const LOCATION_TASK_NAME = 'background-location-task';
 export default function Index() {
-    // npx expo install  expo-task-manager
-    //Zdefiniuj task do działania w tle
-    /*
-    🔍 Różnice między watchPositionAsync a startLocationUpdatesAsync
-    Cechy	watchPositionAsync	startLocationUpdatesAsync
-    Działa w tle, gdy app jest zminimalizowana	✅* (czasowo, zależnie od OS)	✅ (dedykowane do background tracking)
-    Działa po zamknięciu aplikacji	❌	✅
-    Zatrzymuje się automatycznie, np. po ubiciu procesu	✅	❌ (działa nadal, aż wywołasz stopLocationUpdatesAsync)
-    Wymaga tasków (TaskManager)	❌	✅
-    Prostszy w użyciu	✅	❌
-    
-    npx expo install expo-notifications
-    useEffect(() => {
-  registerForPushNotificationsAsync().then(() => {
-    scheduleDailyReminder();
-  });
-}, []);
-    */
     const [refreshing, setRefreshing] = useState(false);
     const [isTracking, setIsTracking] = useState(false);
     const [location, setLocation] = useState(null);
     const [path, setPath] = useState([]);
     const [distance, setDistance] = useState(0);
+    // const [speed, setspeed] = useState(0);
+
     const [dog, setDog] = useState([]);
     const [currentSpeed, setCurrentSpeed] = useState(0);
     const [averageSpeed, setAverageSpeed] = useState(0);
@@ -50,61 +36,47 @@ export default function Index() {
     const [selectedDogIds, setSelectedDogIds] = useState([]);
     const [isPaused, setIsPaused] = useState(false);
     const { dogsFromDB, getDogs } = useDogStore()
-    // const router = useRouter();
+
     const { saveWalk, } = useWalkStore();
     const { uploadImage } = usePhotoStore();
     const { lang, color } = useSettingsStore();
     const t = IndexText[lang];
     const COLORS = texture[color];
     const dynamicStyles = styles(COLORS);
-
-    const [image, setImage] = useState(null);
-    const [imageBase64, setImageBase64] = useState(null);
-
     const mapRef = useRef(null);
-    const watchSubscription = useRef(null);
-    const timerRef = useRef(null);
+    const timeStartRef = useRef(null);
 
+    const timeIntervalRef = useRef(null);
     const fetchData = async () => {
         const result = await getDogs(token);
         if (!result.success) Alert.alert("Error", result.error);
     };
-
-
     useEffect(() => {
         if (token) {
             fetchData();
         }
     }, [token]);
+    useEffect(() => {
+        return () => {
+            // Clean up when component unmounts
+            if (timeIntervalRef.current) {
+                clearInterval(timeIntervalRef.current);
+            }
+        };
+    }, []);
 
-
-    const requestPermissions = async () => {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-            Alert.alert('Permission denied', 'You need to allow location access.');
-            return false;
+    TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
+        if (error) {
+            console.error("Background task error:", error);
+            return;
         }
-        return true;
-    };
 
-    const startTracking = async () => {
-        const hasPermission = await requestPermissions();
-        if (!hasPermission) return;
+        if (data) {
+            const { locations } = data;
+            console.log("New location update:", locations[0]);
+            const loc = locations[0];
 
-        setIsTracking(true);
-        setDistance(0);
-        setTimeElapsed(0);
-        setPath([]);
-        setCurrentSpeed(0);
-        setAverageSpeed(0);
-
-        const subscription = await Location.watchPositionAsync(
-            {
-                accuracy: Location.Accuracy.Highest,
-                timeInterval: 3000,
-                distanceInterval: 5,
-            },
-            (loc) => {
+            if (loc) {
                 const { latitude, longitude, speed } = loc.coords;
                 const newLoc = { latitude, longitude };
                 setLocation(newLoc);
@@ -130,36 +102,85 @@ export default function Index() {
                         longitudeDelta: 0.01,
                     });
                 }
+                console.log('Distance:', distance);
+                console.log('time:', timeElapsed);
+
+                if (distance != null && timeElapsed != null) {
+
+                    const avg = distance / (timeElapsed / 3600);
+                    setAverageSpeed(avg.toFixed(2));
+                    console.log('AVG SPEED:', avg.toFixed(2));
+                }
             }
-        );
-
-        watchSubscription.current = subscription;
+        }
+    });
+    const requestPermissions = async () => {
+        const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
+        const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
+        if (foregroundStatus !== 'granted') {
+            console.log('Permission to access foreground location was denied');
+            return;
+        }
+        if (backgroundStatus !== 'granted') {
+            console.log('Permission to access background location was denied');
+            return;
+        }
+        console.log('Location permissions granted');
     };
 
-    const stopTracking = () => {
+    const startBackgroundUpdates = async () => {
+        try {
+            requestPermissions();
+            await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+                accuracy: Location.Accuracy.Highest,
+                timeInterval: 1000,
+                distanceInterval: 5,
+                showsBackgroundLocationIndicator: true,
+                foregroundService: {
+                    notificationTitle: 'Spacer trwa 🐾',
+                    notificationBody: 'Śledzimy Twój spacer w tle!',
+                },
+            });
 
-        savePath();
-
-        if (watchSubscription.current) {
-            watchSubscription.current.remove();
-            watchSubscription.current = null;
+            console.log('Background location updates started');
+        } catch (e) {
+            console.error("Error starting background updates:", e);
         }
+    };
 
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
-        }
+    const startTracking = async () => {
 
-        setIsTracking(false);
-        setPath([]);
-        setDistance(0);
+        setIsTracking(true);
         setTimeElapsed(0);
-        setCurrentSpeed(0);
-        setAverageSpeed(0);
-        setSelectedDogIds([]);
-        setIsPaused(false);
+        setDistance(0);
+        startBackgroundUpdates();
+
+        timeStartRef.current = Date.now();
+        timeIntervalRef.current = setInterval(() => {
+            const elapsedMs = Date.now() - timeStartRef.current;
+            setTimeElapsed(Math.floor(elapsedMs / 1000));
+        }, 1000);
 
     };
+
+    const stopTracking = async () => {
+        setIsTracking(false);
+        savePath();
+        setTimeElapsed(0);
+        setDistance(0);
+        setCurrentSpeed(0);
+        setSelectedDogIds(null);
+        if (timeIntervalRef.current) {
+            clearInterval(timeIntervalRef.current);
+            timeIntervalRef.current = null;
+        }
+        const hasStarted = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+        if (hasStarted) {
+            await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+        }
+    };
+
+
     const togglePause = () => {
         setIsPaused(prev => !prev);
     };
@@ -172,40 +193,11 @@ export default function Index() {
     };
 
     const savePhoto = async (res) => {
-        console.log(res);
-
         const result = await uploadImage(token, res, user);
         if (!result.success) Alert.alert("Error", result.error);
         else Alert.alert("Sukces", "Zdjecie zostało zapisane!");
 
     }
-
-
-
-    useEffect(() => {
-        if (distance > 0 && timeElapsed > 0) {
-            const avg = distance / (timeElapsed / 3600);
-            setAverageSpeed(avg.toFixed(2));
-        };
-        if (isTracking && !isPaused) {
-            timerRef.current = setInterval(() => {
-                setTimeElapsed(prev => prev + 1);
-            }, 1000);
-        } else {
-            if (timerRef.current) {
-                clearInterval(timerRef.current);
-                timerRef.current = null;
-            }
-        }
-
-        return () => {
-            if (timerRef.current) {
-                clearInterval(timerRef.current);
-                timerRef.current = null;
-            }
-        };
-    }, [distance, timeElapsed, isTracking, isPaused]);
-
 
     const handleRefresh = async () => {
         setRefreshing(true);
@@ -213,89 +205,21 @@ export default function Index() {
         setRefreshing(false);
     }
 
-
-
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
             <View style={dynamicStyles.container}>
                 <View style={dynamicStyles.mapCard}>
-                    {selectedDogIds.length > 0 ? (
-                        <Pressable
-                            // onPress={() => router.push('/(notabs)/camera')}
-                            onPress={async () => {
-                                const result = await openNativeCamera();
-                                if (!result.canceled) {
-
-                                    setImage(result.uri)
-
-                                    if (result.base64) {
-                                        setImageBase64(result.base64);
-                                    } else {
-                                        const base64 = await FileSystem.readAsStringAsync(result.uri, {
-                                            encoding: FileSystem.EncodingType.base64
-                                        });
-                                        setImageBase64(base64);
-                                    }
-
-                                    savePhoto(result);
-                                } else {
-                                    Alert.alert("Error", result.error);
-                                }
-
-                            }}
-                            style={({ pressed }) => [
-                                dynamicStyles.cameraButton,
-                                { backgroundColor: pressed ? '#e0e0e0' : 'white' }, // Szare po naciśnięciu
-                            ]}>
-                            <View style={dynamicStyles.iconBackground}>
-                                <Ionicons name="camera" size={24} color="#777" />
-                            </View>
-                        </Pressable>
+                    {isTracking ? (
+                        <CameraIndex
+                            savePhoto={savePhoto}
+                            openNativeCamera={openNativeCamera} />
                     ) : null}
-                    <MapView
-                        style={dynamicStyles.map}
-                        ref={mapRef}
-                        initialRegion={{
-                            latitude: location?.latitude || 37.78825,
-                            longitude: location?.longitude || -122.4324,
-                            latitudeDelta: 0.01,
-                            longitudeDelta: 0.01,
-                        }}
-                        showsUserLocation={true}
-                        followsUserLocation={true}
-                        scrollEnabled={false}
-                        zoomEnabled={false}
-                        rotateEnabled={false}
-                        pitchEnabled={false}
-                    >
-                        {path.length > 1 && (
-                            <Polyline
-                                coordinates={path}
-                                strokeColor="#1E90FF"
-                                strokeWidth={4}
-                            />
-                        )}
-                    </MapView>
+                    <MapIndex mapRef={mapRef} path={path} location={location} />
                 </View>
-
                 <View style={dynamicStyles.card}>
-                    <View style={dynamicStyles.header}>
-                        <View style={dynamicStyles.formGroup}>
-                            <Text style={dynamicStyles.label}>{t.time}</Text>
-                            <Text style={dynamicStyles.info}>{formatTime(timeElapsed)}</Text>
-                        </View>
-                        <View style={dynamicStyles.formGroup}>
-                            <Text style={dynamicStyles.label}>{t.speed}</Text>
-                            <Text style={dynamicStyles.info}>{currentSpeed} km/h</Text>
-                        </View>
-                        <View style={dynamicStyles.formGroup}>
-                            <Text style={dynamicStyles.label}>{t.distance}</Text>
-                            <Text style={dynamicStyles.info}>{distance.toFixed(2)} km</Text>
-                        </View>
-                    </View>
-
+                    <HeaderIndexPanel currentSpeed={currentSpeed} distance={distance} timeElapsed={timeElapsed} />
                     <View style={dynamicStyles.footer}>
-                        {selectedDogIds.length > 0 ? (
+                        {isTracking && selectedDogIds.length > 0 ? (
                             <View style={dynamicStyles.selectedDogsContainer}>
                                 <FlatList
                                     horizontal
@@ -325,7 +249,7 @@ export default function Index() {
 
                                     <TouchableOpacity
                                         style={[dynamicStyles.button, { backgroundColor: '#FF6347' }]}
-                                        onPress={stopTracking}
+                                        onPress={async () => { stopTracking() }}
                                     >
                                         <Text style={dynamicStyles.buttonText}>{t.endWalk}</Text>
                                     </TouchableOpacity>
@@ -335,94 +259,24 @@ export default function Index() {
                             <View >
                                 <TouchableOpacity
                                     style={dynamicStyles.button}
-                                    onPress={() => setIsDogModalVisible(true)}
-                                >
+                                    onPress={() => setIsDogModalVisible(true)} >
                                     <Text style={dynamicStyles.buttonText}>{t.startWalkPrompt}</Text>
-
                                 </TouchableOpacity>
                             </View>
                         )}
                     </View>
                 </View>
-
-                <Modal
-                    visible={isDogModalVisible}
-                    animationType="slide"
-                    transparent={true}
-                >
-                    <TouchableWithoutFeedback
-                        onPress={() => {
-                            if (selectedDogIds.length === 0) {
-                                setIsDogModalVisible(false);
-                            }
-                        }}
-                    >
-                        <View style={dynamicStyles.ModalAroundBox}>
-                            <TouchableWithoutFeedback onPress={() => { }}>
-                                <View style={dynamicStyles.ModalBox}>
-                                    <Text style={dynamicStyles.title}>{t.selectDog}</Text>
-                                    <FlatList
-                                        data={dogsFromDB}
-                                        keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
-                                        refreshControl={
-                                            <RefreshControl
-                                                refreshing={refreshing}
-                                                onRefresh={handleRefresh}
-                                                colors={[COLORS.primary]}
-                                            />
-                                        }
-                                        renderItem={({ item }) => {
-                                            const isSelected = selectedDogIds.includes(item._id);
-
-                                            return (
-                                                <Pressable
-                                                    style={[
-                                                        dynamicStyles.pressableDogs,
-                                                        { backgroundColor: isSelected ? '#d0f0d0' : '#f0f0f0' }
-                                                    ]}
-                                                    onPress={() => {
-                                                        setSelectedDogIds(prevSelected => {
-                                                            const isSelected = prevSelected.includes(item._id);
-                                                            const updatedSelection = isSelected
-                                                                ? prevSelected.filter(id => id !== item._id)
-                                                                : [...prevSelected, item._id];
-
-                                                            return updatedSelection;
-                                                        });
-                                                    }}
-                                                >
-                                                    <Text style={[dynamicStyles.info, { fontSize: 16 }]}>{item.name}</Text>
-                                                    <Text style={{ fontSize: 18, color: isSelected ? 'green' : '#ccc' }}>
-                                                        {isSelected ? '✓' : '○'}
-                                                    </Text>
-                                                </Pressable>
-                                            );
-                                        }}
-                                    />
-
-                                    <View style={dynamicStyles.buttonDone}>
-                                        <TouchableOpacity
-                                            onPress={async () => {
-                                                if (selectedDogIds.length === 0) {
-                                                    return;
-                                                }
-                                                const selectedDogs = dog.filter(d => selectedDogIds.includes(d.id));
-                                                setDog(selectedDogs);
-                                                setIsDogModalVisible(false);
-                                                await startTracking();
-                                            }}
-                                            style={[dynamicStyles.button, selectedDogIds.length === 0 && dynamicStyles.buttonDisabled]}
-                                            disabled={selectedDogIds.length === 0}
-                                        >
-                                            <Text style={dynamicStyles.buttonText}>{t.done}</Text>
-                                        </TouchableOpacity>
-                                    </View>
-
-                                </View>
-                            </TouchableWithoutFeedback>
-                        </View>
-                    </TouchableWithoutFeedback>
-                </Modal>
+                <DogSelectionModal
+                    isDogModalVisible={isDogModalVisible}
+                    setIsDogModalVisible={setIsDogModalVisible}
+                    dogsFromDB={dogsFromDB}
+                    selectedDogIds={selectedDogIds}
+                    setSelectedDogIds={setSelectedDogIds}
+                    refreshing={refreshing}
+                    handleRefresh={handleRefresh}
+                    startTracking={startTracking}
+                    setDog={setDog}
+                />
             </View >
         </KeyboardAvoidingView >
     );

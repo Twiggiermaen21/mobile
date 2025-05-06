@@ -7,7 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SafeScreen from '@/components/SafeScreen';
 import { useAuthStore } from '@/store/authStore';
 import { useSettingsStore } from '@/store/settingStore';
-
+import { registerForPushNotificationsAsync, scheduleDailyReminder } from '@/constants/notification'; // zakładam, że plik nazywa się notifications.js
 import texture from '@/constants/colorsApp';
 
 
@@ -20,32 +20,22 @@ export default function RootLayout() {
   const { initializeSettings, color } = useSettingsStore();
 
   const COLORS = texture[color];
-  // // useEffect(() => {
-  // //   checkAuth();
-  // //   initializeSettings();
-  // // }, [])
 
-  // useEffect(() => {
-  //   checkAuth();
-  //   initializeSettings();
-  //   if (!authReady) return;
-  //   const inAuthScreen = segments[0] === "(auth)"
-  //   const isSignedIn = user && token;
-
-  //   if (!isSignedIn && !inAuthScreen) router.replace("/(auth)");
-  //   else if (isSignedIn && inAuthScreen) router.replace("/(tabs)");
-  // }, [user, token, segments])
 
 
 
   useEffect(() => {
-    checkAuth(); // Runs once
+    checkAuth();
     initializeSettings();
-  }, []); // ✅ Tylko raz przy uruchomieniu
+    // registerForPushNotificationsAsync().then(() => {
+    //   scheduleDailyReminder();
+    // });
+
+  }, []);
 
 
   useEffect(() => {
-    if (!authReady) return; // ✅ Poczekaj aż auth będzie gotowy
+    if (!authReady) return;
 
     const inAuthScreen = segments[0] === "(auth)";
     const isSignedIn = user && token;
@@ -55,13 +45,13 @@ export default function RootLayout() {
     } else if (isSignedIn && inAuthScreen) {
       router.replace("/(tabs)");
     }
-  }, [authReady, user, token, segments]); // ✅ Zależności od stanu autoryzacji
+  }, [authReady, user, token, segments]);
 
 
   return (
 
     <SafeAreaProvider >
-      <StatusBar style="dark" backgroundColor="#8B4513" />
+      {/* <StatusBar style="dark" backgroundColor="#8B4513" /> */}
       <SafeScreen>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />

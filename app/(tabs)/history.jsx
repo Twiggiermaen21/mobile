@@ -11,7 +11,7 @@ import HistoryText from "@/assets/lang/History.text"
 
 import { useSettingsStore } from '@/store/settingStore';
 import { useWalkStore } from "@/store/walkStore"
-import formatTime from "@/components/PetWalkComponents/timeUtils"
+import formatTime from "@/constants/timeUtils"
 
 export default function HistoryScreen() {
     const { token } = useAuthStore();
@@ -21,8 +21,6 @@ export default function HistoryScreen() {
     const t = HistoryText[lang];
     const COLORS = texture[color];
     const dynamicStyles = styles(COLORS);
-
-
 
     const handleDeleteWalk = (id) => {
         Alert.alert(

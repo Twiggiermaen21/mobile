@@ -8,7 +8,7 @@ const formatTime = (seconds) => {
     } else if (m > 0) {
         return `${m}:${s.toString().padStart(2, '0')}`;
     } else {
-        return `${s}s`;
+        return `${s} s`;
     }
 };
 
