@@ -75,11 +75,6 @@ export default function SettingsScreen() {
                 <SettingButton label={t.changePassword} onPress={() => openModal(t.changePassword, 3)} />
                 <SettingButton label={t.editProfilePicture} onPress={() => openModal(t.editProfilePicture, 4)} />
 
-                {/* Notifications */}
-                {/* <Text style={dynamicStyles.sectionTitle}>{t.notifications}</Text>
-                <SettingButton label={t.emailSMSNotifications} onPress={() => openModal(t.emailSMSNotifications)} /> */}
-
-              
                 <Text style={dynamicStyles.sectionTitle}>{t.themeAppearance}</Text>
                 <ThemePickerButton
                     label={t.colorScheme}

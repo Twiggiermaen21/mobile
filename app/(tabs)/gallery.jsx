@@ -1,45 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import {
-    View,
-    FlatList,
-    Image,
-    Alert,
-    RefreshControl,
-    Text,
-    Modal,
-    Pressable,
-    TouchableOpacity
-} from 'react-native';
+import { View, FlatList, Image, Alert, RefreshControl, Text, Modal, Pressable, TouchableOpacity } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import GalleryText from "@/assets/lang/Gallery.text";
 import { useSettingsStore } from '@/store/settingStore';
 import { usePhotoStore } from "@/store/photoStore";
 import { useAuthStore } from '@/store/authStore';
-
 import styles from '@/assets/styles/gallery.styles';
 import { Ionicons } from '@expo/vector-icons';
 import texture from "@/constants/colorsApp";
-
 
 export default function GalleryScreen() {
     const { lang, color } = useSettingsStore();
     const t = GalleryText[lang];
     const { token } = useAuthStore();
-    const {
-        photos,
-        page,
-        totalPages,
-        isLoadingMore,
-        refreshing,
-        getPhotos,
-        deletePhoto // ← upewnij się, że ta funkcja istnieje w photoStore
-    } = usePhotoStore();
+    const { photos, page, totalPages, isLoadingMore, refreshing, getPhotos, deletePhoto } = usePhotoStore();
     const [selectedPhoto, setSelectedPhoto] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const COLORS = texture[color];
     const dynamicStyles = styles(COLORS);
-
 
     const fetchData = async (pageNumber = 1, refreshing = false) => {
         const result = await getPhotos(pageNumber, refreshing, token);
@@ -47,7 +26,6 @@ export default function GalleryScreen() {
     };
 
     const handleDeletePhoto = () => {
-
         Alert.alert(
             t.deleteTitle,
             t.deleteMessage,
@@ -108,13 +86,9 @@ export default function GalleryScreen() {
         await fetchData(1, true);
     };
 
-
-
     return (
         <View style={dynamicStyles.container}>
             <Text style={dynamicStyles.title}>{t.galleryTitle}</Text>
-
-            {/* {photos && photos.length > 0 ? ( */}
             <FlatList
                 data={photos}
                 keyExtractor={item => item._id}
@@ -146,13 +120,6 @@ export default function GalleryScreen() {
                     </TouchableOpacity>
                 )}
             />
-            {/* ) : (
-            {photos || photos.length > 0 ? (
-                <View style={dynamicStyles.noPhotosContainer}>
-                    <Text style={dynamicStyles.noPhotosText}>{t.noPhoto}</Text>
-                </View>
-            ) : (null)} */}
-
             {selectedPhoto && (
                 <Modal visible={modalVisible} transparent={true} animationType="fade">
                     <View style={dynamicStyles.modalWrapper}>
@@ -177,7 +144,6 @@ export default function GalleryScreen() {
 
                         </View>
                     </View>
-
                 </Modal>
             )}
         </View>

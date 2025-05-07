@@ -7,8 +7,8 @@ const GalleryText = {
         deleteMessage: "Are you sure you want to delete this photo?",
         deleteCancel: "Cancel",
         deleteConfirm: "Delete",
-        success: "Success!",                   // Success message
-        deletePhoto: "Photo deleted successfully" // Message when photo is deleted successfully
+        success: "Success!",                  
+        deletePhoto: "Photo deleted successfully" 
     },
     pl: {
         galleryTitle: "Galeria zdjęć",
@@ -18,8 +18,8 @@ const GalleryText = {
         deleteMessage: "Czy na pewno chcesz usunąć te zdjęcie?",
         deleteCancel: "Anuluj",
         deleteConfirm: "Usuń",
-        success: "Sukces!",                   // Success message in Polish
-        deletePhoto: "Zdjęcie zostało usunięte pomyślnie" // Message when photo is deleted successfully in Polish
+        success: "Sukces!",                   
+        deletePhoto: "Zdjęcie zostało usunięte pomyślnie" 
     },
     es: {
         galleryTitle: "Galería de fotos",
@@ -29,8 +29,8 @@ const GalleryText = {
         deleteMessage: "¿Estás seguro de que quieres eliminar esta foto?",
         deleteCancel: "Cancelar",
         deleteConfirm: "Eliminar",
-        success: "¡Éxito!",                   // Success message in Spanish
-        deletePhoto: "Foto eliminada con éxito" // Message when photo is deleted successfully in Spanish
+        success: "¡Éxito!",                   
+        deletePhoto: "Foto eliminada con éxito" 
     },
     fr: {
         galleryTitle: "Galerie de photos",
@@ -40,8 +40,8 @@ const GalleryText = {
         deleteMessage: "Êtes-vous sûr de vouloir supprimer cette photo?",
         deleteCancel: "Annuler",
         deleteConfirm: "Supprimer",
-        success: "Succès!",                   // Success message in French
-        deletePhoto: "Photo supprimée avec succès" // Message when photo is deleted successfully in French
+        success: "Succès!",                  
+        deletePhoto: "Photo supprimée avec succès"
     },
     de: {
         galleryTitle: "Fotogalerie",
@@ -51,8 +51,8 @@ const GalleryText = {
         deleteMessage: "Möchten Sie dieses Foto wirklich löschen?",
         deleteCancel: "Abbrechen",
         deleteConfirm: "Löschen",
-        success: "Erfolg!",                   // Success message in German
-        deletePhoto: "Foto erfolgreich gelöscht" // Message when photo is deleted successfully in German
+        success: "Erfolg!",                  
+        deletePhoto: "Foto erfolgreich gelöscht" 
     },
     it: {
         galleryTitle: "Galleria fotografica",
@@ -62,8 +62,8 @@ const GalleryText = {
         deleteMessage: "Sei sicuro di voler eliminare questa foto?",
         deleteCancel: "Annulla",
         deleteConfirm: "Elimina",
-        success: "Successo!",                   // Success message in Italian
-        deletePhoto: "Foto eliminata con successo" // Message when photo is deleted successfully in Italian
+        success: "Successo!",                  
+        deletePhoto: "Foto eliminata con successo" 
     },
     pt: {
         galleryTitle: "Galeria de Fotos",
@@ -73,8 +73,8 @@ const GalleryText = {
         deleteMessage: "Tem certeza de que deseja excluir esta foto?",
         deleteCancel: "Cancelar",
         deleteConfirm: "Excluir",
-        success: "Sucesso!",                   // Success message in Portuguese
-        deletePhoto: "Foto excluída com sucesso" // Message when photo is deleted successfully in Portuguese
+        success: "Sucesso!",                 
+        deletePhoto: "Foto excluída com sucesso" 
     },
     ru: {
         galleryTitle: "Галерея фотографий",
@@ -84,8 +84,8 @@ const GalleryText = {
         deleteMessage: "Вы уверены, что хотите удалить это фото?",
         deleteCancel: "Отмена",
         deleteConfirm: "Удалить",
-        success: "Успех!",                   // Success message in Russian
-        deletePhoto: "Фото успешно удалено" // Message when photo is deleted successfully in Russian
+        success: "Успех!",                  
+        deletePhoto: "Фото успешно удалено" 
     },
     ua: {
         galleryTitle: "Фотогалерея",
@@ -95,8 +95,8 @@ const GalleryText = {
         deleteMessage: "Ви впевнені, що хочете видалити це фото?",
         deleteCancel: "Скасувати",
         deleteConfirm: "Видалити",
-        success: "Успішно!",                   // Success message in Ukrainian
-        deletePhoto: "Фото успішно видалено" // Message when photo is deleted successfully in Ukrainian
+        success: "Успішно!",                   
+        deletePhoto: "Фото успішно видалено" 
     },
     zh: {
         galleryTitle: "相册",
@@ -106,8 +106,8 @@ const GalleryText = {
         deleteMessage: "您确定要删除这张照片吗？",
         deleteCancel: "取消",
         deleteConfirm: "删除",
-        success: "成功!",                   // Success message in Chinese
-        deletePhoto: "照片删除成功" // Message when photo is deleted successfully in Chinese
+        success: "成功!",                  
+        deletePhoto: "照片删除成功"
     },
     ja: {
         galleryTitle: "フォトギャラリー",
@@ -117,8 +117,8 @@ const GalleryText = {
         deleteMessage: "本当にこの写真を削除しますか？",
         deleteCancel: "キャンセル",
         deleteConfirm: "削除",
-        success: "成功！",                   // Success message in Japanese
-        deletePhoto: "写真が削除されました" // Message when photo is deleted successfully in Japanese
+        success: "成功！",                   
+        deletePhoto: "写真が削除されました" 
     },
     cs: {
         galleryTitle: "Galerie fotografií",
@@ -128,8 +128,8 @@ const GalleryText = {
         deleteMessage: "Opravdu chcete tuto fotografii smazat?",
         deleteCancel: "Zrušit",
         deleteConfirm: "Smazat",
-        success: "Úspěch!",                   // Success message in Czech
-        deletePhoto: "Fotografie byla úspěšně smazána" // Message when photo is deleted successfully in Czech
+        success: "Úspěch!",                  
+        deletePhoto: "Fotografie byla úspěšně smazána" 
     }
 };
 

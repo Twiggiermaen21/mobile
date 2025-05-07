@@ -25,8 +25,6 @@ export default function Index() {
     const [location, setLocation] = useState(null);
     const [path, setPath] = useState([]);
     const [distance, setDistance] = useState(0);
-    // const [speed, setspeed] = useState(0);
-
     const [dog, setDog] = useState([]);
     const [currentSpeed, setCurrentSpeed] = useState(0);
     const [averageSpeed, setAverageSpeed] = useState(0);
@@ -58,7 +56,6 @@ export default function Index() {
     }, [token]);
     useEffect(() => {
         return () => {
-            // Clean up when component unmounts
             if (timeIntervalRef.current) {
                 clearInterval(timeIntervalRef.current);
             }
@@ -73,7 +70,6 @@ export default function Index() {
 
         if (data) {
             const { locations } = data;
-            console.log("New location update:", locations[0]);
             const loc = locations[0];
 
             if (loc) {
@@ -102,15 +98,14 @@ export default function Index() {
                         longitudeDelta: 0.01,
                     });
                 }
-                console.log('Distance:', distance);
-                console.log('time:', timeElapsed);
 
-                if (distance != null && timeElapsed != null) {
-
-                    const avg = distance / (timeElapsed / 3600);
+                const avg = distance / (timeElapsed / 3600);
+                if (!isNaN(avg) && isFinite(avg)) {
                     setAverageSpeed(avg.toFixed(2));
-                    console.log('AVG SPEED:', avg.toFixed(2));
+                } else {
+                    setAverageSpeed(0);
                 }
+
             }
         }
     });
@@ -162,14 +157,13 @@ export default function Index() {
         }, 1000);
 
     };
-
     const stopTracking = async () => {
         setIsTracking(false);
         savePath();
         setTimeElapsed(0);
         setDistance(0);
         setCurrentSpeed(0);
-        setSelectedDogIds(null);
+        setSelectedDogIds([]);
         if (timeIntervalRef.current) {
             clearInterval(timeIntervalRef.current);
             timeIntervalRef.current = null;

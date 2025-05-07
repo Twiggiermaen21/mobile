@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "mobile",
+    "name": "PetWalk",
     "slug": "mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/DogPaw.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
