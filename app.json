@@ -12,21 +12,30 @@
       "supportsTablet": true,
       "infoPlist": {
         "UIBackgroundModes": [
-          "location"
+          "location",
+          "fetch"
         ],
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "Ta aplikacja używa lokalizacji, aby śledzić spacery nawet w tle."
+        "NSLocationWhenInUseUsageDescription": "Aplikacja używa lokalizacji, aby śledzić spacery.",
+        "NSLocationAlwaysUsageDescription": "Aplikacja potrzebuje dostępu do lokalizacji nawet w tle."
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/Dogpaw-cuate.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
         "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
         "ACCESS_BACKGROUND_LOCATION",
         "FOREGROUND_SERVICE"
-      ]
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDbuUiVX1RWvrpXlADLxdn47B8jQZTU-h8"
+        }
+      },
+      "package": "com.twiggiermaen21.mobile"
     },
     "web": {
       "bundler": "metro",
@@ -47,6 +56,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "6a210f0f-fbca-4c73-ab13-d5766d2dec26"
+      }
+    },
+    "owner": "twiggiermaen21"
   }
 }
