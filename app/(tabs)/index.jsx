@@ -48,7 +48,6 @@ export default function Index() {
             console.error("Background task error:", error);
             return;
         }
-
         if (data) {
             const { locations } = data;
             const loc = locations[0];
@@ -99,7 +98,6 @@ export default function Index() {
         loadPath();
     });
 
-
     useEffect(() => {
         if (token) {
             fetchData();
@@ -143,15 +141,12 @@ export default function Index() {
     };
 
     const startTracking = async () => {
-
         setIsTracking(true);
         setTimeElapsed(0);
         setDistance(0);
         startBackgroundUpdates();
-
         timeStartRef.current = Date.now();
         timeIntervalFunction();
-
     };
     const stopTracking = async () => {
         setIsTracking(false);
@@ -159,11 +154,11 @@ export default function Index() {
         setPath([]);
         setCurrentSpeed(0);
         setTimeElapsed(0);
+        setSelectedDogIds([]);
         await clearPathStorage();
         if (timeIntervalRef.current) {
             clearInterval(timeIntervalRef.current);
         }
-
         const hasStarted = await Location.hasStartedLocationUpdatesAsync("location-tracking");
         if (hasStarted) {
             await Location.stopLocationUpdatesAsync("location-tracking");
@@ -171,7 +166,6 @@ export default function Index() {
     };
 
     const timeIntervalFunction = async () => {
-
         timeIntervalRef.current = setInterval(() => {
             const elapsedMs = Date.now() - timeStartRef.current;
             setTimeElapsed(Math.floor(elapsedMs / 1000));
