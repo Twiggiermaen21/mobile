@@ -15,15 +15,14 @@ To jest frontend mobilnej aplikacji **PetWalk**, stworzonej przy użyciu [Expo](
 - 📖 **Historia spacerów**:
   - Lista poprzednich spacerów
   - Szczegóły spaceru (data, trasa, czas itd.)
-
+- 📸 **Dodawanie zdjęć ze spaceru** – możliwość robienia zdjęć w trakcie spaceru i zapisywania ich w historii
+- 🎨 **Ustawienia aplikacji** – zmiana koloru motywu, języka i innych preferencji
 ## 🛠️ Planowane funkcje
 
 W przyszłych wersjach aplikacji planujemy wdrożenie następujących funkcjonalności:
 
-- 📸 **Dodawanie zdjęć ze spaceru** – możliwość robienia zdjęć w trakcie spaceru i zapisywania ich w historii
-- 🎨 **Ustawienia aplikacji** – zmiana koloru motywu, języka i innych preferencji
 - ✅ **Weryfikacja e-mailowa po rejestracji** – dodatkowa warstwa bezpieczeństwa i potwierdzenie tożsamości użytkownika
-
+- 🧩 ** Tryb Offline** - korzystanie a aplikacji bez łączności z internetem.
 
 ## 🚀 Jak zacząć?
 
