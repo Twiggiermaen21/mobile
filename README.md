@@ -17,32 +17,44 @@ To jest frontend mobilnej aplikacji **PetWalk**, stworzonej przy użyciu [Expo](
   - Szczegóły spaceru (data, trasa, czas itd.)
 - 📸 **Dodawanie zdjęć ze spaceru** – możliwość robienia zdjęć w trakcie spaceru i zapisywania ich w historii
 - 🎨 **Ustawienia aplikacji** – zmiana koloru motywu, języka i innych preferencji
+
 ## 🛠️ Planowane funkcje
 
-W przyszłych wersjach aplikacji planujemy wdrożenie następujących funkcjonalności:
-
 - ✅ **Weryfikacja e-mailowa po rejestracji** – dodatkowa warstwa bezpieczeństwa i potwierdzenie tożsamości użytkownika
-- 🧩 ** Tryb Offline** - korzystanie a aplikacji bez łączności z internetem.
+- 🧩 ** Tryb Offline** - korzystanie z aplikacji bez łączności z internetem.
 
 ## 🚀 Jak zacząć?
 
-1. Zainstaluj zależności:
+1. Sklonuj repozytorium:
+
+   ```bash
+   git clone https://github.com/twoj-login/PetWalk-frontend.git
+   cd PetWalk-frontend
+   ```
+
+2. Zainstaluj zależności:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+3. Dodaj klucz API Google Maps do pliku `app.json`:
 
-   ```bash
-    npx expo start
+   ```json
+   "googleMaps": {
+     "apiKey": "TWOJ_KLUCZ_API"
+   }
    ```
 
-In the output, you'll find options to open the app in a
+4. Uruchom aplikację:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   ```bash
+   npx expo start
+   ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+5. Wybierz platformę:
+
+   - [Development Build](https://docs.expo.dev/develop/development-builds/introduction/)
+   - [Android Emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+   - [iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/)
+   - [Expo Go](https://expo.dev/go)
