@@ -28,8 +28,8 @@ To jest frontend mobilnej aplikacji **PetWalk**, stworzonej przy użyciu [Expo](
 1. Sklonuj repozytorium:
 
    ```bash
-   git clone https://github.com/twoj-login/PetWalk-frontend.git
-   cd PetWalk-frontend
+   git clone https://github.com/Twiggiermaen21/mobile.git
+   cd mobile
    ```
 
 2. Zainstaluj zależności:
