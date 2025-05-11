@@ -33,7 +33,7 @@
       ],
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDbuUiVX1RWvrpXlADLxdn47B8jQZTU-h8"
+          "apiKey": "/"
         }
       },
       "package": "com.twiggiermaen21.mobile"
