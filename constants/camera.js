@@ -12,7 +12,6 @@ export async function openNativeCamera() {
     try {
         const result = await ImagePicker.launchCameraAsync({
             mediaTypes: ['images'],
-            allowsEditing: true,
             quality: 1,
             aspect: [4, 3],
             base64: true

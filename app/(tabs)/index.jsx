@@ -15,10 +15,10 @@ import * as TaskManager from 'expo-task-manager';
 import MapIndex from '@/components/PetWalkComponents/MapIndex';
 import DogSelectionModal from '@/components/PetWalkComponents/DogSelectionModal';
 import CameraIndex from '@/components/PetWalkComponents/CameraIndex';
-import haversineDistance from '@/constants/haversineDistance';
+import calculateTotalDistance from '@/constants/haversineDistance';
 import HeaderIndexPanel from '@/components/PetWalkComponents/HeaderIndexPanel';
+import { savePathToStorage, getPathFromStorage, clearPathStorage } from '@/store/locationStore';
 
-const LOCATION_TASK_NAME = 'background-location-task';
 export default function Index() {
     const [refreshing, setRefreshing] = useState(false);
     const [isTracking, setIsTracking] = useState(false);
@@ -34,7 +34,6 @@ export default function Index() {
     const [selectedDogIds, setSelectedDogIds] = useState([]);
     const [isPaused, setIsPaused] = useState(false);
     const { dogsFromDB, getDogs } = useDogStore()
-
     const { saveWalk, } = useWalkStore();
     const { uploadImage } = usePhotoStore();
     const { lang, color } = useSettingsStore();
@@ -43,26 +42,8 @@ export default function Index() {
     const dynamicStyles = styles(COLORS);
     const mapRef = useRef(null);
     const timeStartRef = useRef(null);
-
     const timeIntervalRef = useRef(null);
-    const fetchData = async () => {
-        const result = await getDogs(token);
-        if (!result.success) Alert.alert("Error", result.error);
-    };
-    useEffect(() => {
-        if (token) {
-            fetchData();
-        }
-    }, [token]);
-    useEffect(() => {
-        return () => {
-            if (timeIntervalRef.current) {
-                clearInterval(timeIntervalRef.current);
-            }
-        };
-    }, []);
-
-    TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
+    TaskManager.defineTask("location-tracking", async ({ data, error }) => {
         if (error) {
             console.error("Background task error:", error);
             return;
@@ -76,16 +57,14 @@ export default function Index() {
                 const { latitude, longitude, speed } = loc.coords;
                 const newLoc = { latitude, longitude };
                 setLocation(newLoc);
+                try {
+                    const currentPath = await getPathFromStorage();
+                    const updatedPath = [...currentPath, newLoc];
+                    await savePathToStorage(updatedPath);
 
-                setPath(prev => {
-                    const updated = [...prev, newLoc];
-                    if (updated.length > 1) {
-                        const last = updated[updated.length - 2];
-                        const segment = haversineDistance(last, newLoc);
-                        setDistance(d => d + segment);
-                    }
-                    return updated;
-                });
+                } catch (e) {
+                    console.error('Error updating path:', e);
+                }
 
                 if (speed != null) {
                     setCurrentSpeed((speed * 3.6).toFixed(2));
@@ -109,34 +88,54 @@ export default function Index() {
             }
         }
     });
-    const requestPermissions = async () => {
-        const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
-        const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
-        if (foregroundStatus !== 'granted') {
-            console.log('Permission to access foreground location was denied');
-            return;
+
+
+    useEffect(() => {
+        const loadPath = async () => {
+            const savedPath = await getPathFromStorage();
+            setPath(savedPath);
+            setDistance(calculateTotalDistance(savedPath));
+        };
+        loadPath();
+    });
+
+
+    useEffect(() => {
+        if (token) {
+            fetchData();
         }
-        if (backgroundStatus !== 'granted') {
-            console.log('Permission to access background location was denied');
-            return;
-        }
-        console.log('Location permissions granted');
-    };
+        return () => {
+            if (timeIntervalRef.current) {
+                clearInterval(timeIntervalRef.current);
+            }
+        };
+    }, [token]);
+
+
 
     const startBackgroundUpdates = async () => {
         try {
-            requestPermissions();
-            await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-                accuracy: Location.Accuracy.Highest,
-                timeInterval: 1000,
-                distanceInterval: 5,
-                showsBackgroundLocationIndicator: true,
-                foregroundService: {
-                    notificationTitle: 'Spacer trwa 🐾',
-                    notificationBody: 'Śledzimy Twój spacer w tle!',
-                },
-            });
+            const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
+            const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
 
+            if (foregroundStatus !== 'granted' || backgroundStatus !== 'granted') {
+                console.log('Location permissions not granted');
+                return;
+            }
+
+            const hasStarted = await Location.hasStartedLocationUpdatesAsync("location-tracking");
+            if (!hasStarted) {
+                await Location.startLocationUpdatesAsync("location-tracking", {
+                    accuracy: Location.Accuracy.Highest,
+                    timeInterval: 3000,
+                    distanceInterval: 1,
+                    showsBackgroundLocationIndicator: true,
+                    foregroundService: {
+                        notificationTitle: 'Spacer trwa 🐾',
+                        notificationBody: 'Śledzimy Twój spacer w tle!',
+                    },
+                });
+            }
             console.log('Background location updates started');
         } catch (e) {
             console.error("Error starting background updates:", e);
@@ -151,46 +150,61 @@ export default function Index() {
         startBackgroundUpdates();
 
         timeStartRef.current = Date.now();
-        timeIntervalRef.current = setInterval(() => {
-            const elapsedMs = Date.now() - timeStartRef.current;
-            setTimeElapsed(Math.floor(elapsedMs / 1000));
-        }, 1000);
+        timeIntervalFunction();
 
     };
     const stopTracking = async () => {
         setIsTracking(false);
-        savePath();
-        setTimeElapsed(0);
-        setDistance(0);
+        await savePath();
+        setPath([]);
         setCurrentSpeed(0);
-        setSelectedDogIds([]);
+        setTimeElapsed(0);
+        await clearPathStorage();
         if (timeIntervalRef.current) {
             clearInterval(timeIntervalRef.current);
-            timeIntervalRef.current = null;
         }
-        const hasStarted = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+
+        const hasStarted = await Location.hasStartedLocationUpdatesAsync("location-tracking");
         if (hasStarted) {
-            await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+            await Location.stopLocationUpdatesAsync("location-tracking");
         }
     };
 
+    const timeIntervalFunction = async () => {
+
+        timeIntervalRef.current = setInterval(() => {
+            const elapsedMs = Date.now() - timeStartRef.current;
+            setTimeElapsed(Math.floor(elapsedMs / 1000));
+        }, 1000);
+    };
 
     const togglePause = () => {
         setIsPaused(prev => !prev);
-    };
-
+        if (!isPaused) {
+            if (timeIntervalRef.current) {
+                clearInterval(timeIntervalRef.current);
+                timeIntervalRef.current = null;
+            }
+        } else {
+            timeStartRef.current = Date.now() - timeElapsed * 1000;
+            timeIntervalFunction();
+        }
+    }
     const savePath = async () => {
         const result = await saveWalk(token, timeElapsed, averageSpeed, distance, path, selectedDogIds,);
         if (!result.success) Alert.alert("Error", result.error);
         else Alert.alert("Sukces", "Spacer został zapisany!");
 
     };
+    const fetchData = async () => {
+        const result = await getDogs(token);
+        if (!result.success) Alert.alert("Error", result.error);
+    };
 
     const savePhoto = async (res) => {
         const result = await uploadImage(token, res, user);
         if (!result.success) Alert.alert("Error", result.error);
         else Alert.alert("Sukces", "Zdjecie zostało zapisane!");
-
     }
 
     const handleRefresh = async () => {

@@ -16,4 +16,17 @@ const haversineDistance = (coord1, coord2) => {
     return R * c;
 };
 
-export default haversineDistance;
+const calculateTotalDistance = (path) => {
+    if (path.length < 2) return 0;
+
+    let totalDistance = 0;
+
+    for (let i = 1; i < path.length; i++) {
+        const segmentDistance = haversineDistance(path[i - 1], path[i]);
+        totalDistance += segmentDistance;
+    }
+
+    return totalDistance;
+};
+
+export default calculateTotalDistance;
