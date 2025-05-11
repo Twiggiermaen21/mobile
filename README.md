@@ -41,9 +41,12 @@ To jest frontend mobilnej aplikacji **PetWalk**, stworzonej przy użyciu [Expo](
 3. Dodaj klucz API Google Maps do pliku `app.json`:
 
    ```json
-   "googleMaps": {
-     "apiKey": "TWOJ_KLUCZ_API"
-   }
+    "expo": {
+    "android": {
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDbuUiVX1RWvrpXlADLxdn47B8jQZTU-h8"
+        }}}
    ```
 
 4. Uruchom aplikację:
